@@ -8,6 +8,11 @@
 5. Make your game in that folder, do not touch anyone else's game
 5. When you're done, merge back into main
 
+## Requirements
+1. You must use Godot 3.5.1
+2. Your game must run on everyone's hardware (don't blow up my laptop please).
+3. Try your best
+
 ## Criteria
 | E - Entertainment              | Q - Quality                 | C - Consistency                                                   | T - Theme                                         |
 |--------------------------------|-----------------------------|-------------------------------------------------------------------|---------------------------------------------------|
