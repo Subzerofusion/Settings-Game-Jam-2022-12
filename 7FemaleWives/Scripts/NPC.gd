@@ -6,46 +6,38 @@ var sail_max_angle = PI/6
 var desired_sail_angle = 0
 
 var wind_direction = 0
-var wind_angular_speed = 0.5
 
-var base_speed = 50
+var base_speed = 30
 var ship_speed = 0
 
 var desired_ship_direction = Vector2(0,0)
 var hull_lerp_factor = 0
 
+var player_position = Vector2(0,0)
+var escape_direction = Vector2(0,0)
+var desired_sail_direction = 0
+var running_away = true
+var sight_radius = 1000
+
 func _ready():
 	pass # Replace with function body.
 
-func _process(_delta):
-	if Input.is_action_just_pressed("zoom1"):
-		$Ship/Camera2D.zoom = Vector2(2,2)
-		
-	if Input.is_action_just_pressed("zoom2"):
-		$Ship/Camera2D.zoom = Vector2(4,4)
-		
-	if Input.is_action_just_pressed("zoom3"):
-		$Ship/Camera2D.zoom = Vector2(20,20)
-
 func _physics_process(delta):
 	
-	if Input.is_action_pressed("sail_cw"):
-#		if  $Sail.rotation - $Ship.rotation < sail_max_angle:
-		$Sail.rotation += sail_angular_speed * delta
-		
-	elif Input.is_action_pressed("sail_ccw"):
-#		if $Sail.rotation - $Ship.rotation > - sail_max_angle:
-		$Sail.rotation -= sail_angular_speed * delta
-	
+	if $Ship.position.distance_to(player_position) < sight_radius:
+		running_away = true
 	else:
-		$Sail.rotation = lerp_angle($Sail.rotation, wind_direction, 0.9 * delta)
+		running_away = false
+	
+
+	if running_away:
+		$Sail.rotation = lerp_angle($Sail.rotation, escape_direction.angle(), 1.5 * delta)
 		
-	if Input.is_action_pressed("wind_cw"):
-		wind_direction += wind_angular_speed * delta
-		
-	if Input.is_action_pressed("wind_ccw"):
-		wind_direction -= wind_angular_speed * delta
-		
+	else:
+		$Sail.rotation = lerp_angle($Sail.rotation, wind_direction, 0.5 * delta)
+	
+	
+	
 
 	_calculate_ship_direction()
 	_calculate_ship_speed()
@@ -66,7 +58,7 @@ func _physics_process(delta):
 	
 	$DirectionArrow.position = $Ship.position
 	
-	get_parent().wind_direction = wind_direction
+	wind_direction = get_parent().wind_direction 
 	
 	
 	
@@ -74,8 +66,15 @@ func _calculate_ship_direction():
 	var sail_vector = Vector2(cos($Sail.rotation), sin($Sail.rotation))
 	var wind_vector = Vector2(cos(wind_direction), sin(wind_direction))
 	desired_ship_direction = sail_vector + wind_vector
-	$DirectionArrow.rotation = desired_ship_direction.angle()
 	
+	
+	
+	escape_direction = -(player_position - $Ship.position)
+	desired_sail_angle = (escape_direction - wind_vector).angle()
+	
+	
+	
+	$DirectionArrow.rotation = escape_direction.angle()
 	
 func _calculate_ship_speed():
 	var modifier = 1.1 + cos($Sail.rotation - wind_direction)
@@ -102,10 +101,3 @@ func _calculate_hull_lerp_factor():
 
 
 	
-	
-
-
-func _on_Area2D_area_entered(area):
-	print_debug(area)
-#	area.get_parent().get_parent().queue_free()
-	pass # Replace with function body.
