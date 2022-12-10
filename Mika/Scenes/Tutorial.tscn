@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Assets/Assets_0001s_0002_Player-Idle.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Assets_0003_Ground.png" type="Texture" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://Scripts/Tutorial.gd" type="Script" id=5]
 [ext_resource path="res://Assets/Assets_0000s_0001_Patron-1.png" type="Texture" id=6]
 [ext_resource path="res://Assets/Assets_0000s_0000_Patron-2.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Assets_0000s_0002_Tutorial.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Assets_0000s_0000_Or.png" type="Texture" id=9]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -28,6 +30,16 @@ texture = ExtResource( 2 )
 position = Vector2( 1152, 16 )
 scale = Vector2( 19.0547, 40.0645 )
 texture = ExtResource( 4 )
+
+[node name="Motivation" type="Sprite" parent="Splash"]
+position = Vector2( -78.9306, -7.58776 )
+scale = Vector2( 0.209922, 0.099839 )
+texture = ExtResource( 8 )
+
+[node name="Keys" type="Sprite" parent="Splash"]
+position = Vector2( -38.2058, 6.58937 )
+scale = Vector2( 0.262402, 0.124799 )
+texture = ExtResource( 9 )
 
 [node name="Player" type="Sprite" parent="."]
 position = Vector2( 3.05176e-05, 7.62939e-06 )
@@ -53,12 +65,12 @@ margin_right = 648.0
 margin_bottom = 78.0
 
 [node name="ReadTimer" type="Timer" parent="."]
-wait_time = 10.0
+wait_time = 5.0
 
 [node name="Tutorialiser" type="AnimatedSprite" parent="."]
 position = Vector2( -112, 80 )
 scale = Vector2( 10, 10 )
 z_index = 6
 frames = SubResource( 1 )
-frame = 1
+frame = 4
 playing = true

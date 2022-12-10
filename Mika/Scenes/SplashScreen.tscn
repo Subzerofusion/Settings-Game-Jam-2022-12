@@ -22,7 +22,7 @@ margin_bottom = 678.0
 rect_scale = Vector2( 3, 3 )
 texture_normal = ExtResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="TextureButton"]
+[node name="PlayText" type="Sprite" parent="TextureButton"]
 position = Vector2( 128, 29.3333 )
 texture = ExtResource( 4 )
 
