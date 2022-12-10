@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Themes/ornate-theme.tres" type="Theme" id=1]
+[ext_resource path="res://Sprites/Ship.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/Sail.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/WindCompassNeedle.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/WindCompassBase.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/ShipDirectionArrow.png" type="Texture" id=6]
+[ext_resource path="res://Scenes/Player.gd" type="Script" id=7]
+
+[node name="Player" type="Node2D"]
+script = ExtResource( 7 )
+
+[node name="Ship" type="KinematicBody2D" parent="."]
+position = Vector2( 384, 209 )
+
+[node name="Hull" type="Sprite" parent="Ship"]
+texture = ExtResource( 2 )
+offset = Vector2( 25, 0 )
+
+[node name="Collision" type="CollisionPolygon2D" parent="Ship"]
+position = Vector2( 1, 1 )
+rotation = 1.5708
+polygon = PoolVector2Array( 26, 21, 29, 12, 29, -6, 9, -65, 0, -84, -9, -65, -29, -6, -29, 13, -26, 21, -21, 25, 21, 25 )
+
+[node name="Camera2D" type="Camera2D" parent="Ship"]
+current = true
+
+[node name="UI" type="Control" parent="Ship"]
+margin_right = 40.0
+margin_bottom = 40.0
+theme = ExtResource( 1 )
+
+[node name="WindCompass" type="Sprite" parent="Ship/UI"]
+position = Vector2( 402, 192 )
+texture = ExtResource( 5 )
+
+[node name="Needle" type="Sprite" parent="Ship/UI/WindCompass"]
+texture = ExtResource( 4 )
+
+[node name="SpeedLabel" type="Label" parent="Ship/UI"]
+margin_left = -502.0
+margin_top = 249.0
+margin_right = -330.0
+margin_bottom = 291.0
+text = "Current Speed: "
+
+[node name="DirectionArrow" type="Sprite" parent="."]
+position = Vector2( 384, 209 )
+texture = ExtResource( 6 )
+offset = Vector2( 25, 0 )
+
+[node name="Sail" type="Sprite" parent="."]
+position = Vector2( 384, 209 )
+texture = ExtResource( 3 )
+offset = Vector2( 25, 0 )
