@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Assets/Assets_0001_Lights.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Assets_0003_Ground.png" type="Texture" id=2]
-[ext_resource path="res://Assets/Assets_0000_Player.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Assets_0001s_0002_Player-Idle.png" type="Texture" id=3]
 [ext_resource path="res://Scripts/Player.gd" type="Script" id=4]
 [ext_resource path="res://Assets/Assets_0002_Lights.png" type="Texture" id=5]
 
@@ -46,28 +46,24 @@ texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D"]
 position = Vector2( -0.149997, -19.3 )
-scale = Vector2( 1, 1 )
 shape = SubResource( 2 )
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="Background"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D2"]
 position = Vector2( 0, 73.1 )
-scale = Vector2( 1, 1 )
 shape = SubResource( 3 )
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="Background"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D3"]
 position = Vector2( -101.75, 26.5 )
-scale = Vector2( 1, 1 )
 shape = SubResource( 4 )
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="Background"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D4"]
 position = Vector2( 101.3, 26.7 )
-scale = Vector2( 1, 1 )
 shape = SubResource( 5 )
 
 [node name="LightsSouth" type="Sprite" parent="."]

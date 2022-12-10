@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Assets_0000_Roof.png-84921637eb470f40b5cb046149d3aa64.stex"
+path="res://.import/Assets_0000s_0002_Patron-Idle.png-2c03241fa9394d0b3e05976b84d8eb48.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Assets_0000_Roof.png"
-dest_files=[ "res://.import/Assets_0000_Roof.png-84921637eb470f40b5cb046149d3aa64.stex" ]
+source_file="res://Assets/Assets_0000s_0002_Patron-Idle.png"
+dest_files=[ "res://.import/Assets_0000s_0002_Patron-Idle.png-2c03241fa9394d0b3e05976b84d8eb48.stex" ]
 
 [params]
 

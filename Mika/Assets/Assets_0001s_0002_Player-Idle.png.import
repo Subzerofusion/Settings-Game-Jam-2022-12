@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Assets_0003_Lights.png-4f2a30a8067b4dee31322caf72456bb1.stex"
+path="res://.import/Assets_0001s_0002_Player-Idle.png-48cff1e398616d159f61f847f52bfee7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Assets_0003_Lights.png"
-dest_files=[ "res://.import/Assets_0003_Lights.png-4f2a30a8067b4dee31322caf72456bb1.stex" ]
+source_file="res://Assets/Assets_0001s_0002_Player-Idle.png"
+dest_files=[ "res://.import/Assets_0001s_0002_Player-Idle.png-48cff1e398616d159f61f847f52bfee7.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=true
+flags/filter=false
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2
