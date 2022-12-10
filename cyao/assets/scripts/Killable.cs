@@ -77,11 +77,11 @@ public class KAction {
       new KAction(){
         Name = "Jar of Fire",
         Effect = (action, user, target) => {
-          target.Buffs.Add(new KAction() {
+          target.Effects.Add(new KAction() {
             Name = "Fire",
             PerTurn = (a, u, t) => {
               if(new Random().Next(1, 10) < 2) {
-                target.Buffs.Remove(a);
+                target.Effects.Remove(a);
                 return new string[]{$"{target.Name} is no longer on fire"};
               }
               int dmg = new Random().Next(1, 20);
@@ -106,8 +106,11 @@ public class Killable {
   public float Resistance { get; set; }
   public List<KAction> Attacks { get; set; } = new List<KAction>();
   public List<KAction> Items { get; set; } = new List<KAction>();
-  public List<KAction> Buffs { get; set; } = new List<KAction>();
-  public string OnDeath { get; set; }
+  public List<KAction> Effects { get; set; } = new List<KAction>();
+  public List<string> Engage { get; set; }
+  public List<string> Idle { get; set; }
+  public List<string> IdleWeak { get; set; }
+  public List<string> OnDeath { get; set; }
 
   public string DamageAsString(int comparisonHealth) {
     double val = Attacks.Select(x => x.Damage).Average() / comparisonHealth;

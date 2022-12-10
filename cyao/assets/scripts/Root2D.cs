@@ -24,6 +24,7 @@ public class Root2D : CanvasLayer {
   [Export]
   public float _textSpeedNormal = 0.05f;
   public float textSpeed;
+  public bool oneLineAtATime = false;
   public bool completelySkipPrintTime = false;
   private Random random = new Random();
 
@@ -64,37 +65,256 @@ public class Root2D : CanvasLayer {
 
   class Command {
     public string Help { get; set; }
+    public string Format { get; set; }
     public bool Hidden { get; set; } = false;
-    public Action<Root2D, string> Cmd;
+    public Func<Root2D, string, Task> Cmd;
   }
 
   private static Root2D ROOT;
 
   private static Dictionary<string, Command> COMMANDS = new Dictionary<string, Command>(){
-    { "help", new Command{Help = "Shows this list!", Cmd = async(root, line) => {
-      Dictionary<string, string> helps = COMMANDS.Where(x=> !x.Value.Hidden ).Select((x) => { return new {x.Key, x.Value.Help};}).ToDictionary(pair=> pair.Key, pair=> pair.Help);
-      int longest = 0;
-      foreach(string key in helps.Keys) {
-        if(key.Length > longest) longest = key.Length;
+    { "help", new Command {Help = "Shows this list!", Cmd = async(root, line) => {
+      string[] split = line.Split(" ");
+      if(split.Count() != 1) {
+        await root.SayLines(
+          "\"help\" has no arguments!",
+          ""
+        );
       }
-
       List<string> lines = new List<string>();
-      foreach(KeyValuePair<string, string> kvp in helps) {
-        lines.Add($"{kvp.Key.PadRight(longest, '-')}--{kvp.Value}");
+      foreach(KeyValuePair<string, Command> kvp in COMMANDS) {
+        lines.Add($"{kvp.Key} {kvp.Value.Format}");
+        lines.Add($"  {kvp.Value.Help}");
         lines.Add("");
       }
       await root.SayLines(lines.ToArray());
       }}},
-    { "stat", new Command{Help = "Shows your current stats.", Cmd = async(root, line) => {
-      await root.SayLines(
-        $"Health: {root.Player.Health}",
-        $"Mana:   {root.Player.Mana}",
-        $"{(root.Player.Buffs.Count > 0 ? $"Is afflicted with: {String.Join(", ", root.Player.Buffs.Select(x=>x.Name))}" : "Has no ongoing effects")}"
-      );
+    { "stat", new Command {Help = "Shows your current stats.", Cmd = async(root, line) => {
+      string[] split = line.Split(" ");
+      if(split.Count() != 1) {
+        await root.SayLines(
+          "\"stat\" only has no arguments!",
+          "use \"help\" for more info.",
+          ""
+        );
+      }
+      await root.SayPlayerStats();
     }}},
-    {"attack", new Command{Help = "Attacks enemy with chosen attack.", Cmd = async(root, line) => {
+    { "inspect", new Command {Format = "[list:{attack | item | effects}] [index:{int}]", Help = "Inspects an item or attack by index", Cmd = async(root, line) => {
+      string[] split = line.Split(" ");
+      if(split.Count() != 3) {
+        await root.SayLines(
+          "\"inspect\" only has 2 arguments!",
+          "use \"help\" for more info.",
+          ""
+        );
+        return;
+      }
+      if(split[1] != "attack" && split[1] != "item") {
 
-    }}}
+        return;
+      }
+      List<KAction> actionSet;
+      switch(split[1]) {
+        case "attack": {
+          actionSet = root.Player.Attacks;
+          break;
+        }
+        case "item":{
+          actionSet = root.Player.Items;
+          break;
+        }
+        case "effect": {
+          actionSet = root.Player.Effects;
+          break;
+        }
+        default:{
+          await root.SayLines(
+            "unrecognised target list",
+            "use \"help\" for more info.",
+            ""
+          );
+          return;
+        }
+      }
+
+      if(actionSet.Count() < 1) {
+        await root.SayLines(
+            $"There are no {split[1]}s to inspect",
+            ""
+          );
+          return;
+      }
+
+      int index;
+      if(!int.TryParse(split[2], out index)) {
+        await root.SayLines(
+          "specified index was not an integer",
+          ""
+        );
+        return;
+      }
+      if(index < 0 || index >= actionSet.Count()) {
+        await root.SayLines(
+          $"index was not within range available {split[1]}{(actionSet.Count() != 1 ? "s" : "")}",
+          "use \"stat\" to see how many options there are.",
+          ""
+        );
+        return;
+      }
+
+      KAction action = actionSet[index];
+      await root.SayLines(
+        $"{action.Name}:",
+        $"  Description: {action.Description}",
+        $"  Cost:        {action.Cost} mana",
+        $"  Damage:      {action.Damage}"
+      );
+
+    }}},
+    { "attack", new Command {Format = "[index:{int}]", Help = "Attacks enemy with chosen attack.", Cmd = async(root, line) => {
+      string[] split = line.Split(" ");
+      if(split.Count() != 2) {
+        await root.SayLines(
+          "\"attack\" only has 1 argument!",
+          "use \"help\" for more info.",
+          ""
+        );
+        return;
+      }
+      int index;
+      if(!int.TryParse(split[1], out index)) {
+        await root.SayLines(
+          "specified index was not an integer",
+          ""
+        );
+        return;
+      }
+      List<KAction> actionSet = root.Player.Attacks;
+      if(index < 0 || index >= actionSet.Count()) {
+        await root.SayLines(
+          $"index was not within range available {split[1]}{(actionSet.Count() != 1 ? "s" : "")}",
+          "use \"stat\" to see how many options there are.",
+          ""
+        );
+        return;
+      }
+      KAction action = actionSet[index];
+      await root.SayLines(action.Execute(root.Player, root.Enemy));
+    }}},
+    { "use", new Command {Format = "[index:{int}] [target:{\"self\" | \"enemy\"}]", Help = "Uses an item on target.", Cmd = async(root, line) => {
+      string[] split = line.Split(" ");
+      if(split.Count() != 3) {
+        await root.SayLines(
+          "\"attack\" only has 2 arguments!",
+          "use \"help\" for more info.",
+          ""
+        );
+        return;
+      }
+      int index;
+      if(!int.TryParse(split[1], out index)) {
+        await root.SayLines(
+          "specified index was not an integer",
+          ""
+        );
+        return;
+      }
+      List<KAction> actionSet = root.Player.Items;
+      if(index < 0 || index >= actionSet.Count()) {
+        await root.SayLines(
+          $"index was not within range available {split[1]}{(actionSet.Count() != 1 ? "s" : "")}",
+          "use \"stat\" to see how many options there are.",
+          ""
+        );
+        return;
+      }
+      KAction action = actionSet[index];
+
+      Killable target;
+      switch(split[2]) {
+        case "self":{
+          target = root.Player;
+          break;
+        }
+        case "enemy":{
+          if(root.Enemy == null) {
+            await root.SayLines(
+              $"there's no enemy to use that on!",
+              ""
+            );
+          }
+          target = root.Enemy;
+          break;
+        }
+        default:{
+          await root.SayLines(
+            "unrecognised target",
+            "target yourself with \"self\"",
+            "or the enemy with \"enemy\"",
+            "use \"help\" for more info.",
+            ""
+          );
+          return;
+        }
+      }
+
+      await root.SayLines(action.Execute(root.Player, root.Enemy));
+    }}},
+    { "analyse", new Command {Format = "[stat:{ \"damage\" | \"health\" | \"resistance\" | \"mana\" | \"items\" }]", Help = "Analyses the enemy", Cmd = async(root, line) => {
+      string[] split = line.Split(" ");
+      if(split.Count() != 2) {
+        await root.SayLines(
+          "\"analyse\" only has 1 argument!",
+          "use \"help\" for more info.",
+          ""
+        );
+        return;
+      }
+
+      if(root.Enemy == null) {
+        await root.SayLines(
+          "There is no enemy to analyse",
+          ""
+        );
+        return;
+      }
+
+      if(!new string[]{"damage", "health", "resistance", "mana", "items"}.Contains(split[1])) {
+        await root.SayLines(
+          $"{split[1]} is not a stat that can be analysed",
+          ""
+        );
+        return;
+      }
+
+      switch(split[1]) {
+        case "damage": {
+          await root.Say(root.Enemy.DamageAsString(root.Player.Health));
+          break;
+        }
+        case "health": {
+          await root.Say(root.Enemy.HealthAsString());
+          break;
+        } case
+        "resistance": {
+          await root.Say(root.Enemy.ResistanceAsString());
+          break;
+        }
+        case "mana": {
+          await root.Say(root.Enemy.ManaAsString());
+          break;
+        }
+        case "items": {
+          await root.Say(root.Enemy.ItemsAsString());
+          break;
+        }
+      }
+
+
+
+      // await root.SayLines(lines.ToArray());
+      }}},
   };
 
   public enum ResponseType {
@@ -119,8 +339,7 @@ public class Root2D : CanvasLayer {
             "",
             "Anyway...",
             "",
-            "Use your spacebar to speed up text.",
-            "You can type \"help\" at any time for a list of commands!",
+            "Use escape to cycle text speed.",
             "Your goal is to fight the other digital magi, and claim the\ntitle of Abstract Software Successor for yourself!!",
             "",
             "So are you ready? To become the ultimate ASS?"
@@ -143,7 +362,7 @@ public class Root2D : CanvasLayer {
           "I'll repeat the instructions again",
           "in case you weren't listening.",
           "",
-          "Use your spacebar to speed up text.",
+          "Use escape to cycle text speed.",
           "You can type \"help\" at any time for a list of commands!",
           "Your goal is to fight the other idiots I throw at you.",
           "",
@@ -158,13 +377,8 @@ public class Root2D : CanvasLayer {
       GDUtil.GameSave.FinishedIntro = true;
       GDUtil.Save();
     } else {
-      if (GDUtil.GameSave.Name != null) {
+      if (GDUtil.GameSave.Name != null && GDUtil.GameSave.Name.Trim() != "") {
         await SayLines($"Welcome back {GDUtil.GameSave.Name}");
-      } else {
-        await SayLines(
-          "It seems like you've been here before."
-        );
-
       }
       await SayLines(
         "Would you like me to repeat instructions?"
@@ -173,7 +387,6 @@ public class Root2D : CanvasLayer {
       if (await Prompt(ResponseType.Bool) == "true") {
         await SayLines(
           "Use your spacebar to speed up text.",
-          "You can type \"help\" at any time for a list of commands!",
           "Your goal is to fight the other idiots I throw at you."
         );
       } else {
@@ -194,6 +407,7 @@ public class Root2D : CanvasLayer {
         "chris", "greener", "me", "sack of cats", "sackofcats", "sackofdicks", "sackofcocks", "sackofass", "hplovecraft",
         "cam", "cameron", "altersquid", "squid",
         "eli", "faldor", "faldor 20", "faldor20",
+        "ellie", "scribbel", "lungs",
         "justin", "nitro", "nitroghost", "nitro ghost", "nitro_ghost", "nitro-ghost",
         "mika", "mhear22", "montana",
         "oscar", "lyxaa", "lyxaaa",
@@ -204,6 +418,7 @@ public class Root2D : CanvasLayer {
       fail: new string[]{
         "Nice name... did your mum give it to you? Try again.",
         "Shit name. Try again.",
+        "Stupid. Try again.",
         "Be more creative dude..."
       });
 
@@ -212,6 +427,7 @@ public class Root2D : CanvasLayer {
       }
 
       GDUtil.GameSave.Name = name;
+      GDUtil.Save();
       await SayLines(
         "Cool, we can start....",
         $"\"{name}\"...",
@@ -258,31 +474,58 @@ public class Root2D : CanvasLayer {
         }
       };
 
+      await SayPlayerStats();
+      await SayLines(
+        "",
+        "This is you!",
+        "You can type \"stat\" at any time to see your stats",
+        "Try it now!"
+      );
+      string line = await Prompt(ResponseType.Str, acceptedAnswers: new string[] { "stat" }, fail: new string[] { "c'mon, you just gotta type \"stat\"...", "it's not hard...", "please..." });
+      await COMMANDS["stat"].Cmd(this, line);
+
+      await SayLines(
+        "Cool beans!",
+        "Use \"help\" to see what else we can use..."
+      );
+
+      line = await Prompt(ResponseType.Str, acceptedAnswers: new string[] { "help" }, fail: new string[] { "no secrets, I won't let you pass until you use \"help\"" });
+      await COMMANDS["help"].Cmd(this, line);
+
+      await SayLines(
+        "Have a look at your items and attacks",
+        "with help from the \"help\" command",
+        "type \"done\" when you want to continue"
+      );
+
+      do {
+        line = await Prompt(ResponseType.Str);
+        string name = line.Split(" ")[0];
+        if (COMMANDS.ContainsKey(name) && line != "done") {
+          await COMMANDS[name].Cmd(this, line);
+        } else {
+          await Say("Unrecognised Command");
+        }
+      } while (line != "done");
+
       Enemy = new Killable() {
         Name = "Tutorial Dummy",
         Health = 10000,
         Mana = 100,
         Resistance = 0.1f,
-        Attacks = new List<KAction>(){
+        Attacks = new List<KAction>() {
           new KAction(){Name = "Fire Ball", Damage= 10, Cost = 2},
           new KAction(){Name = "Lightning Bolt", Damage= 40, Cost = 10},
         },
         Items = new List<KAction>() { }
       };
 
-      await SayLines(
-        "You can type \"stat\" at any time to see your stats",
-        "Try it now!"
-      );
-      string line = await Prompt(ResponseType.Str, acceptedAnswers: new string[] { "stat" }, fail: new string[] { "c'mon, you just gotta type \"stat\"...", "it's not hard...", "please..." });
-      COMMANDS["stat"].Cmd(this, line);
 
-    } else {
-      await SayLines(
-        "Cool!",
-        "We're on the blood path now!"
-      );
     }
+    await SayLines(
+      "Cool!",
+      "We're on the blood path now!"
+    );
   }
 
   // Called when the node enters the scene tree for the first time.
@@ -301,7 +544,6 @@ public class Root2D : CanvasLayer {
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
   public override void _Process(float delta) {
-
   }
 
   int[] cursorPos = { 0, 0 };
@@ -315,6 +557,9 @@ public class Root2D : CanvasLayer {
     teInput.CursorSetLine(cursorPos[1]);
   }
 
+  int currentTextSpeed = 0;
+
+  int prevIndex = 0;
   public override void _Input(InputEvent inputEvent) {
     base._Input(inputEvent);
 
@@ -322,16 +567,51 @@ public class Root2D : CanvasLayer {
       if (eventKey.Pressed) {
         // Print(eventKey.Unicode + " " + eventKey.Scancode + " " + eventKey.AsText());
         switch (eventKey.Scancode) {
-          case (int)KeyList.Space: {
-              Print("changing speeed");
-              textSpeed = _textSpeedFast;
+          case (int)KeyList.Backspace: {
+              if (teInput.HasFocus() && teInput.CursorGetColumn() <= userInputMarkerLength) {
+                teInput.InsertTextAtCursor(" ");
+              }
               break;
             }
           case (int)KeyList.Escape: {
-              completelySkipPrintTime = true;
+              currentTextSpeed = (currentTextSpeed + 1) % 3;
+              switch (currentTextSpeed) {
+                case 0:
+                  completelySkipPrintTime = false;
+                  oneLineAtATime = false;
+                  textSpeed = _textSpeedNormal;
+                  break;
+                case 1:
+                  completelySkipPrintTime = false;
+                  oneLineAtATime = false;
+                  textSpeed = _textSpeedFast;
+                  break;
+                case 2:
+                  oneLineAtATime = true;
+                  completelySkipPrintTime = false;
+                  break;
+                case 3:
+                  oneLineAtATime = false;
+                  completelySkipPrintTime = true;
+                  break;
+              }
               break;
             }
           case (int)KeyList.Enter: {
+              break;
+            }
+          case (int)KeyList.Up: {
+              string line = GDUtil.GameSave.PreviousInputs[Math.Max(prevIndex++, GDUtil.GameSave.PreviousInputs.Count())];
+              if (prevIndex > GDUtil.GameSave.PreviousInputs.Count()) prevIndex = GDUtil.GameSave.PreviousInputs.Count();
+              teInput.Select(int.MaxValue, userInputMarkerLength, int.MaxValue, int.MaxValue);
+              teInput.InsertTextAtCursor(line);
+              break;
+            }
+          case (int)KeyList.Down: {
+              string line = GDUtil.GameSave.PreviousInputs[Math.Min(prevIndex--, 0)];
+              if (prevIndex < GDUtil.GameSave.PreviousInputs.Count()) prevIndex = 0;
+              teInput.Select(int.MaxValue, userInputMarkerLength, int.MaxValue, int.MaxValue);
+              teInput.InsertTextAtCursor(line);
               break;
             }
         }
@@ -352,15 +632,13 @@ public class Root2D : CanvasLayer {
   }
 
   public void OnTEInputCursorChanged() {
-    // if (teInput.CursorGetLine() < lines.Length - 1) {
-    //   LoadCursorPos();
-    // }
+    teInput.CursorSetLine(int.MaxValue);
 
-    // if (teInput.CursorGetColumn() < userInputMarkerLength) {
-    //   teInput.CursorSetColumn(userInputMarkerLength - 1);
-    // }
+    if (teInput.CursorGetColumn() < userInputMarkerLength) {
+      teInput.CursorSetColumn(userInputMarkerLength);
+    }
 
-    // SaveCursorPos();
+    SaveCursorPos();
     // Print(cursorPos[0] + " " + cursorPos[1]);
   }
 
@@ -374,6 +652,24 @@ public class Root2D : CanvasLayer {
 
   }
 
+  public async Task SayPlayerStats() {
+    int i = 0;
+    int j = 0;
+    await SayLines(
+        $"{Player.Name}:",
+        $"  Health: {Player.Health}",
+        $"  Mana:   {Player.Mana}",
+        $"  {(Player.Effects.Count > 0 ? $"Is afflicted with: {String.Join(", ", Player.Effects.Select(x => x.Name))}" : "Has no ongoing effects")}",
+        "",
+        $"  Attacks:");
+    await SayLines(Player.Attacks.Select(x => $"    {i++}. {x.Name}").ToArray());
+    await SayLines(
+        "",
+        $"  Items:");
+    await SayLines(Player.Items.Select(x => $"    {j++}. {x.Name}").ToArray());
+    await SayLines("");
+  }
+
   public async Task SayLines(params string[] texts) {
     preventFocus = true;
     teInput.ReleaseFocus();
@@ -385,8 +681,6 @@ public class Root2D : CanvasLayer {
 
     preventFocus = false;
     teInput.GrabFocus();
-    textSpeed = _textSpeedNormal;
-    completelySkipPrintTime = false;
   }
 
   public async Task Say(string text, bool manageFocus = true) {
@@ -399,13 +693,12 @@ public class Root2D : CanvasLayer {
     for (int i = 0; i < text.Length; i++) {
       teInput.CursorToEnd();
       teInput.InsertTextAtCursor(text[i].ToString());
-      if (!completelySkipPrintTime) await this.Wait((float)random.NextDouble() * textSpeed);
+      if (!completelySkipPrintTime && !oneLineAtATime) await this.Wait((float)random.NextDouble() * textSpeed);
     }
     teInput.InsertTextAtCursor("\n");
     if (manageFocus) {
       preventFocus = false;
       teInput.GrabFocus();
-      completelySkipPrintTime = false;
     }
   }
 
@@ -445,6 +738,9 @@ public class Root2D : CanvasLayer {
     GetTree().Quit();
   }
 
+
+
+  int historyLength = 200;
   public async Task<string> Prompt(ResponseType type, string prompt = null, string[] acceptedAnswers = null, string[] unacceptedAnswers = null, string[] fail = null) {
     if (prompt != null) await Say(prompt);
 
@@ -457,6 +753,12 @@ public class Root2D : CanvasLayer {
         await this.NextFrame();
       }
       result = lastInput;
+      GDUtil.GameSave.PreviousInputs.Insert(0, result);
+      if (GDUtil.GameSave.PreviousInputs.Count() > historyLength) {
+        GDUtil.GameSave.PreviousInputs.RemoveRange(historyLength, GDUtil.GameSave.PreviousInputs.Count());
+      }
+      GDUtil.Save();
+
 
       if (type != ResponseType.Str) {
         if (GERMAN.Contains(result)) {
