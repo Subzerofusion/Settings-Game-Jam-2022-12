@@ -1,29 +1,46 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Assets/Assets_0001_Lights.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Assets_0003_Ground.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Assets_0001s_0002_Player-Idle.png" type="Texture" id=3]
 [ext_resource path="res://Scripts/Player.gd" type="Script" id=4]
 [ext_resource path="res://Assets/Assets_0002_Lights.png" type="Texture" id=5]
+[ext_resource path="res://Scripts/World.gd" type="Script" id=6]
+[ext_resource path="res://Scenes/Mob.tscn" type="PackedScene" id=7]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 7.2111
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 128.05, 10 )
+extents = Vector2( 126.8, 10 )
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 128.2, 10 )
+extents = Vector2( 127.2, 10 )
 
 [sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 25.95, 55.9 )
+extents = Vector2( 23.45, 35.2 )
 
 [sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 26.5, 56.2 )
 
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 10, 56.2 )
+
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 16.4, 3.2 )
+
+[sub_resource type="Curve2D" id=6]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -1304, 512, 0, 0, 0, 0, -1318.29, 320, 0, 0, 0, 0, -1324.87, 192.814, 0, 0, 0, 0, -1344, 24 )
+}
+
 [node name="Node2D" type="Node2D"]
+script = ExtResource( 6 )
+mob_scene = ExtResource( 7 )
 
 [node name="Player" type="KinematicBody2D" parent="."]
+collision_layer = 7
+collision_mask = 7
 script = ExtResource( 4 )
 
 [node name="Sprite" type="Sprite" parent="Player"]
@@ -43,31 +60,58 @@ z_index = -1
 texture = ExtResource( 2 )
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Background"]
+collision_layer = 2
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D"]
-position = Vector2( -0.149997, -19.3 )
+position = Vector2( -54, -19.3 )
+scale = Vector2( 1, 1 )
 shape = SubResource( 2 )
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="Background"]
+collision_layer = 2
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D2"]
-position = Vector2( 0, 73.1 )
+position = Vector2( -53.6, 73.1 )
+scale = Vector2( 1, 1 )
 shape = SubResource( 3 )
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="Background"]
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D3"]
-position = Vector2( -101.75, 26.5 )
+position = Vector2( -104.25, 27.2 )
+scale = Vector2( 1, 1 )
 shape = SubResource( 4 )
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="Background"]
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D4"]
 position = Vector2( 101.3, 26.7 )
 shape = SubResource( 5 )
 
+[node name="Killbox" type="Area2D" parent="Background"]
+scale = Vector2( 1, 1 )
+collision_layer = 0
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Killbox"]
+position = Vector2( 137.6, 27 )
+shape = SubResource( 7 )
+
+[node name="ScoreZone" type="Area2D" parent="Background"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/ScoreZone"]
+position = Vector2( -2, 60 )
+scale = Vector2( 1, 1 )
+shape = SubResource( 8 )
+
 [node name="LightsSouth" type="Sprite" parent="."]
-position = Vector2( -20, 600 )
+position = Vector2( -24, 600 )
 scale = Vector2( 10, 10 )
 z_index = 1
 texture = ExtResource( 1 )
@@ -77,3 +121,22 @@ position = Vector2( -10, -50 )
 scale = Vector2( 10, 10 )
 z_index = 1
 texture = ExtResource( 5 )
+
+[node name="LeftPath" type="Path2D" parent="."]
+position = Vector2( 1643.2, -8 )
+scale = Vector2( 1.8, 1 )
+curve = SubResource( 6 )
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="LeftPath"]
+position = Vector2( -1331.05, 138.247 )
+rotation = -1.6837
+offset = 374.815
+
+[node name="RigidBody2D" parent="." instance=ExtResource( 7 )]
+position = Vector2( 32, 160 )
+
+[node name="MobTimer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="body_entered" from="Background/Killbox" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_entered" from="Background/ScoreZone" to="." method="_on_ScoreZone_body_entered"]

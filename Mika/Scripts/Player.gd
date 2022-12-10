@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 var speed = 500
 
-func _process(delta):
+func _process(_delta):
 	pass
 
 func _physics_process(delta):
@@ -22,4 +22,4 @@ func _physics_process(delta):
 		direction.y = 1
 	
 	var updated_pos = (direction * delta * speed)
-	var collision = move_and_collide(updated_pos)
+	move_and_collide(updated_pos)
