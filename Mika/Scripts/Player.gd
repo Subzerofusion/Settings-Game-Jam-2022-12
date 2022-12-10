@@ -18,5 +18,7 @@ func _physics_process(delta):
 		direction.y = 1
 
 	var updated_pos = (direction * delta * speed)
+	
 	var collision = move_and_collide(updated_pos)
-	print(collision)
+	if (collision):
+		print(collision)
