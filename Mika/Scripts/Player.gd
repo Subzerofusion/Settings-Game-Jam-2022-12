@@ -1,9 +1,11 @@
 extends KinematicBody2D
 
-var speed = 400
-var angular_speed = PI
+var speed = 500
 
 func _process(delta):
+	pass
+
+func _physics_process(delta):
 	var direction = Vector2.ZERO
 
 	if Input.is_action_pressed("ui_left"):
@@ -15,4 +17,6 @@ func _process(delta):
 	elif Input.is_action_pressed("ui_down"):
 		direction.y = 1
 
-	position += direction * delta * 500
+	var updated_pos = (direction * delta * speed)
+	var collision = move_and_collide(updated_pos)
+	print(collision)
