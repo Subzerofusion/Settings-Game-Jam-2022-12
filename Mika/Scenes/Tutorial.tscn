@@ -4,7 +4,7 @@
 [ext_resource path="res://Assets/Assets_0003_Ground.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Assets_0000s_0002_Patron-Idle.png" type="Texture" id=3]
 [ext_resource path="res://Assets/Assets_0000_Roof.png" type="Texture" id=4]
-[ext_resource path="res://Scenes/Tutorial.gd" type="Script" id=5]
+[ext_resource path="res://Scripts/Tutorial.gd" type="Script" id=5]
 [ext_resource path="res://Assets/Assets_0000s_0001_Patron-1.png" type="Texture" id=6]
 [ext_resource path="res://Assets/Assets_0000s_0000_Patron-2.png" type="Texture" id=7]
 
@@ -60,5 +60,5 @@ position = Vector2( -112, 80 )
 scale = Vector2( 10, 10 )
 z_index = 6
 frames = SubResource( 1 )
-frame = 4
+frame = 1
 playing = true
