@@ -1,7 +1,9 @@
 extends Node
 
 export(PackedScene) var mob_scene
-var Score = 0
+
+func _process(delta):
+	pass
 
 func _ready():
 	for item in [1,2,3,4,5]:
@@ -19,8 +21,8 @@ func add_mob():
 
 func _on_Timer_timeout():
 	var newTime = $MobTimer.wait_time *0.99
-	if(newTime <= 0.1):
-		newTime = 0.1
+	if(newTime <= 0.5):
+		newTime = 0.5
 	$MobTimer.wait_time = newTime
 	add_mob()
 	
@@ -33,4 +35,5 @@ func _on_Area2D_body_entered(body):
 func _on_ScoreZone_body_entered(body):
 	if(body.name != "Player"):
 		body.queue_free()
-		Score += 1
+		Globals.Score += 1
+		

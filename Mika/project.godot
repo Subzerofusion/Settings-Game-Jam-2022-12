@@ -11,8 +11,12 @@ config_version=4
 [application]
 
 config/name="Mika"
-run/main_scene="res://Scenes/World.tscn"
+run/main_scene="res://Scenes/SplashScreen.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Globals="*res://Scripts/Globals.gd"
 
 [gui]
 
