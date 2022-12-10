@@ -31,6 +31,6 @@ func _on_Area2D_body_entered(body):
 
 #Score Zone
 func _on_ScoreZone_body_entered(body):
-	body.queue_free()
-	Score += 1
-	print(Score)
+	if(body.name != "Player"):
+		body.queue_free()
+		Score += 1
