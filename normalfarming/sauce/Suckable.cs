@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Godot;
 
 namespace NormalFarming.sauce
@@ -5,16 +6,38 @@ namespace NormalFarming.sauce
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Suckable : RigidBody
     {
+        // ReSharper disable once IdentifierTypo
         [Export] public float Succeleration = 3;
         
         private Spatial _suckedTo = null;
         private float _suckPower = 0;
 
-        // // Called when the node enters the scene tree for the first time.
-        // public override void _Ready()
-        // {
-        //
-        // }
+        // Called when the node enters the scene tree for the first time.
+        public override void _Ready()
+        {
+            ContactMonitor = true;
+            ContactsReported = 5;
+            var err = Connect("body_entered", this, "_on_body_entered");
+            if (err != Error.Ok)
+            {
+                Debug.Fail($"Error connecting signal: {err}");
+            }
+        }
+
+        public void _on_body_entered(Node body)
+        {
+            if (!(body is Player player))
+            {
+                return;
+            }
+            
+            OnHitPlayer(player);
+        }
+
+        protected virtual void OnHitPlayer(Player player)
+        {
+            
+        }
 
         public override void _PhysicsProcess(float delta)
         {
@@ -51,5 +74,6 @@ namespace NormalFarming.sauce
             _suckedTo = null;
             _suckPower = 0;
         }
+        
     }
 }

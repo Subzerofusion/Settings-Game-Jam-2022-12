@@ -34,15 +34,6 @@ mesh = SubResource( 1 )
 transform = Transform( 12.5, 0, 0, 0, 0.1, 0, 0, 0, 12.5, 0, -0.1, 0 )
 shape = SubResource( 2 )
 
-[node name="CSGBox" type="CSGBox" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.93535, 0.95236, -10.0315 )
-
-[node name="CSGBox2" type="CSGBox" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.29494, 1.00273, -8.79306 )
-
-[node name="CSGBox3" type="CSGBox" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.643342, 0.90539, 8.95986 )
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource( 2 )
 
@@ -165,44 +156,44 @@ transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -12.443
 [node name="fence39" parent="static_scenery" instance=ExtResource( 4 )]
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -12.4437, 1.43051e-06, 2.09589 )
 
-[node name="fence40" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, 0.083866 )
-
-[node name="fence41" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, -1.80957 )
-
-[node name="fence42" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, -3.80529 )
-
-[node name="fence43" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, -5.69872 )
-
-[node name="fence44" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, -7.66341 )
-
-[node name="fence45" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, -9.55685 )
-
 [node name="fence46" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, -11.4485 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, -11.5 )
+
+[node name="fence53" parent="static_scenery" instance=ExtResource( 4 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, -9.5 )
 
 [node name="fence47" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, 11.6635 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, -7.5 )
+
+[node name="fence54" parent="static_scenery" instance=ExtResource( 4 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, -5.5 )
 
 [node name="fence48" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, 9.66774 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, -3.5 )
+
+[node name="fence55" parent="static_scenery" instance=ExtResource( 4 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, -1.5 )
 
 [node name="fence49" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, 7.7743 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, 0.5 )
+
+[node name="fence56" parent="static_scenery" instance=ExtResource( 4 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, 2.5 )
 
 [node name="fence50" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, 5.80961 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, 4.5 )
+
+[node name="fence57" parent="static_scenery" instance=ExtResource( 4 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, 6.5 )
 
 [node name="fence51" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, 3.91618 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, 8.5 )
+
+[node name="fence58" parent="static_scenery" instance=ExtResource( 4 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, 10.5 )
 
 [node name="fence52" parent="static_scenery" instance=ExtResource( 4 )]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.461, 1.43051e-06, 2.02456 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.5, 0, 12.5 )
 
 [node name="rock" parent="." instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.14504, 0.577745, -3.91873 )

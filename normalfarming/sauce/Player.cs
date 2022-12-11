@@ -129,7 +129,7 @@ namespace NormalFarming.sauce
 					throw new ArgumentOutOfRangeException();
 			}
 		}
-
+		
 		private void HandleSuckPress()
 		{
 			switch (_suckMode)
@@ -196,6 +196,22 @@ namespace NormalFarming.sauce
 				// TODO: Tell anything we're sucking that we stopped sucking it
 				_suckMode = SuckMode.Nothing;
 			}
+		}
+		
+		public void TryCollect(Suckable suckable)
+		{
+			// See if I can collect the object (i.e., there's container space and I'm sucking air)
+			
+			// If I can collect it, then delete the object in the world and add it to my inventory
+			
+			// Otherwise, stop sucking the object
+		}
+
+		public void GetClogged(Suckable suckable)
+		{
+			// If I'm already clogged, then ignore it
+			
+			// If I'm sucking air, then set myself to clogged and move the object to be a child of ... my gun mount?
 		}
 	}
 }
