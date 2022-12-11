@@ -22,6 +22,15 @@ func _ready():
 	
 	
 	make_island()
+	$Sea/AnimationPlayer.play("seamovement")
+
+func check_pos(pos):
+	var tile_pos = $Islands.world_to_map(pos)
+	
+	if tile_pos.x < 0 or tile_pos.x > map_size.x or tile_pos.y < 0 or tile_pos.y > map_size.y:
+		return false
+	return $Islands.get_cell(tile_pos.x, tile_pos.y) == -1
+
 
 func make_island():
 	for x in map_size.x:
@@ -37,3 +46,6 @@ func _draw_sea():
 		for j in range(0, map_size.y, 2):
 			$Sea/Layer1.set_cell(i, j, tile_ids["sea1"])
 			$Sea/Layer2.set_cell(i, j, tile_ids["sea2"])
+			if i == 0 or i == map_size.x - 2 or j == 0 or j == map_size.y -2 :
+				$Islands.set_cell(i, j, tile_ids["rock"])
+				

@@ -25,13 +25,20 @@ current = true
 zoom = Vector2( 2, 2 )
 
 [node name="Sword" type="Sprite" parent="Ship"]
-position = Vector2( 95, 1 )
+position = Vector2( 47.8, 0.5 )
 texture = ExtResource( 1 )
+offset = Vector2( 40, 0 )
 
-[node name="Area2D" type="Area2D" parent="Ship/Sword"]
+[node name="SwordArea" type="Area2D" parent="Ship/Sword"]
+position = Vector2( 40, 0 )
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship/Sword/Area2D"]
-polygon = PoolVector2Array( -46, -15, 35, -15, 49, 0, 35, 15, -46, 15 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship/Sword/SwordArea"]
+position = Vector2( -1, 0 )
+polygon = PoolVector2Array( -47, -18, 35, -18, 53, 0, 36, 18, -46, 18 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship"]
+position = Vector2( -7.2, -0.5 )
+polygon = PoolVector2Array( 49, -14, 49, 16, 129, 16, 145, 1, 129, -14 )
 
 [node name="DirectionArrow" type="Sprite" parent="."]
 texture = ExtResource( 6 )
@@ -41,4 +48,4 @@ offset = Vector2( 25, 0 )
 texture = ExtResource( 3 )
 offset = Vector2( 25, 0 )
 
-[connection signal="area_entered" from="Ship/Sword/Area2D" to="." method="_on_Area2D_area_entered"]
+[connection signal="area_entered" from="Ship/Sword/SwordArea" to="." method="_on_Area2D_area_entered"]

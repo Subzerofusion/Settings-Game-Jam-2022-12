@@ -1,18 +1,20 @@
 extends Node2D
 
 var velocity = Vector2()
-var sail_angular_speed = 1
+var sail_angular_speed = 0.3
 var sail_max_angle = PI/6
 var desired_sail_angle = 0
 
 var wind_direction = 0
-var wind_angular_speed = 0.5
+var wind_angular_speed = 0.9
 
 var base_speed = 50
 var ship_speed = 0
 
 var desired_ship_direction = Vector2(0,0)
 var hull_lerp_factor = 0
+
+var push_force = 300
 
 func _ready():
 	pass # Replace with function body.
@@ -38,7 +40,7 @@ func _physics_process(delta):
 		$Sail.rotation -= sail_angular_speed * delta
 	
 	else:
-		$Sail.rotation = lerp_angle($Sail.rotation, wind_direction, 0.9 * delta)
+		$Sail.rotation = lerp_angle($Sail.rotation, wind_direction, delta * sail_angular_speed)
 		
 	if Input.is_action_pressed("wind_cw"):
 		wind_direction += wind_angular_speed * delta
@@ -105,7 +107,3 @@ func _calculate_hull_lerp_factor():
 	
 
 
-func _on_Area2D_area_entered(area):
-	print_debug(area)
-#	area.get_parent().get_parent().queue_free()
-	pass # Replace with function body.

@@ -16,51 +16,70 @@ var hull_lerp_factor = 0
 var player_position = Vector2(0,0)
 var escape_direction = Vector2(0,0)
 var desired_sail_direction = 0
-var running_away = true
+var running_away = false
 var sight_radius = 1000
 
-func _ready():
-	pass # Replace with function body.
+var boost_velocity = Vector2(0, 0)
+var boost_loss = 0.3
+var boost_force = 250
+
+var health = 3
+var alive = true
+
 
 func _physics_process(delta):
 	
-	if $Ship.position.distance_to(player_position) < sight_radius:
-		running_away = true
-	else:
-		running_away = false
-	
+	if alive:
+		if ($Ship.position - player_position).length() < sight_radius:
+			running_away = true
+		else:
+#			print(($Ship.position - player_position).length()
 
-	if running_away:
-		$Sail.rotation = lerp_angle($Sail.rotation, escape_direction.angle(), 1.5 * delta)
+			running_away = false
 		
-	else:
-		$Sail.rotation = lerp_angle($Sail.rotation, wind_direction, 0.5 * delta)
-	
-	
-	
 
-	_calculate_ship_direction()
-	_calculate_ship_speed()
-	_calculate_hull_lerp_factor()
+		if running_away:
+			$Sail.rotation = lerp_angle($Sail.rotation, escape_direction.angle(), 1 * delta)
+			
+		else:
+			$Sail.rotation = lerp_angle($Sail.rotation, wind_direction, 0.5 * delta)
+		
+		
+		
+
+		_calculate_ship_direction()
+		_calculate_ship_speed()
+		_calculate_hull_lerp_factor()
+		
+		
+		
+		
+		$Ship.rotation = lerp_angle($Ship.rotation, desired_ship_direction.angle(), hull_lerp_factor*delta)
+		
+		
+	#	Ship.move_and_slide(desired_ship_direction)
+		velocity = Vector2(cos($Ship.rotation), sin($Ship.rotation))
+		
+		
+		$Ship.move_and_slide(velocity*ship_speed + boost_velocity)
+		boost_velocity = lerp(boost_velocity, Vector2(0,0), delta*boost_loss)
+		$Sail.position = $Ship.position
+		
+		$DirectionArrow.position = $Ship.position
+		
+		wind_direction = get_parent().wind_direction 
 	
-	
-	
-	
-	$Ship.rotation = lerp_angle($Ship.rotation, desired_ship_direction.angle(), hull_lerp_factor*delta)
-	
-	
-#	Ship.move_and_slide(desired_ship_direction)
-	velocity = Vector2(cos($Ship.rotation), sin($Ship.rotation))
-	
-	
-	$Ship.move_and_slide(velocity*ship_speed)
-	$Sail.position = $Ship.position
-	
-	$DirectionArrow.position = $Ship.position
-	
-	wind_direction = get_parent().wind_direction 
-	
-	
+	else:
+		$DespawnTimer.start()
+		yield($DespawnTimer, "timeout")
+		queue_free()
+		
+
+func spawn(pos):
+	$Ship.position = pos
+	$Ship.rotation = get_parent().wind_direction
+	show()
+
 	
 func _calculate_ship_direction():
 	var sail_vector = Vector2(cos($Sail.rotation), sin($Sail.rotation))
@@ -69,15 +88,16 @@ func _calculate_ship_direction():
 	
 	
 	
-	escape_direction = -(player_position - $Ship.position)
+	escape_direction = -(player_position - $Ship.position).normalized()
+	$DirectionArrow.rotation = escape_direction.angle()
 	desired_sail_angle = (escape_direction - wind_vector).angle()
 	
 	
 	
-	$DirectionArrow.rotation = escape_direction.angle()
+#	$DirectionArrow.rotation = escape_direction.angle()
 	
 func _calculate_ship_speed():
-	var modifier = 1.1 + cos($Sail.rotation - wind_direction)
+	var modifier = 1.1 + clamp(cos($Sail.rotation - wind_direction), 0, 1)
 	$DirectionArrow.scale.x = modifier
 	var desired_speed = base_speed * modifier
 	
@@ -101,3 +121,21 @@ func _calculate_hull_lerp_factor():
 
 
 	
+
+func _on_Area2D_area_entered(area):
+	
+	if area.name == "SwordArea":
+		health -= 1
+		if health == 2:
+			$Ship/Hull.texture = load("res://Sprites/Enemy/Enemy2.png")
+		elif health == 1:
+			$Ship/Hull.texture = load("res://Sprites/Enemy/Enemy3.png")
+		elif health == 0:
+			$Ship/Hull.texture = load("res://Sprites/Enemy/Enemy4.png")
+			alive = false
+			$Ship/Collision.queue_free()
+			$Sail.texture = load("res://Sprites/Enemy/EnemySailBroken.png")
+			get_parent().on_NPC_death()
+		
+		if alive:
+			boost_velocity = -($Ship.position - area.position).normalized()*boost_force

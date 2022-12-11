@@ -1,7 +1,95 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Themes/Map.tres" type="TileSet" id=1]
 [ext_resource path="res://Scripts/Map.gd" type="Script" id=2]
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Layer1:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Layer1:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("Layer2:position:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/3/type = "bezier"
+tracks/3/path = NodePath("Layer2:position:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "seamovement"
+length = 10.0
+loop = true
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Layer1:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 2.35978, 0.132312, 9.81262, -2.74022, -0.124563, 2.9, -0.356056, 0, -3.5, 1.3436, 0.25, 0 ),
+"times": PoolRealArray( 0, 5, 10 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Layer1:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 121.778, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 2.4 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("Layer2:position:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 1.8, -0.609535, -12.0054, -2.5, 0.697705, 2.2, 9.53674e-07, 0.320737, -2.5, -1.86054, 0.25, 0 ),
+"times": PoolRealArray( 0.1, 5.1, 10 )
+}
+tracks/3/type = "bezier"
+tracks/3/path = NodePath("Layer2:position:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0.1, 9.8, 10 )
+}
 
 [node name="Map" type="Node2D"]
 script = ExtResource( 2 )
@@ -12,11 +100,18 @@ script = ExtResource( 2 )
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 100, 100 )
 format = 1
+tile_data = PoolIntArray( 196610, 5, 0 )
 
 [node name="Layer2" type="TileMap" parent="Sea"]
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 100, 100 )
+cell_custom_transform = Transform2D( 50, 0, 0, 64, 0, 0 )
 format = 1
+tile_data = PoolIntArray( 196610, 6, 0, 458757, 6, 0 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sea"]
+anims/RESET = SubResource( 2 )
+anims/seamovement = SubResource( 3 )
 
 [node name="Islands" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )
