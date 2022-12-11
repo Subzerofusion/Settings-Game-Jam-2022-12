@@ -9,19 +9,26 @@ font_data = ExtResource( 2 )
 [node name="Root2D" type="CanvasLayer"]
 script = ExtResource( 1 )
 _teInputPath = NodePath("TEInput")
+_crSkyrimPath = NodePath("ColorRect")
 _textSpeedFast = 0.0
 _textSpeedNormal = 0.1
 
 [node name="TEInput" type="TextEdit" parent="."]
 margin_right = 640.0
 margin_bottom = 480.0
-rect_pivot_offset = Vector2( -80, 40 )
+rect_pivot_offset = Vector2( 320, 240 )
 mouse_filter = 2
 custom_colors/background_color = Color( 0.101961, 0.101961, 0.101961, 1 )
 custom_fonts/font = SubResource( 1 )
 wrap_enabled = true
 caret_block_mode = true
 caret_blink = true
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+margin_right = 640.0
+margin_bottom = 480.0
+color = Color( 0, 0, 0, 1 )
 
 [connection signal="cursor_changed" from="TEInput" to="." method="OnTEInputCursorChanged"]
 [connection signal="focus_entered" from="TEInput" to="." method="OnTEInputFocusEntered"]

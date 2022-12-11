@@ -21,12 +21,16 @@ static class GDUtil {
     return node.ToSignal(node.GetTree(), "idle_frame");
   }
 
+  public static string SAVELOCATION = "user://godot.dll";
+
   public static GameSave GameSave { get; set; } = Load();
   public static GameSave Load() {
     File f = new File();
-    if (f.FileExists("user://godot.dll")) {
-      f.Open("user://godot.dll", File.ModeFlags.Read);
-      return DeserializeObject<GameSave>(f.GetAsText());
+    if (f.FileExists(SAVELOCATION)) {
+      f.Open(SAVELOCATION, File.ModeFlags.Read);
+      GameSave save = DeserializeObject<GameSave>(f.GetAsText());
+      f.Close();
+      return save;
     } else {
       return new GameSave();
     }
@@ -34,7 +38,12 @@ static class GDUtil {
 
   public static void Save() {
     File f = new File();
-    f.Open("user://godot.dll", File.ModeFlags.Write);
+    if (f.FileExists(SAVELOCATION)) {
+      Directory d = new Directory();
+      d.Remove(SAVELOCATION);
+    }
+    f.Open(SAVELOCATION, File.ModeFlags.Write);
     f.StoreString(SerializeObject(GameSave));
+    f.Close();
   }
 }

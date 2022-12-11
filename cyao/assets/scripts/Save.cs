@@ -9,6 +9,12 @@ public class GameSave {
 
   public string Name = null;
 
+  public bool DiedInTutorial = false;
+
+  public bool DiedToDummy = false;
+
+  public bool QuitCosDied = false;
+
   public bool FinishedCombatTutorial = false;
 
   public Killable CurrentPlayer = null;
