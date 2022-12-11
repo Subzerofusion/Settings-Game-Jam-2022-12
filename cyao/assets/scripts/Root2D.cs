@@ -73,7 +73,7 @@ public class Root2D : CanvasLayer {
     public string Format { get; set; }
     public bool IsTurn { get; set; } = false;
     public bool Hidden { get; set; } = false;
-    public Func<Root2D, string, Task> Cmd;
+    public Func<Root2D, string, Task<bool>> Cmd;
   }
 
   private static Dictionary<string, Command> COMMANDS = new Dictionary<string, Command>(){
@@ -93,6 +93,7 @@ public class Root2D : CanvasLayer {
         lines.Add("");
       }
       await root.SayLines(lines.ToArray());
+      return true;
       }}},
     { "stat", new Command {Help = "Shows your current stats.", Cmd = async(root, line) => {
       string[] split = line.Split(" ");
@@ -104,6 +105,7 @@ public class Root2D : CanvasLayer {
         );
       }
       await root.SayPlayerStats();
+      return true;
     }}},
     { "inspect", new Command {Format = "[list:{attack | item | effects}] [index:{int}]", Help = "Inspects an item or attack by index", Cmd = async(root, line) => {
       string[] split = line.Split(" ");
@@ -113,14 +115,14 @@ public class Root2D : CanvasLayer {
           "use \"help\" for more info.",
           ""
         );
-        return;
+        return false;
       }
       if(split[1] != "attack" && split[1] != "item" && split[1] != "effects") {
         await root.SayLines(
           $"There are no {split[1]} is not an inspectable property",
           ""
         );
-        return;
+        return false;
       }
       List<KAction> actionSet;
       switch(split[1]) {
@@ -151,7 +153,7 @@ public class Root2D : CanvasLayer {
             $"There are no {split[1]}s to inspect",
             ""
           );
-          return;
+          return false;
       }
 
       int index;
@@ -160,7 +162,7 @@ public class Root2D : CanvasLayer {
           "specified index was not an integer",
           ""
         );
-        return;
+        return false;
       }
       if(index < 0 || index >= actionSet.Count()) {
         await root.SayLines(
@@ -168,7 +170,7 @@ public class Root2D : CanvasLayer {
           "use \"stat\" to see how many options there are.",
           ""
         );
-        return;
+        return false;
       }
 
       KAction action = actionSet[index];
@@ -179,7 +181,7 @@ public class Root2D : CanvasLayer {
         $"  Cost:        {action.Cost} mana",
         $"  Damage:      {action.Damage}"
       );
-
+      return true;
     }}},
     { "attack", new Command {Format = "[index:{int}]", IsTurn = true, Help = "Attacks enemy with chosen attack.", Cmd = async(root, line) => {
       string[] split = line.Split(" ");
@@ -189,11 +191,11 @@ public class Root2D : CanvasLayer {
           "use \"help\" for more info.",
           ""
         );
-        return;
+        return false;
       }
       if(root.Enemy == null) {
         await root.SayLines("There're no enemies to attack", "");
-        return;
+        return false;
       }
 
       int index;
@@ -202,7 +204,7 @@ public class Root2D : CanvasLayer {
           "specified index was not an integer",
           ""
         );
-        return;
+        return false;
       }
       List<KAction> actionSet = root.Player.Attacks;
       if(index < 0 || index >= actionSet.Count()) {
@@ -211,10 +213,11 @@ public class Root2D : CanvasLayer {
           "use \"stat\" to see how many options there are.",
           ""
         );
-        return;
+        return false;
       }
       KAction action = actionSet[index];
       await root.SayLines(action.Execute(root, root.Player, root.Enemy));
+      return true;
     }}},
     { "use", new Command {Format = "[index:{int}] [target:{\"self\" | \"enemy\"}]", IsTurn = true, Help = "Uses an item on target.", Cmd = async(root, line) => {
       string[] split = line.Split(" ");
@@ -224,7 +227,7 @@ public class Root2D : CanvasLayer {
           "use \"help\" for more info.",
           ""
         );
-        return;
+        return false;
       }
       int index;
       if(!int.TryParse(split[1], out index)) {
@@ -232,7 +235,7 @@ public class Root2D : CanvasLayer {
           "specified index was not an integer",
           ""
         );
-        return;
+        return false;
       }
       List<KAction> actionSet = root.Player.Items;
       if(index < 0 || index >= actionSet.Count()) {
@@ -241,7 +244,7 @@ public class Root2D : CanvasLayer {
           "use \"stat\" to see how many options there are.",
           ""
         );
-        return;
+        return false;
       }
       KAction action = actionSet[index];
 
@@ -257,6 +260,7 @@ public class Root2D : CanvasLayer {
               $"there's no enemy to use that on!",
               ""
             );
+            return false;
           }
           target = root.Enemy;
           break;
@@ -274,6 +278,7 @@ public class Root2D : CanvasLayer {
       }
 
       await root.SayLines(action.Execute(root, root.Player, target));
+      return true;
     }}},
     { "analyse", new Command {Format = "[stat:{ \"damage\" | \"health\" | \"resistance\" | \"mana\" | \"items\" }]", Help = "Analyses the enemy", Cmd = async(root, line) => {
       string[] split = line.Split(" ");
@@ -283,7 +288,7 @@ public class Root2D : CanvasLayer {
           "use \"help\" for more info.",
           ""
         );
-        return;
+        return false;
       }
 
       if(root.Enemy == null) {
@@ -291,7 +296,7 @@ public class Root2D : CanvasLayer {
           "There is no enemy to analyse",
           ""
         );
-        return;
+        return false;
       }
 
       if(!new string[]{"damage", "health", "resistance", "mana", "items"}.Contains(split[1])) {
@@ -299,7 +304,7 @@ public class Root2D : CanvasLayer {
           $"{split[1]} is not a stat that can be analysed",
           ""
         );
-        return;
+        return false;
       }
 
       switch(split[1]) {
@@ -324,9 +329,7 @@ public class Root2D : CanvasLayer {
           break;
         }
       }
-
-
-
+      return true;
       // await root.SayLines(lines.ToArray());
       }}},
   };
@@ -469,6 +472,7 @@ public class Root2D : CanvasLayer {
         "ellie", "eleanor", "scribbel", "lungs",
         "jeremy", "jer", "alphastrata", "jerk", "alpha",
         "justin", "nitro", "nitroghost", "nitro ghost", "nitro_ghost", "nitro-ghost",
+        "maz", "marcus", "maz_net_au", "iammaz", "i am maz", "i_am_maz",
         "mika", "mhear22", "montana", "mika mika mii", "mikamikamii", "mikamii",
         "oscar", "lyxaa", "lyxaaa",
         "orlando", "bellicapelli", "belli",
@@ -728,38 +732,36 @@ public class Root2D : CanvasLayer {
         line = await Prompt(ResponseType.Str);
         string name = line.Split(" ")[0];
         if (COMMANDS.ContainsKey(name)) {
-          await COMMANDS[name].Cmd(this, line);
+          if (await COMMANDS[name].Cmd(this, line)) {
+            if (COMMANDS[name].IsTurn) {
+              foreach (var effect in Enemy.Effects) {
+                // effect.Item1 will always be self
+                // effect.Item2 will 
 
-          if (COMMANDS[name].IsTurn) {
-            foreach (var effect in Enemy.Effects) {
-              // effect.Item1 will always be self
-              // effect.Item2 will 
+                await SayLines(effect.Item3.PerTurn(this, effect.Item3, effect.Item1 == Target.Player ? Player : Enemy, effect.Item2 == Target.Player ? Player : Enemy));
+              }
 
-              await SayLines(effect.Item3.PerTurn(this, effect.Item3, effect.Item1 == Target.Player ? Player : Enemy, effect.Item2 == Target.Player ? Player : Enemy));
-            }
+              if (Enemy.IsDead) {
+                break;
+              }
 
-            if (Enemy.IsDead) {
-              break;
-            }
+              await SayLines(Enemy.Attacks[0].Execute(this, Enemy, Player));
 
-            await SayLines(Enemy.Attacks[0].Execute(this, Enemy, Player));
-
-            foreach (var effect in Player.Effects) {
-              await SayLines(effect.Item3.PerTurn(this, effect.Item3, effect.Item1 == Target.Player ? Player : Enemy, effect.Item2 == Target.Player ? Player : Enemy));
-            }
-            if (Player.IsDead) {
-              await SayLines("Looks like you're dead :(", "");
-              await this.Wait(1f);
-              GDUtil.GameSave.DiedToDummy = true;
-              GDUtil.GameSave.QuitCosDied = true;
-              GDUtil.Save();
-              await CrushAndClose();
+              foreach (var effect in Player.Effects) {
+                await SayLines(effect.Item3.PerTurn(this, effect.Item3, effect.Item1 == Target.Player ? Player : Enemy, effect.Item2 == Target.Player ? Player : Enemy));
+              }
+              if (Player.IsDead) {
+                await SayLines("Looks like you're dead :(", "");
+                await this.Wait(1f);
+                GDUtil.GameSave.DiedToDummy = true;
+                GDUtil.GameSave.QuitCosDied = true;
+                GDUtil.Save();
+                await CrushAndClose();
+              }
             }
           }
         }
       }
-
-
       await SayLines($"{Enemy.Name} has been defeated!", "", $"{Enemy.Name}: {GetRandom(Enemy.OnDeath)}");
 
 
@@ -798,6 +800,8 @@ public class Root2D : CanvasLayer {
         $"You've acquired {item.Name}",
         ""
       );
+
+      Enemy = null;
     }
 
     await SayLines(
@@ -807,7 +811,115 @@ public class Root2D : CanvasLayer {
     );
     GDUtil.GameSave.FinishedCombatTutorial = true;
     GDUtil.Save();
+  }
+
+  static List<Killable> ENEMYBASES = new List<Killable>{
+    new Killable() {
+      Name = "Mikael the Malevolent"
+    },
+    new Killable() {
+      Name = "Mikael the Malevolent"
+    },
+  };
+
+  Killable GenerateEnemy() {
+    Killable enemy = ENEMYBASES[random.Next(0, ENEMYBASES.Count())];
+    Killable clone = new Killable() {
+      Name = enemy.Name,
+
+    };
+
+    return enemy;
+  }
+
+  private async Task MurderLoop() {
     OS.WindowResizable = true;
+    if (GDUtil.GameSave.CurrentPlayer != null) {
+      Player = GDUtil.GameSave.CurrentPlayer;
+    } else {
+      Player = defaultPlayer;
+      Player.Name = GDUtil.GameSave.Name;
+    }
+    Player.LateInit();
+    Player.SyncActions();
+
+    while (true) {
+      Enemy = GenerateEnemy();
+      while (!Enemy.IsDead) {
+        if (Enemy.Health > Enemy.MaxHealth * 0.5f) {
+          await SayLines($"{Enemy.Name}: {GetRandom(Enemy.Idle)}");
+        } else if (Enemy.Health > Enemy.MaxHealth * 0.25f) {
+          await SayLines($"{Enemy.Name}: {GetRandom(Enemy.IdleWeak)}");
+        } else {
+          await SayLines($"{Enemy.Name}: {GetRandom(Enemy.IdleDieing)}");
+        }
+        string line = await Prompt(ResponseType.Str);
+        string name = line.Split(" ")[0];
+        if (COMMANDS.ContainsKey(name)) {
+          if (await COMMANDS[name].Cmd(this, line)) {
+            if (COMMANDS[name].IsTurn) {
+              // run enemy effects
+              foreach (var effect in Enemy.Effects) {
+                await SayLines(effect.Item3.PerTurn(this, effect.Item3, effect.Item1 == Target.Player ? Player : Enemy, effect.Item2 == Target.Player ? Player : Enemy));
+              }
+
+              if (Enemy.IsDead) {
+                break;
+              }
+
+              await SayLines(Enemy.Attacks[0].Execute(this, Enemy, Player));
+
+              foreach (var effect in Player.Effects) {
+                await SayLines(effect.Item3.PerTurn(this, effect.Item3, effect.Item1 == Target.Player ? Player : Enemy, effect.Item2 == Target.Player ? Player : Enemy));
+              }
+              if (Player.IsDead) {
+                await SayLines(
+                  GetRandom(new string[] { "You'll gettem next time", "You Died", "The birds are shining, the sun is tweeting... and kids like you...", "Looks like you're dead :(" }),
+                  ""
+                );
+                await this.Wait(1f);
+                GDUtil.GameSave.QuitCosDied = true;
+                GDUtil.Save();
+                await CrushAndClose();
+              }
+            }
+          }
+        }
+      }
+      await SayLines($"{Enemy.Name} has been defeated!", "", $"{Enemy.Name}: {GetRandom(Enemy.OnDeath)}");
+
+
+      Player.Effects.Clear();
+      await SayLines(
+        "",
+        "You've been cleared of any ongoing ailments",
+        ""
+      );
+
+      int? selection = null;
+      while (selection == null) {
+        await SayLines("Choose an item to take using its number", "");
+        int i = 0;
+        await SayLines(Enemy.Items.Select(x => $"{i}: {x.Name}").ToArray());
+        await SayLines("");
+        if (int.TryParse(await Prompt(ResponseType.Str), out int s)) {
+          if (s < Enemy.Items.Count() && s >= 0) {
+            selection = s;
+          } else {
+            await SayLines("They didn't have that many items...", "");
+          }
+        }
+      }
+      KAction item = Enemy.Items[(int)selection];
+      Player.Items.Add(item);
+
+      await SayLines(
+        $"You've acquired {item.Name}",
+        ""
+      );
+
+      Enemy = null;
+    }
   }
 
   // Called when the node enters the scene tree for the first time.
