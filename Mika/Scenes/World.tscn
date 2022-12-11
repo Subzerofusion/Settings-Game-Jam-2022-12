@@ -63,7 +63,8 @@ func goal():
 	EnableHider = true
 	Globals.RemainingTime = $GameTimer.time_left
 	$GameTimer.stop()
-	$CompletionTimer.start(1.5)
+	if($CompletionTimer.is_stopped()):
+		$CompletionTimer.start(1.5)
 
 func end_screen():
 	get_tree().change_scene(\"res://Scenes/EndCard.tscn\")

@@ -84,7 +84,7 @@ position = Vector2( -112, 80 )
 scale = Vector2( 10, 10 )
 z_index = 6
 frames = SubResource( 1 )
-frame = 1
+frame = 3
 playing = true
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
