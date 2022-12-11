@@ -100,7 +100,7 @@ script = ExtResource( 2 )
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 100, 100 )
 format = 1
-tile_data = PoolIntArray( 196610, 5, 0 )
+tile_data = PoolIntArray( 196610, 5, 0, 196612, 8, 0 )
 
 [node name="Layer2" type="TileMap" parent="Sea"]
 tile_set = ExtResource( 1 )

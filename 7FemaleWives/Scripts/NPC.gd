@@ -7,7 +7,7 @@ var desired_sail_angle = 0
 
 var wind_direction = 0
 
-var base_speed = 30
+var base_speed = 2
 var ship_speed = 0
 
 var desired_ship_direction = Vector2(0,0)
@@ -25,6 +25,10 @@ var boost_force = 250
 
 var health = 3
 var alive = true
+var dying = false
+
+var cannon_offset = 50
+onready var bullet_scene = load("res://Scenes/Bullet.tscn")
 
 
 func _physics_process(delta):
@@ -61,17 +65,21 @@ func _physics_process(delta):
 		velocity = Vector2(cos($Ship.rotation), sin($Ship.rotation))
 		
 		
-		$Ship.move_and_slide(velocity*ship_speed + boost_velocity)
+		$Ship.move_and_slide(velocity*ship_speed + 0*boost_velocity)
+		
 		boost_velocity = lerp(boost_velocity, Vector2(0,0), delta*boost_loss)
 		$Sail.position = $Ship.position
 		
-		$DirectionArrow.position = $Ship.position
+#		$DirectionArrow.position = $Ship.position
+		_cannon_stuff(delta)
 		
 		wind_direction = get_parent().wind_direction 
 	
-	else:
+	elif dying:
 		$DespawnTimer.start()
+		dying = false
 		yield($DespawnTimer, "timeout")
+		get_parent().npcs.erase(self)
 		queue_free()
 		
 
@@ -89,7 +97,7 @@ func _calculate_ship_direction():
 	
 	
 	escape_direction = -(player_position - $Ship.position).normalized()
-	$DirectionArrow.rotation = escape_direction.angle()
+	
 	desired_sail_angle = (escape_direction - wind_vector).angle()
 	
 	
@@ -120,8 +128,15 @@ func _calculate_hull_lerp_factor():
 		hull_lerp_factor = ship_speed/15
 
 
+func _cannon_stuff(delta):
+	$Cannon.position = $Ship.position + velocity * cannon_offset
+	var angle_to_player = escape_direction.angle() - PI
+	if abs(angle_to_player) - abs($Ship.rotation) < 1.91986:
+		$Cannon.rotation = lerp_angle($Cannon.rotation, angle_to_player, 0.5*delta)
+	else:
+		$Cannon.rotation = lerp_angle($Cannon.rotation, $Ship.rotation, 0.5*delta)
+	$Cannon.rotation = clamp($Cannon.rotation, $Ship.rotation - 1.91986, $Ship.rotation + 1.91986)
 	
-
 func _on_Area2D_area_entered(area):
 	
 	if area.name == "SwordArea":
@@ -133,9 +148,20 @@ func _on_Area2D_area_entered(area):
 		elif health == 0:
 			$Ship/Hull.texture = load("res://Sprites/Enemy/Enemy4.png")
 			alive = false
+			dying = true
 			$Ship/Collision.queue_free()
 			$Sail.texture = load("res://Sprites/Enemy/EnemySailBroken.png")
+			$Cannon.texture = load("res://Sprites/Enemy/Cannon2.png")
 			get_parent().on_NPC_death()
 		
 		if alive:
-			boost_velocity = -($Ship.position - area.position).normalized()*boost_force
+			boost_velocity = ($Ship.position - area.position).normalized()*boost_force
+
+
+func _on_ShootTimer_timeout():
+	var bullet = bullet_scene.instance()
+	add_child(bullet)
+	var cannon_vector = Vector2(cos($Cannon.rotation), sin($Cannon.rotation))
+	bullet.position = $Cannon.position + cannon_vector * cannon_offset * 1.1
+	bullet.shoot(cannon_vector)
+	

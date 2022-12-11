@@ -8,7 +8,7 @@ var desired_sail_angle = 0
 var wind_direction = 0
 var wind_angular_speed = 0.9
 
-var base_speed = 50
+var base_speed = 90
 var ship_speed = 0
 
 var desired_ship_direction = Vector2(0,0)
@@ -16,8 +16,13 @@ var hull_lerp_factor = 0
 
 var push_force = 300
 
+var max_hp = 100.0
+var hp = 10
+var heal_factor = 1.5
+
 func _ready():
-	pass # Replace with function body.
+#	hp = max_hp
+	pass
 
 func _process(_delta):
 	if Input.is_action_just_pressed("zoom1"):
@@ -31,16 +36,8 @@ func _process(_delta):
 
 func _physics_process(delta):
 	
-	if Input.is_action_pressed("sail_cw"):
-#		if  $Sail.rotation - $Ship.rotation < sail_max_angle:
-		$Sail.rotation += sail_angular_speed * delta
-		
-	elif Input.is_action_pressed("sail_ccw"):
-#		if $Sail.rotation - $Ship.rotation > - sail_max_angle:
-		$Sail.rotation -= sail_angular_speed * delta
-	
-	else:
-		$Sail.rotation = lerp_angle($Sail.rotation, wind_direction, delta * sail_angular_speed)
+
+	$Sail.rotation = lerp_angle($Sail.rotation, wind_direction, delta * sail_angular_speed)
 		
 	if Input.is_action_pressed("wind_cw"):
 		wind_direction += wind_angular_speed * delta
@@ -70,7 +67,8 @@ func _physics_process(delta):
 	
 	get_parent().wind_direction = wind_direction
 	
-	
+	hp += delta*heal_factor
+	hp = clamp(hp, 0, max_hp)
 	
 func _calculate_ship_direction():
 	var sail_vector = Vector2(cos($Sail.rotation), sin($Sail.rotation))
@@ -92,7 +90,12 @@ func _calculate_ship_speed():
 	ship_speed = desired_speed
 	
 	
-	
+func hit():
+	print("hit!")
+	hp -= 10
+	if hp == 0:
+		get_parent().game_over()
+		
 	
 func _calculate_hull_lerp_factor():
 	var hull_vector = Vector2(cos($Ship/Hull.rotation), sin($Ship/Hull.rotation))
