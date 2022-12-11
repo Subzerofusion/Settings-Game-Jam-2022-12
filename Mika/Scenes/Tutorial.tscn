@@ -43,6 +43,16 @@ position = Vector2( -38.2058, 6.58937 )
 scale = Vector2( 0.262402, 0.124799 )
 texture = ExtResource( 9 )
 
+[node name="Door" type="Sprite" parent="Splash"]
+position = Vector2( -91.9458, 7.78744 )
+scale = Vector2( 0.524805, 0.249598 )
+texture = ExtResource( 11 )
+
+[node name="FlavorText" type="Sprite" parent="Splash/Door"]
+position = Vector2( 10, -15 )
+scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 10 )
+
 [node name="Player" type="Sprite" parent="."]
 position = Vector2( 3.05176e-05, 7.62939e-06 )
 rotation = 3.14159
@@ -75,13 +85,3 @@ scale = Vector2( 10, 10 )
 z_index = 6
 frames = SubResource( 1 )
 playing = true
-
-[node name="Door" type="Sprite" parent="."]
-position = Vector2( -600, 328 )
-scale = Vector2( 10, 10 )
-texture = ExtResource( 11 )
-
-[node name="FlavorText" type="Sprite" parent="Door"]
-position = Vector2( 10, -15 )
-scale = Vector2( 0.2, 0.2 )
-texture = ExtResource( 10 )

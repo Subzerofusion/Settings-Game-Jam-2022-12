@@ -24,12 +24,13 @@ func _process(delta):
 		if($Player/Hider.position.x <= 0):
 			$Player/Hider.position.x = 0
 			EnableHider = false
-		
+	$LightsNorth.position.y = -50 -$Player.position.y/10
+	$LightsNorth.position.x = -($Player.position.x * 0.2)
+	
+	$LightsSouth.position.y = 630 -$Player.position.y/10
+	$LightsSouth.position.x = -($Player.position.x * 0.2)
 
 func _ready():
-	for item in [1,2,3,4,5]:
-		add_mob()
-	
 	if(Globals.HardMode):
 		$MobTimer.wait_time = 0.1
 	else:
@@ -159,7 +160,6 @@ collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D"]
 position = Vector2( -53.2, -19.3 )
-scale = Vector2( 1, 1 )
 shape = SubResource( 2 )
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="Background"]
@@ -168,7 +168,6 @@ collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D2"]
 position = Vector2( -53.2, 73.1 )
-scale = Vector2( 1, 1 )
 shape = SubResource( 3 )
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="Background"]
@@ -177,7 +176,6 @@ collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/StaticBody2D3"]
 position = Vector2( -88, 27.2 )
-scale = Vector2( 1, 1 )
 shape = SubResource( 4 )
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="Background"]
