@@ -84,4 +84,8 @@ position = Vector2( -112, 80 )
 scale = Vector2( 10, 10 )
 z_index = 6
 frames = SubResource( 1 )
+frame = 1
 playing = true
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color( 0.847059, 0.776471, 0.72549, 1 )
