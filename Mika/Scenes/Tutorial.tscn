@@ -1,0 +1,91 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Assets/Assets_0001s_0002_Player-Idle.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Assets_0003_Ground.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Assets_0000s_0002_Patron-Idle.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Assets_0000_Roof.png" type="Texture" id=4]
+[ext_resource path="res://Scripts/Tutorial.gd" type="Script" id=5]
+[ext_resource path="res://Assets/Assets_0000s_0001_Patron-1.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Assets_0000s_0000_Patron-2.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Assets_0000s_0002_Tutorial.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Assets_0000s_0000_Or.png" type="Texture" id=9]
+[ext_resource path="res://Assets/Assets_0001s_0001_Go-Inside.png" type="Texture" id=10]
+[ext_resource path="res://Assets/Assets_0003_Door.png" type="Texture" id=11]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 7 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 6 ), ExtResource( 3 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "default",
+"speed": 3.0
+} ]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 5 )
+
+[node name="Background" type="Sprite" parent="."]
+scale = Vector2( 10, 10 )
+z_index = -1
+texture = ExtResource( 2 )
+
+[node name="Splash" type="Sprite" parent="."]
+position = Vector2( 1152, 16 )
+scale = Vector2( 19.0547, 40.0645 )
+texture = ExtResource( 4 )
+
+[node name="Motivation" type="Sprite" parent="Splash"]
+position = Vector2( -78.9306, -7.58776 )
+scale = Vector2( 0.209922, 0.099839 )
+texture = ExtResource( 8 )
+
+[node name="Keys" type="Sprite" parent="Splash"]
+position = Vector2( -38.2058, 6.58937 )
+scale = Vector2( 0.262402, 0.124799 )
+texture = ExtResource( 9 )
+
+[node name="Door" type="Sprite" parent="Splash"]
+position = Vector2( -91.9458, 7.78744 )
+scale = Vector2( 0.524805, 0.249598 )
+texture = ExtResource( 11 )
+
+[node name="FlavorText" type="Sprite" parent="Splash/Door"]
+position = Vector2( 10, -15 )
+scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 10 )
+
+[node name="Player" type="Sprite" parent="."]
+position = Vector2( 3.05176e-05, 7.62939e-06 )
+rotation = 3.14159
+scale = Vector2( 10, 10 )
+z_index = 1
+texture = ExtResource( 1 )
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2( 3.05176e-06, 7.62939e-07 )
+rotation = 3.42957
+scale = Vector2( 0.1, 0.1 )
+z_index = 10
+offset = Vector2( -10, 0 )
+current = true
+
+[node name="WipeTimer" type="Timer" parent="."]
+
+[node name="Label" type="Label" parent="."]
+margin_left = 608.0
+margin_top = 64.0
+margin_right = 648.0
+margin_bottom = 78.0
+
+[node name="ReadTimer" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="Tutorialiser" type="AnimatedSprite" parent="."]
+position = Vector2( -112, 80 )
+scale = Vector2( 10, 10 )
+z_index = 6
+frames = SubResource( 1 )
+frame = 3
+playing = true
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color( 0.847059, 0.776471, 0.72549, 1 )
