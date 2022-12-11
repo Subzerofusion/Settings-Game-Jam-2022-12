@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://art/fonts/JetBrainsMono-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://CommandLineInput.cs" type="Script" id=2]
+[ext_resource path="res://CrashTimer.cs" type="Script" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -51,6 +52,7 @@ custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_fonts/font = SubResource( 1 )
 custom_styles/normal = SubResource( 3 )
 text = "Test"
+context_menu_enabled = false
 script = ExtResource( 2 )
 
 [node name="CommandHistory" type="RichTextLabel" parent="CommandLineInput"]
@@ -64,11 +66,7 @@ margin_bottom = -70.0
 grow_vertical = 0
 custom_fonts/mono_font = SubResource( 4 )
 custom_fonts/normal_font = SubResource( 5 )
-text = "West of House
-
-You are standing in an open field west of a white house, with a boarded front door.
-
-There is a small mailbox here."
+bbcode_enabled = true
 fit_content_height = true
 
 [node name="TopCover" type="ColorRect" parent="."]
@@ -93,4 +91,10 @@ anchor_bottom = 1.0
 mouse_default_cursor_shape = 4
 color = Color( 1, 1, 1, 0.470588 )
 
+[node name="CrashTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+script = ExtResource( 3 )
+
 [connection signal="text_entered" from="CommandLineInput" to="CommandLineInput" method="OnCommandLineInputTextEntered"]
+[connection signal="timeout" from="CrashTimer" to="CrashTimer" method="OnCrashTimerTimeout"]
