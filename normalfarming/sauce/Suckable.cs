@@ -8,23 +8,31 @@ namespace Normalfarming.sauce
     {
         // ReSharper disable once IdentifierTypo
         [Export] public float Succeleration = 3;
-        
+        [Export] private float _hitParticleThreshold = 1;
+
         private Spatial _suckedTo = null;
         private float _suckPower = 0;
+        private PackedScene _hitParticleResource;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
             ContactMonitor = true;
             ContactsReported = 5;
-            var err = Connect("body_entered", this, "_on_body_entered");
+            var err = Connect("body_entered", this, "_OnBodyEntered");
             if (err != Error.Ok)
             {
                 Debug.Fail($"Error connecting signal: {err}");
             }
+
+            _hitParticleResource = ResourceLoader.Load("res://fx/hit_particles.tscn") as PackedScene;
+            if (_hitParticleResource is null)
+            {
+                Debug.Fail("Didn't find particle resource to load");
+            }
         }
 
-        public void _on_body_entered(Node body)
+        public void _OnBodyEntered(Node body)
         {
             if (body is Player player)
             {
@@ -34,6 +42,11 @@ namespace Normalfarming.sauce
             if (body.Owner is Hittable hittable)
             {
                 hittable.GetHit(this);
+            }
+
+            if (LinearVelocity.Length() > _hitParticleThreshold)
+            {
+                AddChild(_hitParticleResource.Instance());
             }
         }
 
