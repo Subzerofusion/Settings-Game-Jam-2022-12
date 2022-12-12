@@ -4,11 +4,11 @@ Hitting the ball is so last centuary.
 
 
 ### Controls:
-1 - add object 
-space - place object
-tab - play/restart
-mouseWheel - change velocity
-shift+ mouseWheel- change mass
+- "1" - add object 
+- "space" - place object
+- "tab" - play/restart
+- "mouseWheel" - change velocity
+- "shift+ mouseWheel" - change mass
 
 
 ### Placing objects:
