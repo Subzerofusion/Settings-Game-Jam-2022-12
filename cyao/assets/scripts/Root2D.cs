@@ -470,8 +470,10 @@ public class Root2D : CanvasLayer {
         "cam", "cameron", "altersquid", "squid",
         "eli", "faldor", "faldor 20", "faldor20",
         "ellie", "eleanor", "scribbel", "lungs",
+        "james", "exee",
         "jeremy", "jer", "alphastrata", "jerk", "alpha",
         "justin", "nitro", "nitroghost", "nitro ghost", "nitro_ghost", "nitro-ghost",
+        "morgan", "temere",
         "maz", "marcus", "maz_net_au", "iammaz", "i am maz", "i_am_maz",
         "mika", "mhear22", "montana", "mika mika mii", "mikamikamii", "mikamii",
         "oscar", "lyxaa", "lyxaaa",
@@ -511,7 +513,7 @@ public class Root2D : CanvasLayer {
     },
     Items = new List<KAction>() {
       KAction.Items.First(x=> x.Id == "item_health_pot_1"),
-      KAction.Items.First(x=> x.Id == "item_stab_book")
+      KAction.ForbiddenItems.First(x=> x.Id == "item_stab_book")
     }
   };
 
@@ -546,7 +548,7 @@ public class Root2D : CanvasLayer {
         },
         Items = new List<KAction>() {
           KAction.Items.First(x=> x.Id == "item_health_pot_1"),
-          KAction.Items.First(x=> x.Id == "item_curse_amulet")
+          KAction.ForbiddenItems.First(x=> x.Id == "item_curse_amulet")
         }
       };
 
@@ -625,7 +627,7 @@ public class Root2D : CanvasLayer {
           new KAction(){Name = "Murder", Damage = 100000, Cost = 0}
         },
         Items = new List<KAction>() {
-          KAction.Items.First(x=>x.Id == "item_stab_book")
+          KAction.ForbiddenItems.First(x=>x.Id == "item_stab_book")
         },
         Engage = new List<string>() {
           "<Looks like it wants to kick the shit out of you!>"
@@ -814,21 +816,237 @@ public class Root2D : CanvasLayer {
   }
 
   static List<Killable> ENEMYBASES = new List<Killable>{
-    new Killable() {
-      Name = "Mikael the Malevolent"
+    new Killable() { Name = "Aureon Jo the All Powerful",
+      Health = 304,
+      Mana = 328,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_punch", "atk_focus"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"Don't fucking talk to me."},
+      Idle = new List<string>(){"Complains about having to open his Macbook again to recompile", "Is waiting for a BRZ", "Can't think of what attack to use..."},
+      IdleWeak = new List<string>(){"Still doesn't have his BRZ", "Wonders why he's stuck in this video game"},
+      IdleDieing = new List<string>(){"Dreams of the stars"},
+      OnDeath = new List<string>(){"Where is my BRZ :("}
     },
-    new Killable() {
-      Name = "Mikael the Malevolent"
+
+    new Killable() { Name = "Neo of the Waters",
+      Health = 1000,
+      Mana = 1000,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_exp_strike"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"..."},
+      Idle = new List<string>(){"..." },
+      IdleWeak = new List<string>(){"..."},
+      IdleDieing = new List<string>(){"..."},
+      OnDeath = new List<string>(){"..."}
     },
+    new Killable() { Name = "Witch of the Blair",
+      Health = 5670,
+      Mana = 2234,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_pos_charge", "atk_neg_charge"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"The air crackles with electricity"},
+      Idle = new List<string>(){"Where's the magic smoke?", "Thinks about Space Dwarves", "Charges their next attack"},
+      IdleWeak = new List<string>(){"Is that all you got?", "The pestilence!!!", "Fumbles their phone while checking for messages."},
+      IdleDieing = new List<string>(){"Phone is out of power :(", "Is ready to go home"},
+      OnDeath = new List<string>(){"Missed the message and is ignoring death"}
+    },
+    new Killable() { Name = "Writhing Sack of Horrors",
+      Health = 911,
+      Mana = 911,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_knife_game"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"SCREAM FOR ME BITCH"},
+      Idle = new List<string>(){"The stars are but maggots on the cold flesh of heaven", "The worms crawl in..."},
+      IdleWeak = new List<string>(){"The worms crawl out...", "Take of your dress, put on your face"},
+      IdleDieing = new List<string>(){"Through the ghoul guarded gateways of slumber..."},
+      OnDeath = new List<string>(){"Well... you know what they say..."}
+    },
+    new Killable() { Name = "Squid of the Alter",
+      Health = 800,
+      Mana = 1000,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_deep"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"This! Is an excellent game."},
+      Idle = new List<string>(){"I'd rather be having ramen", "I don't like the ramen here, the broth is too thick"},
+      IdleWeak = new List<string>(){"I have too many figurines to paint :(", "He's done it!"},
+      IdleDieing = new List<string>(){"Well, at least he stopped playing dark souls"},
+      OnDeath = new List<string>(){"Remember, squid are the best sea creatures"}
+    },
+    new Killable() { Name = "Faldor of the Li",
+      Health = 200,
+      Mana = 200,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_forage", "atk_toughen", "atk_fire_ball", "atk_lightning"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"What is this!"},
+      Idle = new List<string>(){"This isn't even an engine!", "Wait... Everything's an object?"},
+      IdleWeak = new List<string>(){"Let me tell you about F#", "This would be better in Haskell"},
+      IdleDieing = new List<string>(){"Looks good to me", "I completely disagree"},
+      OnDeath = new List<string>(){"This isn't a fight... this is a... notion... an idea of a fight."}
+    },
+    new Killable() { Name = "Eleanor Sanguinus (Literal Vampire)",
+      Health = 4751,
+      Mana = 3051,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_gaslight", "atk_gatekeep", "atk_girlboss"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"Good Morning!"},
+      Idle = new List<string>(){"Oh no!", ">:3c", "heeeeere we gooooooooooo!"},
+      IdleWeak = new List<string>(){"Born to HAII!! ^-^ :333 hii :> forced to hello", "This sends me"},
+      IdleDieing = new List<string>(){":("},
+      OnDeath = new List<string>(){"bweh~ :<"}
+    },
+    new Killable() { Name = "James.exee",
+      Health = 7265,
+      Mana = 1,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){ "atk_punch", "atk_leave" },
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"Why do you even want to play this game?"},
+      Idle = new List<string>(){"This fight isn't even good", "You done?", "Are you going to watch Jojo's any time?"},
+      IdleWeak = new List<string>(){"Why doesn't anyone want to watch Jojo's", "So much anime unwatched :("},
+      IdleDieing = new List<string>(){"Whatever", "Alright then..."},
+      OnDeath = new List<string>(){"Go watch Bocchi"}
+    },
+    new Killable() { Name = "strata.0.0.1.2194-alpha",
+      Health = 4823,
+      Mana = 2346,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_oxidise", "punch"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"Hello"},
+      Idle = new List<string>(){"Perhaps, you are your own nemesis", "no time for emotion"},
+      IdleWeak = new List<string>(){"Shit times all around", "You're overthinking it"},
+      IdleDieing = new List<string>(){"If the world dictates that this is the path, then so be it"},
+      OnDeath = new List<string>(){"Well, I die a noble death"}
+    },
+    new Killable() { Name = "Ghost of the Nitre",
+      Health = 4200,
+      Mana = 6900,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_signal", "atk_delegate"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"You should not be having fun."},
+      Idle = new List<string>(){"Pog", "Very Confusing", "Dumb", "Jesus"},
+      IdleWeak = new List<string>(){"This is phenomenally dumb", "Terrible person"},
+      IdleDieing = new List<string>(){"I'm having a bad time", ""},
+      OnDeath = new List<string>(){"Flat out not having a good time..."}
+    },
+    new Killable() { Name = "Mortemere of the Anime",
+      Health = 100,
+      Mana = 100,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_punch", "atk_facts", "atk_logic"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"You're not taking my tiny jar"},
+      Idle = new List<string>(){"Is that thunder or is someone just taking their bins out?", "I did not have sexual relations with that tarnished" },
+      IdleWeak = new List<string>(){"The lyrebird at Sydney taronga zoo has been mimicking the evacuation alarm ever since it went off after some lions escaped their enclosures a few weeks ago", "Yuji Naka, co-creator of Sonic, who was arrested for insider trading of dragon quest, last month. Has now been arrested AGAIN for insider trading over the Final fantasy VII mobile game"},
+      IdleDieing = new List<string>(){"most countries banks dont have enough currency in circulation to pay if everyone did that"},
+      OnDeath = new List<string>(){"The jar is now... empty... and clean..."}
+    },
+    new Killable() { Name = "I Am Maz",
+      Health = 100,
+      Mana = 100,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_rebuild", "atk_manaburn", "atk_focus" },
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"heh"},
+      Idle = new List<string>(){"brb. rebooting router", "either there was just sudden thunder. or my cat has escaped the house and is running on the roof"},
+      IdleWeak = new List<string>(){"i miss messing with fat catto", "I assume so"},
+      IdleDieing = new List<string>(){"hmm", "ah... seems like it"},
+      OnDeath = new List<string>(){"oh well. later problem. night."}
+    },
+    new Killable() { Name = "Mikael the Malevolent",
+      Health = 2649,
+      Mana = 7435,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_lightning", "atk_polarise"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"What's up bitches!"},
+      Idle = new List<string>(){"I like just woke up", "Why would you buy anything but Sony?", "Am Live"},
+      IdleWeak = new List<string>(){":/", "Have you considered wearing something lighter?", "oh! cool..."},
+      IdleDieing = new List<string>(){"getting to the office at 930am hits different(bad)", "sleeby..."},
+      OnDeath = new List<string>(){"When sunlight strikes raindrops in the air..."}
+    },
+    new Killable() { Name = "O'Scar in the Lyx",
+      Health = 700,
+      Mana = 1,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){ "atk_repair", "atk_slam" },
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"8=D"},
+      Idle = new List<string>(){"What hv U DONE", "Hey nice"},
+      IdleWeak = new List<string>(){"Bruh", "Wtf", ":((("},
+      IdleDieing = new List<string>(){"I'm tired as FEK rn", "stopit"},
+      OnDeath = new List<string>(){"Someone pls explain"}
+    },
+    new Killable() { Name = "Aurora Lando of the Seven",
+      Health = 100,
+      Mana = 100,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_7_female_wives"},
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"Wait, are the enemies just people we know?"},
+      Idle = new List<string>(){"I'm going to turn into The Joker", "Have you seen my seven female wives?", "I'm laughing at my own jokes, this is bad"},
+      IdleWeak = new List<string>(){"I've gone through all the Greek letters dude", "Oh no... I've made this impossible"},
+      IdleDieing = new List<string>(){"Fuck trigonometry dude", "I'm becoming deathpilled"},
+      OnDeath = new List<string>(){"That's it, I've become The Joker"}
+    },
+    new Killable() { Name = "Aberrant Wolves",
+      Health = 5329,
+      Mana = 100,
+      Resistance = 0.1f,
+      AttackIds = new List<string>(){"atk_clutter", "atk_sweep", "akt_collapse" },
+      ItemIds = new List<string>(){},
+      EffectIds = new List<(Target, Target, string)>(){},
+      Engage = new List<string>(){"Oh, wow."},
+      Idle = new List<string>(){"Neat.", "Indeed!", "T_T", "It's not that I WANT to fight you, I just got spawned in."},
+      IdleWeak = new List<string>(){"Oh, I see.", "Dang.", "Heh. Well, then."},
+      IdleDieing = new List<string>(){"Oh, shit", "Yeah.", "Okay, cool."},
+      OnDeath = new List<string>(){"Word."}
+    }
   };
 
   Killable GenerateEnemy() {
     Killable enemy = ENEMYBASES[random.Next(0, ENEMYBASES.Count())];
+
     Killable clone = new Killable() {
       Name = enemy.Name,
-
+      Health = enemy.Health,
+      Mana = enemy.Mana,
+      Resistance = enemy.Resistance,
+      AttackIds = enemy.AttackIds,
+      ItemIds = enemy.ItemIds,
+      EffectIds = enemy.EffectIds,
+      Engage = enemy.Engage,
+      Idle = enemy.Idle,
+      IdleWeak = enemy.IdleWeak,
+      IdleDieing = enemy.IdleDieing,
+      OnDeath = enemy.OnDeath
     };
 
+    clone.LateInit();
+    clone.SyncActions();
     return enemy;
   }
 

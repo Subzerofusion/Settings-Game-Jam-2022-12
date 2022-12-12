@@ -9,6 +9,7 @@ public enum KTarget {
 public class KAction {
   public string Id { get; set; } = "";
   public string Name { get; set; } = "No Name";
+  public bool GoodForSelf { get; set; } = false;
   public int Cost { get; set; } = 0;
   public int Damage { get; set; } = 0;
   public string Description { get; set; } = "No Description";
@@ -31,26 +32,274 @@ public class KAction {
   string UsePrint = "{{user}} tried to use {{name}} on {{target.Name}}";
 
   public static KAction[] Attacks = new KAction[] {
-    new KAction(){Id = "atk_fire_ball", Name = "Fire Ball",
+    new KAction(){ Id = "atk_fire_ball", Name = "Fire Ball",
       Description = "A basic incantation which hurtls a fireball at target",
       Damage = 10, Cost = 2},
-    new KAction(){Id = "atk_lightning", Name = "Lightning Bolt",
+    new KAction(){ Id = "atk_lightning", Name = "Lightning Bolt",
       Description = "LIGHTNING BOLT! LIGHTNING BOLT!! LIGHTNING BOLT!!!",
-      Damage = 40, Cost = 10},
-    new KAction(){Id = "atk_punch", Name = "Punch",
+      Damage = 41, Cost = 10},
+    new KAction(){ Id = "atk_punch", Name = "Punch",
       Description = "Hand goes into their face! (strictly better than Fire Ball but way less cool)",
       Damage = 10, Cost = 0},
-    new KAction(){Id = "atk_stab", Name = "Stab them in the Throat",
+    new KAction(){ Id = "atk_stab", Name = "Stab them in the Throat",
       Description = "Stabs the victim in their throat (very effective)",
       Damage = 400, Cost = 0,
       Effect = (root2d, action, user, target) => {
         target.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy, Effects.First(x=>x.Id=="fx_stab")));
         return new string[]{$"{target.Name} is now bleeding to death" };
-      }}
+      }},
+    new KAction(){ Id = "atk_pos_charge", Name = "Positive Slash",
+      Description = "Stores a charge on the target, when opposite charge is applied, charges are consumed, dealing the damage again as true damage",
+      Damage = 10, Cost = 0,
+      Effect = (root2d, action, user, target) => {
+        target.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy, Effects.First(x=>x.Id=="fx_pos")));
+        int dmg  = target.Effects.RemoveAll(x=>x.Item3.Id == "fx_neg");
+        target.TrueDmg(dmg * 10);
+        var list = new List<string>();
+        if(dmg > 0) {
+          list.Add($"{dmg} negative charges have been triggered for {dmg*10} damage");
+        }
+        list.Add($"{target.Name} has had a positive charge applied to them.");
+        return list.ToArray();
+      }},
+    new KAction(){ Id = "atk_neg_charge", Name = "Negative Stab",
+      Description = "Stores a charge on the target, when opposite charge is applied, charges are consumed, dealing the damage again as true damage",
+      Damage = 400, Cost = 0,
+      Effect = (root2d, action, user, target) => {
+        target.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy, Effects.First(x=>x.Id=="fx_neg")));
+        int dmg  = target.Effects.RemoveAll(x=>x.Item3.Id == "fx_pos");
+        target.TrueDmg(dmg * 10);
+        var list = new List<string>();
+        if(dmg > 0) {
+          list.Add($"{dmg} positive charges have been triggered for {dmg*10} damage");
+        }
+        list.Add($"{target.Name} has had a negative charge applied to them.");
+        return list.ToArray();
+      }},
+    new KAction(){ Id = "atk_exp_strike", Name = "Exponential Strike",
+      Description = "Strikes for more damage per use",
+      Damage = 1, Cost = 0,
+      Effect = (root2d, action, user, target) => {
+        action.Damage *= 2;
+        return new string[]{"Exponential strike just got more powerful"};
+      }},
+    new KAction(){ Id = "atk_focus", Name = "Focused Blast",
+      Description = "Focuses all mana into an attack",
+      Damage = 0, Cost = 0,
+      Effect = (root2d, action, user, target) => {
+        int dmg = user.Mana;
+        target.TrueDmg(user.Mana);
+        user.Mana = 0;
+        return new string[]{$"{user.Name} used all their mana to attack ${target.Name} for {dmg} damage"};
+      }
+    },
+    new KAction(){ Id = "atk_knife_game", Name = "Knife Game",
+      Description = "Attack starts at 0 damage but increases in damage per \"miss\".",
+      Damage = 0, Cost = 5,
+      Effect = (root2d, action, user, target) => {
+        if(new Random().Next(0, 10) == 0) {
+          int count = user.Effects.RemoveAll(x=>x.Item3.Id == "fx_knife_miss");
+          action.Damage = (action.Damage + count) * 20;
+          return new string[] { $"{user.Name} has hit {target.Name} for {target.StdDmg(action.Damage)} damage" };
+        } else {
+          user.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy, Effects.First(x=>x.Id=="fx_knife_miss")));
+          return new string[] { $"{user.Name} has missed, strike damage has increased." };
+        }
+      }},
+    new KAction(){ Id = "atk_deep", Name = "Tendrils of the Deep",
+      Description = "Inflicts malevolent visions which deal damage over time",
+      Damage = 0, Cost = 30,
+        Effect = (root2d, action, user, target) => {
+          target.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy, Effects.First(x=>x.Id=="fx_tendrils")));
+          return new string[] { $"{target.Name} has been aflicted with malefic visions" };
+        }},
+    new KAction(){ Id = "atk_forage", Name = "Forage",
+      Description = "Finds and uses a random item",
+      Damage = 10, Cost = 30,
+        Effect = (root2d, action, user, target) => {
+          var actionLog = new List<string>();
+          var item = KAction.Items[new Random().Next(0, KAction.Items.Count())];
+          actionLog.Add($"{user.Name} has found ${item.Name}");
+          if(item.GoodForSelf) {
+            actionLog.AddRange(item.Execute(root2d, user, user));
+          } else {
+            actionLog.AddRange(item.Execute(root2d, user, target));
+          }
+          return actionLog.ToArray();
+        }},
+    new KAction(){ Id = "atk_toughen", Name = "Toughen",
+      Description = "Permanently increases own resistances",
+      Damage = 0, Cost = 30,
+      Effect = (root2d, action, user, target) => {
+        user.Resistance *= 0.2f;
+        return new string[]{$"{user.Name} has become tougher"};
+      }},
+    new KAction(){ Id = "atk_gaslight", Name = "Gaslight",
+      Description = "Use an opponents item on yourself as them",
+      Effect = (root2d, action, user, target) => {
+        var item = target.Items[new Random().Next(0, target.Items.Count())];
+        return item.Execute(root2d, target, user);
+      }},
+    new KAction(){ Id = "atk_gatekeep", Name = "GateKeep",
+      Description = "Increases resistances to max for 1 turn",
+      Effect = (root2d, action, user, target) => {
+        return new string[]{$"{target.Name} is being Gatekept"};
+      }},
+    new KAction(){ Id = "atk_girlboss", Name = "Girlboss",
+      Description = "Uses one of the opponents attacks against them",
+      Effect = (root2d, action, user, target) => {
+        var attack = target.Attacks[new Random().Next(0, target.Items.Count())];
+        return attack.Execute(root2d, user, target);
+      }},
+    new KAction(){ Id = "atk_manaburn", Name = "Mana Burn",
+      Description = "Burns targets mana, transfers to self",
+      Effect = (root2d, action, user, target) => {
+        int burn = new Random().Next(20-300);
+        target.Mana -= burn;
+        user.Mana += burn;
+        return new string[]{$"{user.Name} has burned {burn} Mana from {target.Name}"};
+      }},
+    new KAction(){ Id = "atk_oxidise", Name = "Oxidise",
+      Description = "Reduces target resistance",
+      Effect = (root2d, action, user, target) => {
+        target.Resistance *= 2;
+        return new string[]{$"{target.Name}'s resistances fall"};
+      }},
+    new KAction(){ Id = "atk_signal", Name = "Signal",
+      Description = "Adds a one of 3 types of marks to the target that can be activated later",
+      Effect = (root2d, action, user, target) => {
+        target.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy, Effects.First(x=>x.Id==new string[]{"fx_health","fx_mana","fx_res"}[new Random().Next(0, 3)])));
+        return new string[]{$"{target.Name}'s resistances fall"};
+      }},
+    new KAction(){ Id = "atk_delegate", Name = "Delegate",
+      Description = "Adds a one of 3 types of marks to the target that can be activated later",
+      Effect = (root2d, action, user, target) => {
+        var effects = target.Effects.FindAll(x=>new string[]{"fx_health","fx_mana","fx_res"}.Contains(x.Item3.Id));
+        List<string> actionList = new List<string>();
+        foreach(var effect in effects) {
+          actionList.AddRange(effect.Item3.Effect(root2d, effect.Item3, user, target));
+        }
+        return actionList.ToArray();
+      }},
+    new KAction(){ Id = "atk_leave", Name = "Leave",
+      Description = "Unit has had enough and leaves combat",
+      Effect = (root2d, action, user, target) => {
+        user.Health = 0;
+        return new string[]{$"{user.Name} has had enough. They're leaving."};
+      }},
+    new KAction(){ Id = "atk_rebuild", Name = "Rebuild",
+      Description = "Swaps target health and mana",
+      Effect = (root2d, action, user, target) => {
+        var h = target.Health;
+        var m = target.Mana;
+
+        target.Health = m;
+        target.Mana = h;
+
+        return new string[]{$"{target.Name} target's mana and health have been swapped."};
+      }},
+    new KAction(){ Id = "atk_facts", Name = "Facts",
+      Description = "If the target's health is greater than their mana, deal the difference in damage.",
+      Effect = (root2d, action, user, target) => {
+        var dmg = target.Health - target.Mana;
+        target.TrueDmg(dmg);
+        return new string[]{$"{target.Name} has been hit by the facts for {dmg} damage"};
+      }},
+    new KAction(){ Id = "atk_logic", Name = "Logic",
+      Description = "If the target's mana is greater than their health, deal the difference in damage.",
+      Effect = (root2d, action, user, target) => {
+        var dmg = target.Mana - target.Health;
+        target.TrueDmg(dmg);
+        return new string[]{$"{target.Name} has been hit by the logic for {dmg} damage"};
+      }},
+    new KAction(){ Id = "atk_polarise", Name = "Polarise",
+      Description = "Divide the target's health by its lowest non 1 factor.",
+      Effect = (root2d, action, user, target) => {
+        int lowestFactor = 1;
+        for(; lowestFactor < target.Health; lowestFactor++) {
+          if(target.Health % lowestFactor == 0) break;
+        }
+        int endHealth = target.Health / lowestFactor;
+
+        var dmg = target.Health - endHealth;
+        target.TrueDmg(dmg);
+
+        return new string[]{$"{target.Name} has had their health divided by the lowest factor ({lowestFactor}) for {dmg} damage"};
+      }},
+    new KAction(){ Id = "atk_repair", Name = "Repair",
+      Description = "Repairs own health back to full",
+      Effect = (root2d, action, user, target) => {
+        user.Health = user.MaxHealth;
+        return new string[]{$"{user.Name} has repaired all damage taken"};
+      }},
+    new KAction(){ Id = "atk_slam", Name = "Slam",
+      Description = "Deals damage to target based on user's health",
+      Effect = (root2d, action, user, target) => {
+        var dmg = target.StdDmg(user.Health / 2);
+        return new string[]{$"{target.Name} been slammed for {dmg} damage"};
+      }},
+    new KAction(){ Id = "atk_7_female_wives", Name = "Seven Female Wives",
+      Description = "Once user has acquired all Seven Female Wives, target is killed instantly",
+      Effect = (root2d, action, user, target) => {
+        user.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy, Effects.First(x=>x.Id=="fx_female_wife")));
+        var wifeCount = user.Effects.Where(x=>x.Item3.Id == "fx_female_wife").Count();
+        if(wifeCount == 1) {
+          return new string[]{$"{user.Name} has acquired 1 Female Wife and is 6 away from victory."};
+        } else if (wifeCount >= 7) {
+          target.TrueDmg(target.Health);
+          return new string[]{$"{user.Name} has acquired all 7 Female Wives"};
+        } else {
+          return new string[]{$"{user.Name} has acquired {wifeCount} Female Wives and is {7 - wifeCount} away from victory."};
+        }
+      }},
+    new KAction(){ Id = "atk_clutter", Name = "Clutter",
+      Description = "Spawns random items in user's inventory",
+      Effect = (root2d, action, user, target) => {
+        int itemCount = new Random().Next(0,5);
+        for(int i = 0; i < itemCount; i++) {
+          user.Items.Add(KAction.Items[new Random().Next(0, KAction.Items.Length)]);
+        }
+        return new string[]{$"{itemCount} new item{(itemCount == 1 ? "s" : "")} have spawned in {user.Name}'s inventory"};
+      }},
+    new KAction(){ Id = "atk_sweep", Name = "Swept Under the Rug",
+      Description = "Puts entire user inventory in target's inventory",
+      Effect = (root2d, action, user, target) => {
+        int itemCount = user.Items.Count();
+        target.Items.AddRange(user.Items);
+        user.Items.Clear();
+        return new string[]{$"{itemCount} item{(itemCount == 1 ? "s" : "")} have been transfered to {target.Name}'s inventory"};
+      }},
+    new KAction(){ Id = "akt_collapse", Name = "Collapse",
+      Description = "Destroys target inventory, deals damage based on number of items destroyed",
+      Effect = (root2d, action, user, target) => {
+        int itemCount = target.Items.Count();
+        target.Items.Clear();
+        int dmg = target.TrueDmg(itemCount * new Random().Next(4,20));
+        return new string[]{$"{itemCount} item{(itemCount == 1 ? "s" : "")} have been destroyed, dealing {dmg} damage to {target.Name}"};
+      }},
+  };
+
+  public static KAction[] ForbiddenItems = new KAction[] {
+   new KAction(){ Id = "item_curse_amulet", Name = "Cursed Amulet of Decimation",
+      Description = "Rare and dangerous amulet which decimates the victims health per turn when broken",
+      Effect = (root2d, action, user, target) => {
+        user.Items.Remove(action);
+        target.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy,  Effects.First(x=>x.Id=="fx_curse")));
+        return new string[]{$"{target.Name} is now cursed"};
+      },
+    },
+    new KAction(){ Id = "item_stab_book", Name = "Knife and Book Titled \"Stabbing for Dummies\"",
+      Description = "That's actually pretty funny...",
+        Effect = (root2d, action, user, target) => {
+          user.Items.Remove(action);
+          target.Attacks.Add(KAction.Attacks.First(x=>x.Id == "atk_stab"));
+          return new string[]{$"{target.Name} has learned how to stab!"};
+          }
+    }
   };
 
   public static KAction[] Items = new KAction[] {
-    new KAction(){ Id = "item_health_pot_1", Name = "Minor Health Potion",
+    new KAction(){ Id = "item_health_pot_1", Name = "Minor Health Potion", GoodForSelf = true,
     Description = "Restores 10 health to target when used.",
     Effect = (root2d, action, user, target) => {
       user.Items.Remove(action);
@@ -58,7 +307,7 @@ public class KAction {
       return new string[]{$"has restored 10 health to {target.Name}"};
       }
     },
-    new KAction(){ Id = "item_health_pot_2", Name = "OK Health Potion",
+    new KAction(){ Id = "item_health_pot_2", Name = "OK Health Potion", GoodForSelf = true,
     Description = "Restores 40 health to target when used.",
     Effect = (root2d, action, user, target) => {
       user.Items.Remove(action);
@@ -66,7 +315,7 @@ public class KAction {
       return new string[]{$"has restored 40 health to {target.Name}"};
       }
     },
-    new KAction(){ Id = "item_health_pot_3", Name = "Amazing Health Potion",
+    new KAction(){ Id = "item_health_pot_3", Name = "Amazing Health Potion", GoodForSelf = true,
     Description = "Restores 100 health to target when used.",
     Effect = (root2d, action, user, target) => {
       user.Items.Remove(action);
@@ -74,7 +323,23 @@ public class KAction {
       return new string[]{$"has restored 100 health to {target.Name}"};
       }
     },
-    new KAction(){ Id = "item_resist_up", Name = "Liquid Shield",
+    new KAction(){ Id = "item_health_pot_4", Name = "Phenomenal Health Potion", GoodForSelf = true,
+    Description = "Restores 500 health to target when used.",
+    Effect = (root2d, action, user, target) => {
+      user.Items.Remove(action);
+      target.Health += 500;
+      return new string[]{$"has restored 500 health to {target.Name}"};
+      }
+    },
+    new KAction(){ Id = "item_resist_up_1", Name = "Minor Liquid Shield", GoodForSelf = true,
+    Description = "Permanently minorly increases resistance",
+    Effect = (root2d, action, user, target) => {
+      user.Items.Remove(action);
+      target.Resistance *= 0.8f;
+      return new string[]{$"{target.Name}'s resistances have been increased"};
+      }
+    },
+    new KAction(){ Id = "item_resist_up_2", Name = "Liquid Shield", GoodForSelf = true,
     Description = "Permanently increases resistance",
     Effect = (root2d, action, user, target) => {
       user.Items.Remove(action);
@@ -97,24 +362,9 @@ public class KAction {
         target.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy, Effects.First(x=>x.Id=="fx_molotovd")));
         return new string[]{$"{target.Name} is now on Fire"};
       },
-    },
-    new KAction(){ Id = "item_curse_amulet", Name = "Cursed Amulet of Decimation",
-      Description = "Rare and dangerous amulet which decimates the victims health per turn when broken",
-      Effect = (root2d, action, user, target) => {
-        user.Items.Remove(action);
-        target.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy,  Effects.First(x=>x.Id=="fx_curse")));
-        return new string[]{$"{target.Name} is now cursed"};
-      },
-    },
-    new KAction(){ Id = "item_stab_book", Name = "Knife and Book Titled \"Stabbing for Dummies\"",
-      Description = "That's actually pretty funny...",
-        Effect = (root2d, action, user, target) => {
-          user.Items.Remove(action);
-          target.Attacks.Add(KAction.Attacks.First(x=>x.Id == "atk_stab"));
-          return new string[]{$"{target.Name} has learned how to stab!"};
-          }
     }
   };
+
 
   public static KAction[] Effects = new KAction[] {
     new KAction() { Id = "fx_curse", Name = "Curse of Decimation",
@@ -141,7 +391,40 @@ public class KAction {
         holder.TrueDmg(dmg);
         return new string[]{$"{holder.Name} has burned for {dmg}"};
       }
-    }
+    },
+    new KAction() { Id = "fx_pos", Name = "Positive Charge" },
+    new KAction() { Id = "fx_neg", Name = "Negative Charge" },
+    new KAction() { Id = "fx_knife_miss", Name = "Knife Miss" },
+    new KAction() { Id = "fx_female_wife", Name = "Female Wife" },
+    new KAction() { Id = "fx_tendrils", Name = "Malific Visions",
+      PerTurn = (root2d, action, opponent, holder) => {
+        int count = holder.Effects.Count(x=>x.Item3.Id == action.Id);
+        holder.TrueDmg(count);
+        return new string[]{$"Malefic Visions has dealt {count} damage."};
+      }
+    },
+    new KAction() { Id = "fx_health", Name = "Signal Health",
+      Effect = (root2d, action, opponent, holder) => {
+        int count = new Random().Next(4, 20);
+        int dmg = holder.StdDmg(count);
+        return new string[]{$"Signal Health has dealt {dmg} damage."};
+      }
+    },
+    new KAction() { Id = "fx_mana", Name = "Signal Mana",
+      Effect = (root2d, action, opponent, holder) => {
+        int count = new Random().Next(69, 420);
+        holder.Mana -= count;
+        int dmg = holder.StdDmg(count * 2);
+        return new string[]{$"Signal Health has burned {count} mana for {dmg} damage."};
+      }
+    },
+    new KAction() { Id = "fx_res", Name = "Signal Resistance",
+      Effect = (root2d, action, opponent, holder) => {
+        holder.Resistance *= 1.2f;
+        return new string[]{$"Signal resistance reduces resistances {holder}'s resistance"};
+      }
+    },
+
   };
 };
 
@@ -200,9 +483,10 @@ public class Killable {
     return dmg;
   }
 
-  public void TrueDmg(int damage) {
+  public int TrueDmg(int damage) {
     this.Health -= damage;
     OnDmgEvent?.Invoke();
+    return damage;
   }
 
   public string DamageAsString(int comparisonHealth) {
