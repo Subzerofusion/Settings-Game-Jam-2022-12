@@ -4,6 +4,15 @@ A Game by Orlando Scarpa
 
 ### [Please watch this video before playing the game](https://www.youtube.com/watch?v=2-oCNXMsMvg)
 
+Controls:
+- Use A/W to change the wind direction.
+- Press Tab/M to open the map.
+- Press 1/2/3 to change zoom level (Default: 2)
+- Press E for a Wives update.
+- Press Space/Esc to pause/unpause
+- Press H to cheat and get a random power-up
+- Use the volume mixer to change sound volume :^)
+
 ## Spoiler free guide:
 - kill 10 enemies
 - go to the star on your map
@@ -14,12 +23,6 @@ A Game by Orlando Scarpa
 
 In WftWGtQftSFW, you embark on a quest to enact your revenge on those who have ridiculed you for your quest to find your seventh female wife.
 To do so, you use the power to control the wind that the Wind God granted you, and set sail to murder the non-believers using the giant sword the Wind God also attached to your ship.
-- Use A/W to change the wind direction.
-- Press Tab/M to open the map.
-- Press 1/2/3 to change zoom level (Default: 2)
-- Press E for a Wives update.
-- Press Space/Esc to pause/unpause
-- Press H to cheat and get a random power-up
 
 After killing 10 enemies, a boss will spawn on the map, go kill it to find your seventh female wife. After this return home to Coney Island and wait for a message from the Wind God.
 
