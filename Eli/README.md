@@ -17,3 +17,7 @@ Hitting the ball is so last centuary.
 - press "space" once you are happy with your position and direction to let go of the object
 
 If you click on another planet during placing your planets direction will be locked tangent to that planet. Good for orbits.
+### Known bugs: 
+
+Eli didn't bother to impliment his own collisions properly so if you go to fast you won't touch anything. 
+
