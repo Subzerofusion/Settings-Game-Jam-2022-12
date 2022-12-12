@@ -1,11 +1,13 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Sprites/sword.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/Ship.png" type="Texture" id=2]
 [ext_resource path="res://Sprites/Sail.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/MapIcons/Icons1.png" type="Texture" id=4]
+[ext_resource path="res://Sounds/SixFemaleWives.wav" type="AudioStream" id=5]
 [ext_resource path="res://Sprites/ShipDirectionArrow.png" type="Texture" id=6]
 [ext_resource path="res://Scenes/Player.gd" type="Script" id=7]
+[ext_resource path="res://Sounds/SevenFemaleWives.wav" type="AudioStream" id=8]
 
 [node name="Player" type="Node2D"]
 script = ExtResource( 7 )
@@ -25,6 +27,10 @@ polygon = PoolVector2Array( 26, 21, 29, 12, 29, -6, 9, -65, 0, -84, -9, -65, -29
 current = true
 zoom = Vector2( 2, 2 )
 
+[node name="SwordCollision" type="CollisionPolygon2D" parent="Ship"]
+position = Vector2( -62, -1 )
+polygon = PoolVector2Array( 105, -14, 105, 17, 184, 17, 200, 1, 184, -14 )
+
 [node name="Sword" type="Sprite" parent="Ship"]
 position = Vector2( 47.8, 0.5 )
 texture = ExtResource( 1 )
@@ -36,10 +42,6 @@ position = Vector2( 40, 0 )
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship/Sword/SwordArea"]
 position = Vector2( -1, 0 )
 polygon = PoolVector2Array( -47, -18, 35, -18, 53, 0, 36, 18, -46, 18 )
-
-[node name="SwordCollision" type="CollisionPolygon2D" parent="Ship"]
-position = Vector2( -62, -1 )
-polygon = PoolVector2Array( 105, -14, 105, 17, 184, 17, 200, 1, 184, -14 )
 
 [node name="MapIcon" type="Sprite" parent="Ship"]
 visible = false
@@ -55,5 +57,15 @@ offset = Vector2( 25, 0 )
 [node name="Sail" type="Sprite" parent="."]
 texture = ExtResource( 3 )
 offset = Vector2( 25, 0 )
+
+[node name="Sounds" type="Node" parent="."]
+
+[node name="SevenFemaleWives" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 8 )
+volume_db = -15.0
+
+[node name="SixFemaleWives" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 5 )
+volume_db = -15.0
 
 [connection signal="area_entered" from="Ship/Sword/SwordArea" to="." method="_on_Area2D_area_entered"]

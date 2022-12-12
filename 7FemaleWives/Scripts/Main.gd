@@ -5,30 +5,69 @@ var wind_direction = 0
 var wind_angular_speed = 0.65
 
 onready var npc_scene = load("res://Scenes/NPC.tscn")
-var despawn_range = 8000
+onready var boss_scene = load("res://Scenes/Boss.tscn")
 
+var boss
+var boss_active = false
+
+var despawn_range = 3000
 
 var showing_map = false
 var npcs = []
 var max_npcs = 15
 
+var Enemy_spawn_range = 3000
+var minimum_spawn_distance = 0
+
 var number_of_kills = 0
 var seventh_wife_threshold = 10
 
+var paused = true
+var story_active = false
+
+var returning_home = false
+var listening = false
+
 var center
+var coney_island_position = Vector2()
+var instagram_position = Vector2()
+var instagram_active = false
+
 func _ready():
+	pause()
 	center = Vector2($Map.map_size.x * 100 / 2, $Map.map_size.y * 100 / 2)
 	$MapCamera.position=center
-	$Player/Ship.position = center + Vector2(350, 320)
+	coney_island_position = center + Vector2(350, 320)
+	$Player/Ship.position = coney_island_position
+	$Map/ConeyIsland.position = center + Vector2(-250, -150)
+
+	
+	
 	
 func _process(_delta):
 	if Input.is_action_just_pressed("map"):
+		
 		if showing_map:
 			hide_map()
-		else:
+		elif not paused:
 			show_map()
-	if Input.is_action_just_pressed("die"):
-		on_NPC_death()
+			
+			
+	if Input.is_action_just_pressed("pause"):
+		
+		if paused:
+			close_pause_menu()
+			$UILayer/Menu/Notification.hide()
+		else:
+			open_pause_menu()
+			
+	if Input.is_action_just_pressed("fullscreen"):
+		OS.window_fullscreen = not OS.window_fullscreen
+			
+		
+	
+		
+	
 
 func _physics_process(delta):
 	var to_remove = []
@@ -36,20 +75,73 @@ func _physics_process(delta):
 		if npc.get_node("Ship").position.distance_to($Player/Ship.position) > despawn_range:
 			to_remove.append(npc)
 		npc.player_position = $Player/Ship.position
+	if boss_active:
+		boss.player_position = $Player/Ship.position
 		
-	
 	for npc in to_remove:
 		npcs.erase(npc)
 		npc.queue_free()
 		
+	if returning_home and coney_island_position.distance_to($Player/Ship.position) < 500:
+		returning_home = false
+		pause()
+		$UILayer/Menu/Notification.show()
+		$UILayer/Menu/Notification/Label.text = "After you brought home your seventh female wife, the Wind God came to you once again, with one clear message:"
+		$UILayer/Menu/Notification/Continue.text = "Listen"
+		listening = true
+	
+		instagram_position = $Map.generate_instagram()
+		instagram_active = true
+	
+	if instagram_active and instagram_position.distance_to($Player/Ship.position) < 500:
+		instagram_active = false
+		pause()
+		$UILayer/Menu/Notification.show()
+		$UILayer/Menu/Notification/Label.text = "The Wind God thanks you for reaching him at his Instagram, and tells you that you are now the new Wind God!\nYOU WIN!"
+		$UILayer/Menu/Notification/Continue.text = "Free Play"
 		
 		
 	_update_UI()
 	
-func show_map():
+func pause():
 	
+	paused = true
+	get_tree().paused = true
+		
+func unpause():
+	
+	paused = false
+	get_tree().paused = false
+	$UILayer/UI.show()
+
+func open_pause_menu():
+	hide_map()
+	pause()
+	$UILayer/Menu/Pause.show()
+	var n = $Player.number_of_wives
+	$UILayer/Menu/Pause/Kills.text = "Ships sunk: %d/%d" % [number_of_kills, seventh_wife_threshold]
+	$UILayer/Menu/Pause/Kills.show()
+	
+	
+	
+
+func close_pause_menu():
+	unpause()
+	
+	$UILayer/Menu/Pause.hide()
+	hide_map()
+	
+	if listening:
+		$Sounds/GoToMyInstagram.play()
+		listening = false
+	
+
+func show_map():
+	pause()
 	showing_map = true
 	$Map/Sea.hide()
+	$Map/SeventhWifeIcon.show()
+	
 	$Player/Ship/MapIcon.show()
 	$UILayer/UI/WindCompass.hide()
 	$UILayer/UI/SpeedLabel.hide()
@@ -57,14 +149,21 @@ func show_map():
 	$UILayer/UI/StatsLabel.hide()
 	
 	$UILayer/UI/ConeyIsland.show()
+	
+	if boss_active:
+		boss.get_node("Ship/MapIcon").show()
+	
 	for npc in npcs:
 		npc.get_node("Ship/MapIcon").show()
-		get_tree().paused = true
+		
 	$MapCamera.current=true
 	
 func hide_map():
+	unpause()
 	showing_map = false
 	$Map/Sea.show()
+	$Map/SeventhWifeIcon.hide()
+	
 	$Player/Ship/MapIcon.hide()
 	$UILayer/UI/WindCompass.show()
 	$UILayer/UI/SpeedLabel.show()
@@ -72,9 +171,13 @@ func hide_map():
 	$UILayer/UI/StatsLabel.show()
 	
 	$UILayer/UI/ConeyIsland.hide()
+	
 	for npc in npcs:
 		npc.get_node("Ship/MapIcon").hide()
-		get_tree().paused = false
+	
+	if boss_active:
+		boss.get_node("Ship/MapIcon").hide()
+	
 	$Player/Ship/Camera2D.current = true
 	
 	
@@ -94,11 +197,12 @@ func on_NPC_death():
 		var r = randi() % 3
 		
 		if r == 0:
-			$Player.base_speed += 10
+			$Player.base_speed += 15
 			notif = notif % "Base Speed"
 		elif r == 1:
-			$Player.sail_angular_speed += 0.1
-			notif = notif % "Sail Speed"
+			$Player.sail_angular_speed += 0.2
+			$Player.hull_angle_boost += 10
+			notif = notif % "Angles"
 		elif r == 2:
 			$Player.heal_factor += 0.5
 			notif = notif % "Healing"
@@ -116,11 +220,10 @@ func on_NPC_death():
 		$UILayer/UI/NotificationLabel.hide()
 		spawn_seventh_wife()
 	
-
 func _on_EnemySpawnTimer_timeout():
 	if len(npcs) < max_npcs:
-		var rang = 3000
-		var m = 2000
+		var rang = Enemy_spawn_range
+		var m = minimum_spawn_distance
 		
 		
 		var alpha = deg2rad(randi() % 360)
@@ -139,5 +242,46 @@ func _on_EnemySpawnTimer_timeout():
 		npc.spawn(pos)
 		npcs.append(npc)
 
+func on_Boss_death():
+	
+	$Player.number_of_wives += 1
+	if $Player.number_of_wives > 7:
+		$Player.base_speed += 200
+	
+	boss_active = false
+	$Player.hp = 100
+	$Player/Sounds/SevenFemaleWives.play()
+	$Delay.start()
+	yield($Delay, "timeout")
+	pause()
+	$UILayer/Menu/Notification.show()
+	$UILayer/Menu/Notification.text = "You rescued your seventh female wife from the wreckage! Bring her home to Coney Island so you can introduce her to the rest of your wives"
+	$UILayer/Menu/Notification/Continue.text = "Continue"
+	returning_home = true
+
+
+
+
 func spawn_seventh_wife():
-	pass
+	boss = boss_scene.instance()
+	add_child(boss)
+	var seventh_wife_location = $Map.select_seventh_wife_spawn_location($Player/Ship.position)
+	boss.spawn(seventh_wife_location)
+	
+	boss_active=true
+	
+
+
+func _on_Continue_pressed():
+	if paused:
+		close_pause_menu()
+		$UILayer/Menu/Notification.hide()
+
+func game_over():
+	$UILayer/Menu/Notification.show()
+	$UILayer/Menu/Notification.text = "You died, leaving behind %d female widows." % $Player.number_of_wives
+	$UILayer/Menu/Notification/Continue.text = "Respawn"
+	$Player/Ship.position = coney_island_position
+	$Player.hp = $Player.max_hp
+	pause()
+	

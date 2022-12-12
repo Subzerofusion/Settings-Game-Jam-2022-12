@@ -1,7 +1,16 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Themes/Map.tres" type="TileSet" id=1]
 [ext_resource path="res://Scripts/Map.gd" type="Script" id=2]
+[ext_resource path="res://Sprites/MapIcons/Icons4.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/Instagram.png" type="Texture" id=4]
+
+[sub_resource type="CapsuleShape2D" id=4]
+radius = 13.9
+height = 23.5999
+
+[sub_resource type="CircleShape2D" id=5]
+radius = 136.602
 
 [sub_resource type="Animation" id=2]
 length = 0.001
@@ -94,6 +103,25 @@ tracks/3/keys = {
 [node name="Map" type="Node2D"]
 script = ExtResource( 2 )
 
+[node name="ConeyIsland" type="Area2D" parent="."]
+position = Vector2( -675, -587 )
+scale = Vector2( 20, 20 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ConeyIsland"]
+position = Vector2( 33.75, 29.3 )
+rotation = 1.57079
+shape = SubResource( 4 )
+
+[node name="Instagram" type="Sprite" parent="."]
+visible = false
+scale = Vector2( 5, 5 )
+texture = ExtResource( 4 )
+
+[node name="Area2D" type="Area2D" parent="Instagram"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Instagram/Area2D"]
+shape = SubResource( 5 )
+
 [node name="Sea" type="Node2D" parent="."]
 
 [node name="Layer1" type="TileMap" parent="Sea"]
@@ -118,3 +146,13 @@ tile_set = ExtResource( 1 )
 cell_size = Vector2( 100, 100 )
 format = 1
 tile_data = PoolIntArray( 0, 5, 0, 2, 5, 0, 4, 5, 0, 65543, 0, 0, 65544, 0, 1, 65545, 0, 1, 65546, 0, 1, 65547, 0, 2, 131077, 0, 0, 131078, 0, 1, 131079, 0, 3, 131080, 0, 65537, 131081, 0, 65537, 131082, 0, 65540, 131083, 0, 131074, 196612, 0, 0, 196613, 0, 3, 196614, 0, 65537, 196615, 0, 65537, 196616, 0, 65537, 196617, 0, 65537, 196618, 0, 65538, 262148, 0, 131072, 262149, 0, 65539, 262150, 0, 65537, 262151, 0, 65537, 262152, 0, 65537, 262153, 0, 65537, 262154, 0, 65538, 327685, 0, 131072, 327686, 0, 65539, 327687, 0, 65537, 327688, 0, 65537, 327689, 0, 65537, 327690, 0, 4, 327691, 0, 2, 393222, 0, 131072, 393223, 0, 131073, 393224, 0, 131073, 393225, 0, 65539, 393226, 0, 65540, 393227, 0, 131074, 458761, 0, 131072, 458762, 0, 131074 )
+
+[node name="SeventhWifeIcon" type="Sprite" parent="."]
+visible = false
+position = Vector2( -675, -587 )
+scale = Vector2( 20, 20 )
+z_index = 6
+texture = ExtResource( 3 )
+
+[connection signal="area_entered" from="ConeyIsland" to="." method="_on_ConeyIsland_area_entered"]
+[connection signal="area_entered" from="Instagram/Area2D" to="." method="_on_Area2D_area_entered"]

@@ -1,5 +1,7 @@
 extends Node2D
 
+var number_of_wives = 6
+
 var velocity = Vector2()
 var sail_angular_speed = 0.3
 var sail_max_angle = PI/6
@@ -8,7 +10,9 @@ var desired_sail_angle = 0
 var wind_direction = 0
 var wind_angular_speed = 0.9
 
-var base_speed = 90
+var hull_angle_boost = 0
+
+var base_speed = 100
 var ship_speed = 0
 
 var desired_ship_direction = Vector2(0,0)
@@ -17,8 +21,8 @@ var hull_lerp_factor = 0
 var push_force = 300
 
 var max_hp = 100.0
-var hp = 10
-var heal_factor = 1.5
+var hp = max_hp
+var heal_factor = 0.5
 
 func _ready():
 #	hp = max_hp
@@ -26,13 +30,16 @@ func _ready():
 
 func _process(_delta):
 	if Input.is_action_just_pressed("zoom1"):
-		$Ship/Camera2D.zoom = Vector2(2,2)
+		$Ship/Camera2D.zoom = Vector2(1,1)
 		
 	if Input.is_action_just_pressed("zoom2"):
-		$Ship/Camera2D.zoom = Vector2(4,4)
+		$Ship/Camera2D.zoom = Vector2(2,2)
 		
 	if Input.is_action_just_pressed("zoom3"):
-		$Ship/Camera2D.zoom = Vector2(20,20)
+		$Ship/Camera2D.zoom = Vector2(4,4)
+		
+	if Input.is_action_pressed("wife_update"):
+		_wife_update()
 
 func _physics_process(delta):
 	
@@ -52,8 +59,8 @@ func _physics_process(delta):
 	
 	
 	
-	
-	$Ship.rotation = lerp_angle($Ship.rotation, desired_ship_direction.angle(), hull_lerp_factor*delta)
+	print_debug(hull_lerp_factor)
+	$Ship.rotation = lerp_angle($Ship.rotation, desired_ship_direction.angle(), (hull_angle_boost + hull_lerp_factor)*delta)
 	
 	
 #	Ship.move_and_slide(desired_ship_direction)
@@ -91,9 +98,10 @@ func _calculate_ship_speed():
 	
 	
 func hit():
-	print("hit!")
+	
 	hp -= 10
 	if hp == 0:
+		
 		get_parent().game_over()
 		
 	
@@ -106,7 +114,13 @@ func _calculate_hull_lerp_factor():
 		hull_lerp_factor = ship_speed/15
 
 
-	
+func _wife_update():
+	if number_of_wives == 6:
+		if not $Sounds/SixFemaleWives.playing:
+			$Sounds/SixFemaleWives.play()
+	elif number_of_wives == 7:
+		if not $Sounds/SevenFemaleWives.playing:
+			$Sounds/SevenFemaleWives.play()
 	
 
 

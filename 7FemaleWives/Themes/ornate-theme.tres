@@ -1,11 +1,8 @@
-[gd_resource type="Theme" load_steps=69 format=2]
+[gd_resource type="Theme" load_steps=70 format=2]
 
 [ext_resource path="res://Themes/ornate.png" type="Texture" id=1]
 [ext_resource path="res://Themes/pixelplay.ttf" type="DynamicFontData" id=2]
-
-[sub_resource type="DynamicFont" id=57]
-size = 32
-font_data = ExtResource( 2 )
+[ext_resource path="res://Themes/font.tres" type="DynamicFont" id=3]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -46,6 +43,10 @@ margin_left = 9.89544
 margin_right = 9.93499
 margin_top = 7.22895
 margin_bottom = 7.31437
+
+[sub_resource type="DynamicFont" id=57]
+size = 32
+font_data = ExtResource( 2 )
 
 [sub_resource type="AtlasTexture" id=6]
 atlas = ExtResource( 1 )
@@ -446,13 +447,14 @@ margin_top = 2.0
 expand_margin_top = 3.0
 
 [resource]
-default_font = SubResource( 57 )
+default_font = ExtResource( 3 )
 Button/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
 Button/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+Button/colors/font_color_focus = Color( 0.94, 0.94, 0.94, 1 )
 Button/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
 Button/colors/font_color_pressed = Color( 1, 1, 1, 1 )
 Button/constants/hseparation = 2
-Button/fonts/font = SubResource( 57 )
+Button/fonts/font = ExtResource( 3 )
 Button/styles/disabled = SubResource( 1 )
 Button/styles/focus = SubResource( 2 )
 Button/styles/hover = SubResource( 3 )

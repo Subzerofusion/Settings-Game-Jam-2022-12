@@ -7,7 +7,7 @@ var desired_sail_angle = 0
 
 var wind_direction = 0
 
-var base_speed = 2
+var base_speed = 30
 var ship_speed = 0
 
 var desired_ship_direction = Vector2(0,0)
@@ -17,7 +17,8 @@ var player_position = Vector2(0,0)
 var escape_direction = Vector2(0,0)
 var desired_sail_direction = 0
 var running_away = false
-var sight_radius = 1000
+var sight_radius = 2000
+var bullet_range = 1000
 
 var boost_velocity = Vector2(0, 0)
 var boost_loss = 0.3
@@ -43,8 +44,8 @@ func _physics_process(delta):
 		
 
 		if running_away:
-			$Sail.rotation = lerp_angle($Sail.rotation, escape_direction.angle(), 1 * delta)
-			
+			$Sail.rotation = lerp_angle($Sail.rotation, escape_direction.angle(), 0.5 * delta)
+			_set_arrow(escape_direction.angle())
 		else:
 			$Sail.rotation = lerp_angle($Sail.rotation, wind_direction, 0.5 * delta)
 		
@@ -65,12 +66,12 @@ func _physics_process(delta):
 		velocity = Vector2(cos($Ship.rotation), sin($Ship.rotation))
 		
 		
-		$Ship.move_and_slide(velocity*ship_speed + 0*boost_velocity)
+		$Ship.move_and_slide(velocity*ship_speed + boost_velocity+velocity*ship_speed)
 		
 		boost_velocity = lerp(boost_velocity, Vector2(0,0), delta*boost_loss)
 		$Sail.position = $Ship.position
 		
-#		$DirectionArrow.position = $Ship.position
+		$DirectionArrow.position = $Ship.position
 		_cannon_stuff(delta)
 		
 		wind_direction = get_parent().wind_direction 
@@ -136,6 +137,7 @@ func _cannon_stuff(delta):
 	else:
 		$Cannon.rotation = lerp_angle($Cannon.rotation, $Ship.rotation, 0.5*delta)
 	$Cannon.rotation = clamp($Cannon.rotation, $Ship.rotation - 1.91986, $Ship.rotation + 1.91986)
+	$Cannon.rotation = angle_to_player
 	
 func _on_Area2D_area_entered(area):
 	
@@ -143,10 +145,13 @@ func _on_Area2D_area_entered(area):
 		health -= 1
 		if health == 2:
 			$Ship/Hull.texture = load("res://Sprites/Enemy/Enemy2.png")
+			play_sound("hurt")
 		elif health == 1:
 			$Ship/Hull.texture = load("res://Sprites/Enemy/Enemy3.png")
+			play_sound("hurt")
 		elif health == 0:
 			$Ship/Hull.texture = load("res://Sprites/Enemy/Enemy4.png")
+			play_sound("dead")
 			alive = false
 			dying = true
 			$Ship/Collision.queue_free()
@@ -155,13 +160,49 @@ func _on_Area2D_area_entered(area):
 			get_parent().on_NPC_death()
 		
 		if alive:
-			boost_velocity = ($Ship.position - area.position).normalized()*boost_force
+			boost_velocity = escape_direction*boost_force
+			_set_arrow(boost_velocity.angle())
 
 
 func _on_ShootTimer_timeout():
-	var bullet = bullet_scene.instance()
-	add_child(bullet)
-	var cannon_vector = Vector2(cos($Cannon.rotation), sin($Cannon.rotation))
-	bullet.position = $Cannon.position + cannon_vector * cannon_offset * 1.1
-	bullet.shoot(cannon_vector)
+	if $Ship.position.distance_to(player_position) <= bullet_range:
+		var bullet = bullet_scene.instance()
+		add_child(bullet)
+		var cannon_vector = Vector2(cos($Cannon.rotation), sin($Cannon.rotation))
+		bullet.position = $Cannon.position + cannon_vector * cannon_offset * 1.3
+		bullet.shoot(cannon_vector)
 	
+func _set_arrow(angle):
+	$DirectionArrow.rotation=angle
+	$DirectionArrow.show()
+	
+func play_sound(type):
+	var r = randf()
+	if type=="hurt":
+		if r<0.5:
+			$Sounds/BingBong1.play()
+		elif r<0.95:
+			$Sounds/BingBong2.play()
+		elif r<=1:
+			$Sounds/YellowFoams.play()
+	elif type == "dead":
+		if r<0.5:
+			$Sounds/FuckYaLife.play()
+		elif r<=1:
+			$Sounds/SteveJobs.play()
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			

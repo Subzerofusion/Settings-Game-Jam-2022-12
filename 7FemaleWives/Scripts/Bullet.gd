@@ -28,5 +28,6 @@ func _physics_process(delta):
 			queue_free()
 
 func shoot(dir):
+	$AudioStreamPlayer2D.play()
 	direction = dir.normalized()
 	active = true
