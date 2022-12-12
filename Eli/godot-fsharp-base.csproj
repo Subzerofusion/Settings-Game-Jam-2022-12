@@ -1,0 +1,9 @@
+<Project Sdk="Godot.NET.Sdk/3.3.0">
+  <ItemGroup>
+    <ProjectReference Include="scriptsfs/ScriptsFs.fsproj" />
+  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>godotfsharpbase</RootNamespace>
+  </PropertyGroup>
+</Project>

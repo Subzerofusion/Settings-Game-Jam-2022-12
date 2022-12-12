@@ -1,0 +1,8 @@
+obj/
+bin/
+.mono
+.vscode
+.vs
+.idea
+.config
+export 

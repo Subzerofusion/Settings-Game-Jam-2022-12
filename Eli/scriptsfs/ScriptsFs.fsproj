@@ -1,0 +1,28 @@
+<Project Sdk="Godot.NET.Sdk/3.3.0">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>godotfsharpbase</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="calc.fs" />
+    <Compile Include="Raycasting.fs" />
+    <Compile Include="Actions.fs" />
+    <Compile Include="OrbitPhysics.fs" />
+    <Compile Include="Library.fs" />
+    <Compile Include="InputHandler.fs" />
+    <Compile Include="ControlManager.fs" />
+    <Compile Include="Target.fs" />
+    <Compile Include="GUIHandler.fs" />
+    <Compile Include="LineDrawer.fs" />
+    <Compile Include="SimplePrintFs.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FSharp.Control.Reactive" Version="5.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="GodotSharp">
+      <HintPath>../.mono/assemblies/Debug/GodotSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
