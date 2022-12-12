@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Godot;
 
-namespace NormalFarming.sauce
+namespace Normalfarming.sauce
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Suckable : RigidBody
@@ -26,17 +26,20 @@ namespace NormalFarming.sauce
 
         public void _on_body_entered(Node body)
         {
-            if (!(body is Player player))
+            if (body is Player player)
             {
-                return;
+                OnHitPlayer(player);
             }
             
-            OnHitPlayer(player);
+            if (body.Owner is Hittable hittable)
+            {
+                hittable.GetHit(this);
+            }
         }
 
         protected virtual void OnHitPlayer(Player player)
         {
-            
+            player.GetClogged(this);
         }
 
         public override void _PhysicsProcess(float delta)

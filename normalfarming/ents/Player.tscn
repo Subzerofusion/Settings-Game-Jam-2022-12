@@ -21,3 +21,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -10 )
 collision_mask = 2
+
+[node name="HoldPoint" type="Spatial" parent="Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.787897 )

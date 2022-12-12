@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Godot;
 using Array = Godot.Collections.Array;
 
-namespace NormalFarming.sauce
+namespace Normalfarming.sauce
 {
 	internal enum SuckMode
 	{
 		Nothing,
 		SuckingAir,
 		Clogged,
-		Unclogging,
 		Blowing
 	};
 	
@@ -20,6 +20,7 @@ namespace NormalFarming.sauce
 		[Export] public float MoveSpeed = 10.0f;
 		[Export] public float RotateSpeed = 2.0f;
 		[Export] public float JumpPower = 6.0f;
+		[Export] private float _ejectionForce = 10.0f;
 	
 		private Vector3 _velocity = Vector3.Zero;
 		private float _gravity;
@@ -27,6 +28,9 @@ namespace NormalFarming.sauce
 		private Camera _camera = null;
 		private RayCast _cameraRay = null;
 		private List<Suckable> _suckingThings = new List<Suckable>();
+		private Suckable _clog = null;
+		private Node _clogParent = null;
+		private Spatial _holdPoint;
 
 		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
@@ -38,6 +42,12 @@ namespace NormalFarming.sauce
 			if (_camera is null || _cameraRay is null)
 			{
 				Debug.Fail("Missing Camera or RayCast on the Player");
+			}
+
+			_holdPoint = GetNode<Spatial>("Camera/HoldPoint");
+			if (_holdPoint is null)
+			{
+				Debug.Fail("No hold point found on player");
 			}
 		}
 
@@ -118,10 +128,7 @@ namespace NormalFarming.sauce
 					
 					break;
 				case SuckMode.Clogged:
-					// TODO: drop whatever we're holding, politely
-					_suckMode = SuckMode.Nothing;
-					break;
-				case SuckMode.Unclogging:
+					// Nothing to do (passively)
 					break;
 				case SuckMode.Blowing:
 					break;
@@ -152,6 +159,15 @@ namespace NormalFarming.sauce
 			}
 		}
 
+		private void ReleaseSuckingThings()
+		{
+			foreach (var thing in _suckingThings)
+			{
+				thing.StopSucking();
+			}
+			_suckingThings.Clear();
+		}
+
 		private void HandleSuckRelease()
 		{
 			switch (_suckMode)
@@ -160,17 +176,11 @@ namespace NormalFarming.sauce
 					// Can happen, but nothing needs to be done here
 					break;
 				case SuckMode.SuckingAir:
-					foreach (var thing in _suckingThings)
-					{
-						thing.StopSucking();
-					}
-					_suckingThings.Clear();
+					ReleaseSuckingThings();
 					_suckMode = SuckMode.Nothing;
 					break;
 				case SuckMode.Clogged:
 					// Don't do anything, 'cause we keep holding whatever
-					break;
-				case SuckMode.Unclogging:
 					break;
 				case SuckMode.Blowing:
 					// Safe to ignore, probably
@@ -184,8 +194,27 @@ namespace NormalFarming.sauce
 		{
 			if (_suckMode == SuckMode.Clogged)
 			{
-				// TODO: Eject that shit hard!!
-				_suckMode = SuckMode.Unclogging;
+				Debug.Print("EJECT THAT SHIT!!!");
+				_suckMode = SuckMode.Nothing;
+
+				if (_clog is null)
+				{
+					// Shouldn't happen, but... meh
+					return;
+				}
+
+				var clogOwner = _clog.Owner ?? _clog;
+				_holdPoint.RemoveChild(clogOwner);
+				_clogParent.AddChild(clogOwner);
+				
+				_clog.GlobalTranslation = _holdPoint.GlobalTranslation;
+				_clog.Mode = RigidBody.ModeEnum.Rigid;
+				_clog.GetNode<CollisionShape>("CollisionShape").Disabled = false;
+				_clog.ApplyCentralImpulse(-_camera.GlobalTransform.basis.z * _ejectionForce);
+			}
+			else
+			{
+				_suckMode = SuckMode.Blowing;
 			}
 		}
 
@@ -193,7 +222,6 @@ namespace NormalFarming.sauce
 		{
 			if (_suckMode == SuckMode.Blowing)
 			{
-				// TODO: Tell anything we're sucking that we stopped sucking it
 				_suckMode = SuckMode.Nothing;
 			}
 		}
@@ -209,9 +237,39 @@ namespace NormalFarming.sauce
 
 		public void GetClogged(Suckable suckable)
 		{
+			// Ignore suckables that I'm not actually sucking
+			if (!_suckingThings.Contains(suckable))
+			{
+				return;
+			}
+
 			// If I'm already clogged, then ignore it
-			
+			if (_suckMode != SuckMode.SuckingAir)
+			{
+				return;
+			}
+
 			// If I'm sucking air, then set myself to clogged and move the object to be a child of ... my gun mount?
+			Debug.Print("I'm getting clogged!!");
+			_suckMode = SuckMode.Clogged;
+			ReleaseSuckingThings();
+
+			_clog = suckable;
+			_clog.Mode = RigidBody.ModeEnum.Static;
+			_clog.GetNode<CollisionShape>("CollisionShape").Disabled = true;
+			var owner = _clog.GetOwnerOrNull<Spatial>() ?? suckable;
+			if (owner.GetParentOrNull<Node>() is Node parent)
+			{
+				parent.RemoveChild(owner);
+				_clogParent = parent;
+			}
+			else
+			{
+				Debug.Print("No parent, I guess?");
+			}
+
+			_holdPoint.AddChild(owner);
+			_clog.GlobalTranslation = _holdPoint.GlobalTranslation;
 		}
 	}
 }
