@@ -1,0 +1,108 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Target.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Orbiter2.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/ControlManager.cs" type="Script" id=3]
+[ext_resource path="res://ground.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scripts/GUIHandler.cs" type="Script" id=5]
+[ext_resource path="res://components/intro.tscn" type="PackedScene" id=6]
+
+[sub_resource type="SpatialMaterial" id=4]
+albedo_color = Color( 0.184314, 0.8, 0.835294, 1 )
+
+[sub_resource type="CapsuleMesh" id=5]
+material = SubResource( 4 )
+
+[node name="Spatial" type="Spatial"]
+
+[node name="ground" parent="." instance=ExtResource( 4 )]
+transform = Transform( 35.243, 0, 0, 0, 0.657, 0, 0, 0, 23.695, 0, 0, 45.3232 )
+
+[node name="ControlManager" type="Node" parent="."]
+script = ExtResource( 3 )
+nextLevelPath = "res://Levels/Level4.tsc"
+
+[node name="Camera" type="Camera" parent="ControlManager"]
+transform = Transform( 1, 0, 0, 0, 0.53858, 0.842575, 0, -0.842575, 0.53858, -1.48845, 66.2672, 108.616 )
+far = 1438.9
+
+[node name="RayCast" type="RayCast" parent="ControlManager/Camera"]
+enabled = true
+
+[node name="Placement" type="RayCast" parent="ControlManager/Camera"]
+enabled = true
+collision_mask = 2
+
+[node name="PlacementIndicator" type="MeshInstance" parent="ControlManager/Camera"]
+transform = Transform( 0.254773, 0.0118796, 0.000892948, 0.00812018, -0.20571, -0.383999, -0.00704432, 0.192526, -0.410351, 5.89135, -12.7207, -59.293 )
+mesh = SubResource( 5 )
+skeleton = NodePath("../..")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="ControlManager"]
+script = ExtResource( 5 )
+
+[node name="Stats" type="Label" parent="ControlManager/CanvasLayer"]
+margin_left = 36.0
+margin_top = 22.0
+margin_right = 88.0
+margin_bottom = 36.0
+text = "HEYYYYY"
+
+[node name="MouseState" type="Label" parent="ControlManager/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -43.0
+margin_top = -52.0
+margin_right = 36.0
+margin_bottom = -38.0
+text = "Mouse State"
+align = 1
+valign = 2
+
+[node name="Label" type="Label" parent="ControlManager/CanvasLayer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -43.0
+margin_top = 15.0
+margin_right = 44.0
+margin_bottom = 63.0
+text = "Level 3
+Wiggle wiggle
+"
+align = 1
+
+[node name="intro" parent="ControlManager/CanvasLayer" instance=ExtResource( 6 )]
+text = "You may have noticed by this point that perterbation orbs and the \"ball\" don't seem to touch each other. 
+
+That's because this is golf, a game of careful maneuvers not ugly brutish bouncing and bashing.
+
+If you want to hit things go play space-billards!"
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( -0.999716, -0.0238214, -2.44404e-10, 0.00653089, -0.274083, 0.961684, -0.0229087, 0.961411, 0.274161, -45.3572, 9.20552, 26.1881 )
+light_color = Color( 0.466667, 0.466667, 0.466667, 1 )
+light_energy = 0.293
+light_indirect_energy = 0.891
+shadow_enabled = true
+
+[node name="OmniLight" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 19.3806, 44.835 )
+light_color = Color( 0.862745, 0.866667, 0.737255, 1 )
+light_energy = 0.13
+shadow_enabled = true
+omni_range = 91.7378
+
+[node name="Ball" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 60.5109, -1.52588e-05, 64.2533 )
+mass = 5000.0
+linear_velocity = Vector3( 100, 0, 0 )
+angular_velocity = Vector3( 100, 0, 0 )
+startingVelocity = Vector3( -15, 0, 0 )
+
+[node name="Target" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.41583, 0.107529, 55.8012 )
+
+[node name="Target2" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 21.0602, 0.107513, 77.6374 )
