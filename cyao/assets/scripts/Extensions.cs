@@ -1,5 +1,5 @@
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 using Godot;
 using static Newtonsoft.Json.JsonConvert;
 
@@ -7,6 +7,21 @@ static class TextEditExtension {
   public static void CursorToEnd(this TextEdit textEdit) {
     textEdit.CursorSetLine(Int32.MaxValue);
     textEdit.CursorSetColumn(Int32.MaxValue);
+  }
+}
+
+static class ListExtension {
+  private static Random rng = new Random();
+
+  public static void Shuffle<T>(this IList<T> list) {
+    int n = list.Count;
+    while (n > 1) {
+      n--;
+      int k = rng.Next(n + 1);
+      T value = list[k];
+      list[k] = list[n];
+      list[n] = value;
+    }
   }
 }
 

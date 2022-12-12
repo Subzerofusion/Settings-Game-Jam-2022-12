@@ -20,4 +20,6 @@ public class GameSave {
   public Killable CurrentPlayer = null;
 
   public List<string> PreviousInputs = new List<string>();
+
+  public List<string> UnfoughtEnemies = new List<string>();
 }

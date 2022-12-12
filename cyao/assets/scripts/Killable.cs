@@ -277,6 +277,39 @@ public class KAction {
         int dmg = target.TrueDmg(itemCount * new Random().Next(4,20));
         return new string[]{$"{itemCount} item{(itemCount == 1 ? "s" : "")} have been destroyed, dealing {dmg} damage to {target.Name}"};
       }},
+    new KAction(){ Id = "atk_bongcloud", Name = "Bong Cloud",
+      Description = "Afflicts target with status effect Bonged",
+      Effect = (root2d, action, user, target) => {
+        target.Effects.Add((user == root2d.Player ? Target.Player : Target.Enemy, target == root2d.Player ? Target.Player : Target.Enemy, Effects.First(x=>x.Id=="fx_bonged")));
+        return new string[]{$"{target.Name} is now {target.Effects.Where(x=>x.Item3.Id == "fx_bonged")} Bonged"};
+      }},
+    new KAction(){ Id = "atk_blaze", Name = "Blaze",
+      Description = "Consume target's Bonged effects to divide their health by how Bonged they are.",
+      Effect = (root2d, action, user, target) => {
+        int bongs = target.Effects.RemoveAll(x=>x.Item3.Id=="fx_bonged");
+
+        int dmg = target.Health - target.Health / bongs;
+        target.TrueDmg(dmg);
+
+        return new string[]{$"{target.Name} was Blazed for {dmg} damage"};
+      }},
+    new KAction(){ Id = "atk_build", Name = "Build",
+      Damage = 20, Cost = 20,
+      Description = "Increases the damage dealt by deploy",
+      Effect = (root2d, action, user, target) => {
+        var attack = user.Attacks.First(x=>x.Id=="atk_deploy");
+        attack.Damage += 20;
+        return new string[]{$"{user.Name}'s Deploy has increased in damage"};
+      }},
+    new KAction() {Id = "atk_deploy", Name = "Deploy",
+      Damage = 20, Cost = 20,
+      Description = "Increases the damage dealt by build",
+      Effect = (root2d, action, user, target) => {
+        var attack = user.Attacks.First(x=>x.Id=="atk_build");
+        attack.Damage += 20;
+        return new string[] { $"{user.Name}'s Build has increased in damage" };
+      }
+    },
   };
 
   public static KAction[] ForbiddenItems = new KAction[] {
@@ -329,6 +362,80 @@ public class KAction {
       user.Items.Remove(action);
       target.Health += 500;
       return new string[]{$"has restored 500 health to {target.Name}"};
+      }
+    },
+    new KAction(){ Id = "item_health_multiplier_1", Name = "Health Multiplier", GoodForSelf = true,
+    Description = "Doubles health of target when used.",
+    Effect = (root2d, action, user, target) => {
+      user.Items.Remove(action);
+      target.Health *= 2;
+      return new string[]{$"{target.Name}'s health has been doubled"};
+      }
+    },
+    new KAction(){ Id = "item_health_multiplier_2", Name = "Greater Health Multiplier", GoodForSelf = true,
+      Description = "Quadruples health of target when used.",
+      Effect = (root2d, action, user, target) => {
+        target.Health *= 4;
+        return new string[]{$"{target.Name}'s health has been quadrupled"};
+      }
+    },
+    new KAction(){ Id = "item_mana_pot_1", Name = "Minor Mana Potion", GoodForSelf = true,
+    Description = "Restores 10 mana to target when used.",
+    Effect = (root2d, action, user, target) => {
+      user.Items.Remove(action);
+      target.Mana += 10;
+      return new string[]{$"has restored 10 mana to {target.Name}"};
+      }
+    },
+    new KAction(){ Id = "item_mana_pot_2", Name = "OK Mana Potion", GoodForSelf = true,
+    Description = "Restores 40 mana to target when used.",
+    Effect = (root2d, action, user, target) => {
+      user.Items.Remove(action);
+      target.Mana += 40;
+      return new string[]{$"has restored 40 mana to {target.Name}"};
+      }
+    },
+    new KAction(){ Id = "item_mana_pot_3", Name = "Amazing Mana Potion", GoodForSelf = true,
+    Description = "Restores 100 mana to target when used.",
+    Effect = (root2d, action, user, target) => {
+      user.Items.Remove(action);
+      target.Mana += 100;
+      return new string[]{$"has restored 100 mana to {target.Name}"};
+      }
+    },
+    new KAction(){ Id = "item_mana_pot_4", Name = "Phenomenal Mana Potion", GoodForSelf = true,
+    Description = "Restores 500 mana to target when used.",
+    Effect = (root2d, action, user, target) => {
+      user.Items.Remove(action);
+      target.Mana += 500;
+      return new string[]{$"has restored 500 mana to {target.Name}"};
+      }
+    },
+    new KAction(){ Id = "item_mana_multiplier_1", Name = "Mana Multiplier", GoodForSelf = true,
+    Description = "Doubles mana of target when used.",
+    Effect = (root2d, action, user, target) => {
+      user.Items.Remove(action);
+      target.Mana *= 2;
+      return new string[]{$"{target.Name}'s mana has been doubled"};
+      }
+    },
+    new KAction(){ Id = "item_mana_multiplier_2", Name = "Greater Mana Multiplier", GoodForSelf = true,
+      Description = "Quadruples mana of target when used.",
+      Effect = (root2d, action, user, target) => {
+        target.Mana *= 4;
+        return new string[]{$"{target.Name}'s mana has been quadrupled"};
+      }
+    },
+    new KAction(){ Id = "item_health_markiplier", Name = "Health Markiplier", GoodForSelf = true,
+    Description = "Hello everybody it's Markiplier",
+    Effect = (root2d, action, user, target) => {
+      return new string[]{$"{target.Name}: Hello everybody it's Markiplier"};
+      }
+    },
+    new KAction(){ Id = "item_gc_coffin", Name = "From Software Gender Change Coffin", GoodForSelf = true,
+    Description = "Swaps target's gender",
+    Effect = (root2d, action, user, target) => {
+      return new string[]{$"{target.Name}'s gender has been changed"};
       }
     },
     new KAction(){ Id = "item_resist_up_1", Name = "Minor Liquid Shield", GoodForSelf = true,
