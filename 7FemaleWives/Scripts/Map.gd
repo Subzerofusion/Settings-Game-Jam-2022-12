@@ -11,7 +11,7 @@ var coney_island = [[1,1,1,1,1,1],
 					[0,1,1,1,1,0],
 					[0,0,0,0,0,0]]
 var house_pos = Vector2(3,2)
-var seventh_wife_radius = 1000
+var seventh_wife_radius = 10
 var instagram_location = Vector2(200, 200)
 func _ready():
 	
@@ -69,7 +69,7 @@ func make_islands():
 				min_loc = Vector2(x, y)
 	
 	instagram_location = min_loc
-	print(min_loc)
+	
 	$Instagram.position = $Islands.map_to_world(min_loc)
 	
 	var center = Vector2(int(map_size.x/2), int(map_size.y/2))
@@ -84,6 +84,8 @@ func make_islands():
 	var house_coord = center + house_pos 
 	$Islands.set_cell(house_coord.x, house_coord.y, tile_ids["coney_island"])
 	$Islands.set_cell(house_coord.x+1, house_coord.y, -1)
+	
+	
 	
 func _draw_sea():
 	

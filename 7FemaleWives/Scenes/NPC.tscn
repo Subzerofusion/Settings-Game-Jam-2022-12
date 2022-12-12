@@ -48,6 +48,7 @@ offset = Vector2( 25, 0 )
 
 [node name="Cannon" type="Sprite" parent="."]
 position = Vector2( 52, 0 )
+rotation = 2.37714
 texture = ExtResource( 6 )
 offset = Vector2( -19.5, 0 )
 
@@ -62,7 +63,7 @@ wait_time = 5.0
 one_shot = true
 
 [node name="ShootTimer" type="Timer" parent="."]
-wait_time = 3.0
+wait_time = 2.5
 autostart = true
 
 [node name="Sounds" type="Node" parent="."]

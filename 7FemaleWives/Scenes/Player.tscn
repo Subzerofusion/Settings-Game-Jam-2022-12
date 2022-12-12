@@ -6,7 +6,7 @@
 [ext_resource path="res://Sprites/MapIcons/Icons1.png" type="Texture" id=4]
 [ext_resource path="res://Sounds/SixFemaleWives.wav" type="AudioStream" id=5]
 [ext_resource path="res://Sprites/ShipDirectionArrow.png" type="Texture" id=6]
-[ext_resource path="res://Scenes/Player.gd" type="Script" id=7]
+[ext_resource path="res://Scripts/Player.gd" type="Script" id=7]
 [ext_resource path="res://Sounds/SevenFemaleWives.wav" type="AudioStream" id=8]
 
 [node name="Player" type="Node2D"]
@@ -41,6 +41,7 @@ position = Vector2( 40, 0 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship/Sword/SwordArea"]
 position = Vector2( -1, 0 )
+scale = Vector2( 1.1, 1.1 )
 polygon = PoolVector2Array( -47, -18, 35, -18, 53, 0, 36, 18, -46, 18 )
 
 [node name="MapIcon" type="Sprite" parent="Ship"]
@@ -51,6 +52,7 @@ texture = ExtResource( 4 )
 offset = Vector2( 8, 0 )
 
 [node name="DirectionArrow" type="Sprite" parent="."]
+visible = false
 texture = ExtResource( 6 )
 offset = Vector2( 25, 0 )
 

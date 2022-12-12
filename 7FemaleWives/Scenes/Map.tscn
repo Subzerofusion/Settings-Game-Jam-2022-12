@@ -1,13 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Themes/Map.tres" type="TileSet" id=1]
 [ext_resource path="res://Scripts/Map.gd" type="Script" id=2]
 [ext_resource path="res://Sprites/MapIcons/Icons4.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/Instagram.png" type="Texture" id=4]
-
-[sub_resource type="CapsuleShape2D" id=4]
-radius = 13.9
-height = 23.5999
 
 [sub_resource type="CircleShape2D" id=5]
 radius = 136.602
@@ -103,15 +99,6 @@ tracks/3/keys = {
 [node name="Map" type="Node2D"]
 script = ExtResource( 2 )
 
-[node name="ConeyIsland" type="Area2D" parent="."]
-position = Vector2( -675, -587 )
-scale = Vector2( 20, 20 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ConeyIsland"]
-position = Vector2( 33.75, 29.3 )
-rotation = 1.57079
-shape = SubResource( 4 )
-
 [node name="Instagram" type="Sprite" parent="."]
 visible = false
 scale = Vector2( 5, 5 )
@@ -154,5 +141,4 @@ scale = Vector2( 20, 20 )
 z_index = 6
 texture = ExtResource( 3 )
 
-[connection signal="area_entered" from="ConeyIsland" to="." method="_on_ConeyIsland_area_entered"]
 [connection signal="area_entered" from="Instagram/Area2D" to="." method="_on_Area2D_area_entered"]

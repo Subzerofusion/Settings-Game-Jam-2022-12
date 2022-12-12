@@ -10,14 +10,14 @@ onready var boss_scene = load("res://Scenes/Boss.tscn")
 var boss
 var boss_active = false
 
-var despawn_range = 3000
+var despawn_range = 5000
 
 var showing_map = false
 var npcs = []
 var max_npcs = 15
 
-var Enemy_spawn_range = 3000
-var minimum_spawn_distance = 0
+var Enemy_spawn_range = 2000
+var minimum_spawn_distance = 2500
 
 var number_of_kills = 0
 var seventh_wife_threshold = 10
@@ -33,13 +33,15 @@ var coney_island_position = Vector2()
 var instagram_position = Vector2()
 var instagram_active = false
 
+var first_time = true
+
 func _ready():
 	pause()
 	center = Vector2($Map.map_size.x * 100 / 2, $Map.map_size.y * 100 / 2)
 	$MapCamera.position=center
 	coney_island_position = center + Vector2(350, 320)
 	$Player/Ship.position = coney_island_position
-	$Map/ConeyIsland.position = center + Vector2(-250, -150)
+	
 
 	
 	
@@ -64,7 +66,10 @@ func _process(_delta):
 	if Input.is_action_just_pressed("fullscreen"):
 		OS.window_fullscreen = not OS.window_fullscreen
 			
-		
+	if Input.is_action_just_pressed("debug"):
+		if number_of_kills != seventh_wife_threshold :
+			number_of_kills -= 1
+		on_NPC_death()
 	
 		
 	
@@ -129,11 +134,16 @@ func close_pause_menu():
 	unpause()
 	
 	$UILayer/Menu/Pause.hide()
+	$UILayer/Menu/Pause/Hint.hide()
 	hide_map()
 	
 	if listening:
 		$Sounds/GoToMyInstagram.play()
 		listening = false
+		
+	if first_time:
+		$Sounds/Live.play()
+		first_time = false
 	
 
 func show_map():
@@ -200,9 +210,8 @@ func on_NPC_death():
 			$Player.base_speed += 15
 			notif = notif % "Base Speed"
 		elif r == 1:
-			$Player.sail_angular_speed += 0.2
-			$Player.hull_angle_boost += 10
-			notif = notif % "Angles"
+			$Player.sail_angular_speed += 0.4
+			notif = notif % "Sail Speed"
 		elif r == 2:
 			$Player.heal_factor += 0.5
 			notif = notif % "Healing"
@@ -213,11 +222,10 @@ func on_NPC_death():
 		yield($UILayer/UI/NotificationLabel/Timer, "timeout")
 		$UILayer/UI/NotificationLabel.hide()
 	else:
-		$UILayer/UI/NotificationLabel.text = "In the wreckage you find a hint of the location\nof the Seventh Female Wife!"
-		$UILayer/UI/NotificationLabel.show()
-		$UILayer/UI/NotificationLabel/Timer.start()
-		yield($UILayer/UI/NotificationLabel/Timer, "timeout")
-		$UILayer/UI/NotificationLabel.hide()
+		pause()
+		$UILayer/Menu/Notification.show()
+		$UILayer/Menu/Notification/Label.text = "You found a hint about the location of the seventh wife in the wreckage! Check your map to see it."
+		$UILayer/Menu/Notification/Continue.text = "Continue"
 		spawn_seventh_wife()
 	
 func _on_EnemySpawnTimer_timeout():
@@ -255,7 +263,7 @@ func on_Boss_death():
 	yield($Delay, "timeout")
 	pause()
 	$UILayer/Menu/Notification.show()
-	$UILayer/Menu/Notification.text = "You rescued your seventh female wife from the wreckage! Bring her home to Coney Island so you can introduce her to the rest of your wives"
+	$UILayer/Menu/Notification/Label.text = "You rescued your seventh female wife from the wreckage! Bring her home to Coney Island so you can introduce her to the rest of your wives"
 	$UILayer/Menu/Notification/Continue.text = "Continue"
 	returning_home = true
 
@@ -279,9 +287,14 @@ func _on_Continue_pressed():
 
 func game_over():
 	$UILayer/Menu/Notification.show()
-	$UILayer/Menu/Notification.text = "You died, leaving behind %d female widows." % $Player.number_of_wives
+	$UILayer/Menu/Notification/Label.text = "You died, leaving behind %d female widows." % $Player.number_of_wives
 	$UILayer/Menu/Notification/Continue.text = "Respawn"
 	$Player/Ship.position = coney_island_position
+	$Player/Ship.rotation = 0
 	$Player.hp = $Player.max_hp
 	pause()
 	
+
+
+func _on_Quit_pressed():
+	$UILayer/Menu/Pause/Hint.show()

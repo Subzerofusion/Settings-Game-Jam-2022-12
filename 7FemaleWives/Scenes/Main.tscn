@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=2]
+[gd_scene load_steps=80 format=2]
 
 [ext_resource path="res://Themes/ornate-theme.tres" type="Theme" id=1]
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://Themes/ornate.png" type="Texture" id=8]
 [ext_resource path="res://Themes/pixelplay.ttf" type="DynamicFontData" id=9]
 [ext_resource path="res://Sounds/GoToMyInstagram.wav" type="AudioStream" id=10]
+[ext_resource path="res://Sounds/LiveFromConeyIsland.wav" type="AudioStream" id=11]
 
 [sub_resource type="DynamicFont" id=57]
 size = 32
@@ -707,32 +708,34 @@ z_index = 3
 [node name="UILayer" type="CanvasLayer" parent="."]
 
 [node name="UI" type="Control" parent="UILayer"]
-margin_left = 477.0
-margin_top = 269.0
-margin_right = 517.0
-margin_bottom = 309.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 theme = ExtResource( 1 )
 
 [node name="WindCompass" type="Sprite" parent="UILayer/UI"]
-position = Vector2( 1329, 644 )
+position = Vector2( 1806, 949 )
 texture = ExtResource( 5 )
 
 [node name="Needle" type="Sprite" parent="UILayer/UI/WindCompass"]
 texture = ExtResource( 4 )
 
 [node name="SpeedLabel" type="Label" parent="UILayer/UI"]
-margin_left = 1156.0
-margin_top = -268.0
-margin_right = 1434.0
-margin_bottom = -225.0
+margin_left = 1621.0
+margin_top = 12.0
+margin_right = 1899.0
+margin_bottom = 55.0
 text = "Current Speed: "
 
 [node name="ConeyIsland" type="Label" parent="UILayer/UI"]
 visible = false
-margin_left = -70.0
-margin_top = -39.0
-margin_right = 92.0
-margin_bottom = 3.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -56.0
+margin_top = -38.0
+margin_right = 106.0
+margin_bottom = 4.0
 rect_pivot_offset = Vector2( 81, 21 )
 theme = SubResource( 68 )
 text = "CONEY ISLAND"
@@ -747,10 +750,10 @@ z_as_relative = false
 texture = ExtResource( 7 )
 
 [node name="MaxHP" type="ColorRect" parent="UILayer/UI"]
-margin_left = -457.0
-margin_top = 541.0
-margin_right = -403.0
-margin_bottom = 745.0
+margin_left = 16.0
+margin_top = 841.0
+margin_right = 70.0
+margin_bottom = 1045.0
 
 [node name="HP" type="ColorRect" parent="UILayer/UI/MaxHP"]
 margin_left = 52.0
@@ -770,20 +773,20 @@ align = 1
 valign = 1
 
 [node name="StatsLabel" type="Label" parent="UILayer/UI"]
-margin_left = -395.0
-margin_top = 634.0
-margin_right = -245.0
-margin_bottom = 766.0
+margin_left = 78.0
+margin_top = 934.0
+margin_right = 228.0
+margin_bottom = 1066.0
 text = "BaseSpeed:
 SailSpeed:
 Regen:"
 
 [node name="NotificationLabel" type="Label" parent="UILayer/UI"]
 visible = false
-margin_left = -473.0
-margin_top = -263.0
-margin_right = -94.0
-margin_bottom = -170.0
+margin_left = 16.0
+margin_top = 15.0
+margin_right = 395.0
+margin_bottom = 108.0
 text = "The Wind God is pleased,
 he grants you some"
 
@@ -861,6 +864,16 @@ text = "Ships sunk: 5/10
 "
 align = 2
 
+[node name="Hint" type="Label" parent="UILayer/Menu/Pause"]
+visible = false
+margin_left = 544.5
+margin_top = 178.0
+margin_right = 909.5
+margin_bottom = 494.0
+rect_scale = Vector2( 0.5, 0.5 )
+text = "press Alt+F4 to quit :)"
+autowrap = true
+
 [node name="Notification" type="ColorRect" parent="UILayer/Menu"]
 visible = false
 anchor_left = 0.5
@@ -901,20 +914,26 @@ rect_pivot_offset = Vector2( 147, 44 )
 text = "Continue"
 
 [node name="EnemySpawnTimer" type="Timer" parent="."]
+wait_time = 1.2
 autostart = true
 
 [node name="MapCamera" type="Camera2D" parent="."]
-zoom = Vector2( 40, 40 )
+zoom = Vector2( 20, 20 )
 
 [node name="Delay" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 3.0
 
 [node name="Sounds" type="Node" parent="."]
 
 [node name="GoToMyInstagram" type="AudioStreamPlayer" parent="Sounds"]
 stream = ExtResource( 10 )
 
+[node name="Live" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 11 )
+volume_db = -10.0
+
 [connection signal="pressed" from="UILayer/Menu/Pause/Label/Continue" to="." method="_on_Continue_pressed"]
+[connection signal="pressed" from="UILayer/Menu/Pause/Label/Quit" to="." method="_on_Quit_pressed"]
 [connection signal="pressed" from="UILayer/Menu/Notification/Continue" to="." method="_on_Continue_pressed"]
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_EnemySpawnTimer_timeout"]
 

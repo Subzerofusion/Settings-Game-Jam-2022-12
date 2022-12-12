@@ -3,6 +3,6 @@
 [ext_resource path="res://Themes/cc.yal.6w4.otf" type="DynamicFontData" id=1]
 
 [resource]
-size = 50
+size = 100
 extra_spacing_bottom = 15
 font_data = ExtResource( 1 )

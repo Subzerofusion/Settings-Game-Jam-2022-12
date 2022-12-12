@@ -7,7 +7,7 @@ var desired_sail_angle = 0
 
 var wind_direction = 0
 
-var base_speed = 45
+var base_speed = 35
 var ship_speed = 0
 
 var desired_ship_direction = Vector2(0,0)
@@ -19,11 +19,11 @@ var desired_sail_direction = 0
 var running_away = false
 var sight_radius = 2000
 var activation_radius = 4000
-var bullet_range = 1000
+var bullet_range = 10000
 
 var boost_velocity = Vector2(0, 0)
-var boost_loss = 0.3
-var boost_force = 500
+var boost_loss = 0.5
+var boost_force = 600
 
 var health = 5
 var alive = true
@@ -37,8 +37,8 @@ func _physics_process(delta):
 	
 	if alive:
 		
-		$Sail.rotation = lerp_angle($Sail.rotation, escape_direction.angle() + PI, 0.5 * delta)
-		_set_arrow(escape_direction.angle())
+		$Sail.rotation = lerp_angle($Sail.rotation, $Sail.position.angle_to(player_position), 0.5 * delta)
+		
 		
 		
 		
@@ -161,17 +161,23 @@ func _on_Area2D_area_entered(area):
 			get_parent().on_Boss_death()
 		
 		if alive:
+			
 			boost_velocity = -($Cannon.position - area.position).normalized()*boost_force
-			_set_arrow(boost_velocity.angle())
+			$Sail.rotation = boost_velocity.angle()
+			
 
 
 func _on_ShootTimer_timeout():
 	if $Ship.position.distance_to(player_position) <= bullet_range:
-		var bullet = bullet_scene.instance()
-		add_child(bullet)
-		var cannon_vector = Vector2(cos($Cannon.rotation), sin($Cannon.rotation))
-		bullet.position = $Cannon.position + cannon_vector * cannon_offset * 1.1
-		bullet.shoot(cannon_vector)
+		var kappa = int(abs(rad2deg($Cannon.rotation)))%360 #int(abs(rad2deg($Cannon.rotation - $Ship.rotation))) % 360
+		kappa = int(abs(rad2deg($Cannon.position.angle_to_point($Ship.position) - $Cannon.rotation))) % 360
+		
+		if (kappa <= 150 or kappa >= 210):
+			var bullet = bullet_scene.instance()
+			add_child(bullet)
+			var cannon_vector = Vector2(cos($Cannon.rotation), sin($Cannon.rotation))
+			bullet.position = $Cannon.position + cannon_vector * cannon_offset * 1.3
+			bullet.shoot(cannon_vector)
 	
 func _set_arrow(angle):
 	$DirectionArrow.rotation=angle
