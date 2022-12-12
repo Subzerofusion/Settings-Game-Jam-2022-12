@@ -144,7 +144,7 @@ public class Root2D : CanvasLayer {
             "use \"help\" for more info.",
             ""
           );
-          return;
+          return false;
         }
       }
 
@@ -273,7 +273,7 @@ public class Root2D : CanvasLayer {
             "use \"help\" for more info.",
             ""
           );
-          return;
+          return false;
         }
       }
 
@@ -504,17 +504,11 @@ public class Root2D : CanvasLayer {
 
   Killable defaultPlayer = new Killable() {
     Name = GDUtil.GameSave.Name,
-    Health = 2000,
+    Health = 20000000,
     Mana = 2000,
     Resistance = 0.9f,
-    Attacks = new List<KAction>(){
-        KAction.Attacks.First(x=> x.Id == "atk_fire_ball"),
-        KAction.Attacks.First(x=> x.Id == "atk_lightning")
-    },
-    Items = new List<KAction>() {
-      KAction.Items.First(x=> x.Id == "item_health_pot_1"),
-      KAction.ForbiddenItems.First(x=> x.Id == "item_stab_book")
-    }
+    AttackIds = new List<string>() { "atk_fire_ball", "atk_lightning" },
+    ItemIds = new List<string>() { "item_health_pot_1", "item_stab_book" }
   };
 
   private async Task CombatTutorial() {
@@ -553,7 +547,7 @@ public class Root2D : CanvasLayer {
       };
 
       Player.LateInit();
-      Player.OnDmgEvent += () => { ScreenShake(0.25f, 8, 4, 0.01f); };
+      Player.OnDmgEvent += () => { ScreenShake(0.25f, 16, 16, 0.01f); };
 
       await SayPlayerStats();
       await SayLines(
@@ -621,7 +615,7 @@ public class Root2D : CanvasLayer {
         Name = "Tutorial Dummy",
         Health = 10000000,
         Mana = 10000000,
-        Resistance = 0.1f,
+        Resistance = 0.8f,
         Attacks = new List<KAction>() {
           new KAction(){Name = "Punch", Damage = 10, Cost = 0},
           new KAction(){Name = "Murder", Damage = 100000, Cost = 0}
@@ -817,9 +811,9 @@ public class Root2D : CanvasLayer {
 
   static List<Killable> ENEMYBASES = new List<Killable>{
     new Killable() { Name = "ArJo of Nes",
-      Health = 2398,
+      Health = 9832,
       Mana = 3328,
-      Resistance = 0.1f,
+      Resistance = 0.8f,
       AttackIds = new List<string>(){"atk_build", "atk_deploy"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -830,9 +824,9 @@ public class Root2D : CanvasLayer {
       OnDeath = new List<string>(){"Where is my BRZ :("}
     },
     new Killable() { Name = "Neo of the Angled Waters",
-      Health = 1000,
+      Health = 8923,
       Mana = 1000,
-      Resistance = 0.1f,
+      Resistance = 0.3f,
       AttackIds = new List<string>(){"atk_exp_strike"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -845,7 +839,7 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "Witch of the Blair",
       Health = 5670,
       Mana = 2234,
-      Resistance = 0.1f,
+      Resistance = 0.8f,
       AttackIds = new List<string>(){"atk_pos_charge", "atk_neg_charge"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -858,7 +852,7 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "Writhing Sack of Horrors",
       Health = 911,
       Mana = 911,
-      Resistance = 0.1f,
+      Resistance = 0.04f,
       AttackIds = new List<string>(){"atk_knife_game"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -872,7 +866,7 @@ public class Root2D : CanvasLayer {
       Health = 800,
       Mana = 1000,
       Resistance = 0.1f,
-      AttackIds = new List<string>(){"atk_deep"},
+      AttackIds = new List<string>(){"atk_deep", "atk_punch"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
       Engage = new List<string>(){"This! Is an excellent game."},
@@ -882,9 +876,9 @@ public class Root2D : CanvasLayer {
       OnDeath = new List<string>(){"Remember, squid are the best sea creatures"}
     },
     new Killable() { Name = "Faldor of the Li",
-      Health = 4323,
+      Health = 5900,
       Mana = 8732,
-      Resistance = 0.1f,
+      Resistance = 0.3f,
       AttackIds = new List<string>(){"atk_forage", "atk_toughen", "atk_fire_ball", "atk_lightning"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -897,7 +891,7 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "Eleanor Sanguinus (Literal Vampire)",
       Health = 4751,
       Mana = 3051,
-      Resistance = 0.1f,
+      Resistance = 0.8f,
       AttackIds = new List<string>(){"atk_gaslight", "atk_gatekeep", "atk_girlboss"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -910,7 +904,7 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "James.exee",
       Health = 7265,
       Mana = 1,
-      Resistance = 0.1f,
+      Resistance = 0.8f,
       AttackIds = new List<string>(){ "atk_punch", "atk_leave" },
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -923,8 +917,8 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "strata.0.0.1.2194-alpha",
       Health = 4823,
       Mana = 2346,
-      Resistance = 0.1f,
-      AttackIds = new List<string>(){"atk_oxidise", "punch"},
+      Resistance = 0.5f,
+      AttackIds = new List<string>(){"atk_oxidise", "atk_punch"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
       Engage = new List<string>(){"Hello"},
@@ -936,7 +930,7 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "Amic Spectre",
       Health = 4200,
       Mana = 6900,
-      Resistance = 0.1f,
+      Resistance = 0.8f,
       AttackIds = new List<string>(){"atk_bongcloud", "atk_blaze"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -949,7 +943,7 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "Mortemere of the Far East",
       Health = 4290,
       Mana = 8932,
-      Resistance = 0.1f,
+      Resistance = 0.8f,
       AttackIds = new List<string>(){"atk_punch", "atk_facts", "atk_logic"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -962,7 +956,7 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "I Am Maz",
       Health = 2439,
       Mana = 2458,
-      Resistance = 0.1f,
+      Resistance = 0.8f,
       AttackIds = new List<string>(){"atk_rebuild", "atk_manaburn", "atk_focus" },
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -975,7 +969,7 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "Mikael of the Malevolent 22",
       Health = 2649,
       Mana = 7435,
-      Resistance = 0.1f,
+      Resistance = 0.2f,
       AttackIds = new List<string>(){"atk_lightning", "atk_polarise"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -986,7 +980,7 @@ public class Root2D : CanvasLayer {
       OnDeath = new List<string>(){"When sunlight strikes raindrops in the air..."}
     },
     new Killable() { Name = "O'Scar van Lyx",
-      Health = 700,
+      Health = 1000,
       Mana = 1,
       Resistance = 0.1f,
       AttackIds = new List<string>(){ "atk_repair", "atk_slam" },
@@ -1001,7 +995,7 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "Aurora Lando of the Seven",
       Health = 6390,
       Mana = 2342,
-      Resistance = 0.1f,
+      Resistance = 0.7f,
       AttackIds = new List<string>(){"atk_7_female_wives"},
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -1014,7 +1008,7 @@ public class Root2D : CanvasLayer {
     new Killable() { Name = "Aberrant Mage Pahzy of the Yuzu Lands",
       Health = 5329,
       Mana = 100,
-      Resistance = 0.1f,
+      Resistance = 0.4f,
       AttackIds = new List<string>(){"atk_clutter", "atk_sweep", "akt_collapse" },
       ItemIds = new List<string>(){},
       EffectIds = new List<(Target, Target, string)>(){},
@@ -1057,30 +1051,29 @@ public class Root2D : CanvasLayer {
       clone.Items.Add(KAction.Items[random.Next(0, KAction.Items.Length)]);
     }
 
-    return enemy;
+    return clone;
   }
 
   private async Task MurderLoop() {
     OS.WindowResizable = true;
-    if (GDUtil.GameSave.CurrentPlayer != null) {
-      Player = GDUtil.GameSave.CurrentPlayer;
+    if (GDUtil.GameSave.PlayerSaved) {
+      Player = GDUtil.LoadPlayer();
     } else {
       Player = defaultPlayer;
       Player.Name = GDUtil.GameSave.Name;
     }
     Player.LateInit();
     Player.SyncActions();
+    GDUtil.SavePlayer(Player);
+    GDUtil.Save();
+
+    Player.OnDmgEvent += () => { ScreenShake(0.25f, 16, 8, 0.01f); };
 
     while (true) {
       Enemy = GenerateEnemy();
+
+      await SayLines($"{Enemy.Name}: {GetRandom(Enemy.Engage)}");
       while (!Enemy.IsDead) {
-        if (Enemy.Health > Enemy.MaxHealth * 0.5f) {
-          await SayLines($"{Enemy.Name}: {GetRandom(Enemy.Idle)}");
-        } else if (Enemy.Health > Enemy.MaxHealth * 0.25f) {
-          await SayLines($"{Enemy.Name}: {GetRandom(Enemy.IdleWeak)}");
-        } else {
-          await SayLines($"{Enemy.Name}: {GetRandom(Enemy.IdleDieing)}");
-        }
         string line = await Prompt(ResponseType.Str);
         string name = line.Split(" ")[0];
         if (COMMANDS.ContainsKey(name)) {
@@ -1088,7 +1081,7 @@ public class Root2D : CanvasLayer {
             if (COMMANDS[name].IsTurn) {
               // run enemy effects
               foreach (var effect in Enemy.Effects) {
-                await SayLines(effect.Item3.PerTurn(this, effect.Item3, effect.Item1 == Target.Player ? Player : Enemy, effect.Item2 == Target.Player ? Player : Enemy));
+                if (effect.Item3.PerTurn != null) await SayLines(effect.Item3.PerTurn(this, effect.Item3, effect.Item1 == Target.Player ? Player : Enemy, effect.Item2 == Target.Player ? Player : Enemy));
               }
 
               if (Enemy.IsDead) {
@@ -1107,17 +1100,25 @@ public class Root2D : CanvasLayer {
               }
 
               foreach (var effect in Player.Effects) {
-                await SayLines(effect.Item3.PerTurn(this, effect.Item3, effect.Item1 == Target.Player ? Player : Enemy, effect.Item2 == Target.Player ? Player : Enemy));
+                if (effect.Item3.PerTurn != null) await SayLines(effect.Item3.PerTurn(this, effect.Item3, effect.Item1 == Target.Player ? Player : Enemy, effect.Item2 == Target.Player ? Player : Enemy));
               }
               if (Player.IsDead) {
                 await SayLines(
                   GetRandom(new string[] { "You'll gettem next time", "You Died", "The birds are shining, the sun is tweeting... and kids like you...", "Looks like you're dead :(" }),
                   ""
                 );
-                await this.Wait(1f);
+                await this.Wait(2f);
                 GDUtil.GameSave.QuitCosDied = true;
                 GDUtil.Save();
                 await CrushAndClose();
+              }
+
+              if (Enemy.Health > Enemy.MaxHealth * 0.5f) {
+                await SayLines($"{Enemy.Name}: {GetRandom(Enemy.Idle)}");
+              } else if (Enemy.Health > Enemy.MaxHealth * 0.25f) {
+                await SayLines($"{Enemy.Name}: {GetRandom(Enemy.IdleWeak)}");
+              } else {
+                await SayLines($"{Enemy.Name}: {GetRandom(Enemy.IdleDieing)}");
               }
             }
           }
@@ -1125,6 +1126,7 @@ public class Root2D : CanvasLayer {
       }
 
       GDUtil.GameSave.UnfoughtEnemies.Remove(Enemy.Name);
+      GDUtil.SavePlayer(Player);
       GDUtil.Save();
 
       await SayLines($"{Enemy.Name} has been defeated!", "", $"{Enemy.Name}: {GetRandom(Enemy.OnDeath)}");
@@ -1140,7 +1142,7 @@ public class Root2D : CanvasLayer {
       while (selection == null) {
         await SayLines("Choose an item to take using its number", "");
         int i = 0;
-        await SayLines(Enemy.Items.Select(x => $"{i}: {x.Name}").ToArray());
+        await SayLines(Enemy.Items.Select(x => $"{i++}: {x.Name}").ToArray());
         await SayLines("");
         if (int.TryParse(await Prompt(ResponseType.Str), out int s)) {
           if (s < Enemy.Items.Count() && s >= 0) {
@@ -1157,7 +1159,9 @@ public class Root2D : CanvasLayer {
         $"You've acquired {item.Name}",
         ""
       );
+
       GDUtil.GameSave.UnfoughtEnemies.Remove(Enemy.Name);
+      GDUtil.SavePlayer(Player);
       GDUtil.Save();
       Enemy = null;
     }
@@ -1177,6 +1181,7 @@ public class Root2D : CanvasLayer {
     await Intro();
     await PlayerName();
     await CombatTutorial();
+    await MurderLoop();
   }
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.

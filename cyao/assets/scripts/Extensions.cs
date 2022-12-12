@@ -39,13 +39,44 @@ static class GDUtil {
   public static string SAVELOCATION = "user://godot.dll";
 
   public static GameSave GameSave { get; set; } = Load();
+
+  public static void SavePlayer(Killable player) {
+    player.SyncIds();
+    GameSave.MaxHealth = player.MaxHealth;
+    GameSave.Health = player.Health;
+    GameSave.MaxMana = player.MaxMana;
+    GameSave.Mana = player.Mana;
+    GameSave.Resistance = player.Resistance;
+    GameSave.AttackIds = player.AttackIds;
+    GameSave.ItemIds = player.ItemIds;
+    GameSave.PlayerSaved = true;
+  }
+
+  public static Killable LoadPlayer() {
+    var player = new Killable();
+    player.Name = GameSave.Name;
+    player.MaxHealth = GameSave.MaxHealth;
+    player.Health = GameSave.Health;
+    player.MaxMana = GameSave.MaxMana;
+    player.Mana = GameSave.Mana;
+    player.Resistance = GameSave.Resistance;
+    player.AttackIds = GameSave.AttackIds;
+    player.ItemIds = GameSave.ItemIds;
+    player.SyncActions();
+    return player;
+  }
+
   public static GameSave Load() {
     File f = new File();
     if (f.FileExists(SAVELOCATION)) {
-      f.Open(SAVELOCATION, File.ModeFlags.Read);
-      GameSave save = DeserializeObject<GameSave>(f.GetAsText());
-      f.Close();
-      return save;
+      try {
+        f.Open(SAVELOCATION, File.ModeFlags.Read);
+        GameSave save = DeserializeObject<GameSave>(f.GetAsText());
+        f.Close();
+        return save;
+      } catch {
+        return new GameSave();
+      }
     } else {
       return new GameSave();
     }

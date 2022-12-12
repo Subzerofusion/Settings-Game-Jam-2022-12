@@ -8,6 +8,15 @@ public class GameSave {
   public bool FinishedIntro = false;
 
   public string Name = null;
+  public int MaxHealth = 1;
+  public int Health = 1;
+  public int MaxMana = 1;
+  public int Mana = 1;
+  public float Resistance = 1;
+  public List<string> AttackIds = null;
+  public List<string> ItemIds = null;
+
+  public bool PlayerSaved = false;
 
   public bool DiedInTutorial = false;
 
@@ -16,8 +25,6 @@ public class GameSave {
   public bool QuitCosDied = false;
 
   public bool FinishedCombatTutorial = false;
-
-  public Killable CurrentPlayer = null;
 
   public List<string> PreviousInputs = new List<string>();
 

@@ -25,7 +25,6 @@ caret_block_mode = true
 caret_blink = true
 
 [node name="ColorRect" type="ColorRect" parent="."]
-visible = false
 margin_right = 640.0
 margin_bottom = 480.0
 color = Color( 0, 0, 0, 1 )
