@@ -16,7 +16,7 @@ public class KAction {
   public string Description { get; set; } = "No Description";
   public Func<Root2D, KAction, Killable, Killable, string[]> Effect { get; set; } = null;
   public Func<Root2D, KAction, Killable, Killable, string[]> PerTurn { get; set; } = null;
-  string UsePrint = "{{user}} tried to use {{name}} on {{target.Name}}";
+  string UsePrint = "{{user}} used {{name}} on {{target.Name}}";
 
   public KAction Clone() {
     var clone = new KAction() {
@@ -39,6 +39,7 @@ public class KAction {
     if (Cost > user.Mana) executionLog.Add($"{user.Name} doesn't have enough mana");
     executionLog.Add(UsePrint.Replace("{{user}}", user.Name).Replace("{{name}}", Name).Replace("{{target.Name}}", target.Name == user.Name ? "themselves" : target.Name));
     executionLog.Add($"Description: {Description}");
+    executionLog.Add("");
     user.Mana -= Cost;
     int dmg = (int)(Damage * target.Resistance);
     target.StdDmg(Damage);

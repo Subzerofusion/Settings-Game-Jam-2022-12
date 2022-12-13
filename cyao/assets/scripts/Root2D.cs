@@ -584,7 +584,7 @@ public class Root2D : CanvasLayer {
       };
 
       Player.LateInit();
-      Player.OnDmgEvent += () => { ScreenShake(0.25f, 16, 16, 0.01f); };
+      Player.OnDmgEvent += () => { ScreenShake(0.25f, 8, 8, 0.002f); };
 
       await SayPlayerStats();
       await SayLines(
@@ -654,7 +654,7 @@ public class Root2D : CanvasLayer {
         Mana = 10000000,
         Resistance = 0.8f,
         Attacks = new List<KAction>() {
-          new KAction(){Name = "Punch", Damage = 10, Cost = 0},
+          new KAction(){Name = "Punch", Description="Decks you in the mouth", Damage = 10, Cost = 0},
           new KAction(){Name = "Murder", Damage = 100000, Cost = 0}
         },
         Items = new List<KAction>() {
@@ -696,10 +696,6 @@ public class Root2D : CanvasLayer {
             "type \"done\" when you're ready to move on",
             ""
           );
-
-      OS.WindowResizable = true;
-
-
       do {
         line = await Prompt(ResponseType.Str);
         string[] split = line.Split(" ");
@@ -713,8 +709,7 @@ public class Root2D : CanvasLayer {
             await SayLines(
               GetRandom(new string[] {
                 "Yeah, I know that's a command but lets stay on topic",
-                "I'm only gonna let you use \"help\" and \"analyse\" for now...",
-                "C'mon, just play a long please..." }),
+                "I'm only gonna let you use \"help\", \"analyse\" or \"done\" for now..." }),
               ""
             );
           } else {
@@ -754,6 +749,8 @@ public class Root2D : CanvasLayer {
         "Well... I guess you just gotta fight gigachad right here...",
         ""
       );
+
+      OS.WindowResizable = true;
 
       while (!Enemy.IsDead) {
         if (Enemy.Health > Enemy.MaxHealth * 0.5f) {
@@ -796,6 +793,7 @@ public class Root2D : CanvasLayer {
           }
         }
       }
+      teInput.SetRotation(0);
       await SayLines($"{Enemy.Name} has been defeated!", "", $"{Enemy.Name}: {GetRandom(Enemy.OnDeath)}");
 
 
@@ -1164,7 +1162,7 @@ public class Root2D : CanvasLayer {
           }
         }
       }
-
+      teInput.SetRotation(0);
       GDUtil.GameSave.UnfoughtEnemies.Remove(Enemy.Name);
       GDUtil.SavePlayer(Player);
       GDUtil.Save();
@@ -1223,6 +1221,11 @@ public class Root2D : CanvasLayer {
       "",
       "OI",
       "NONONOONOO"
+    );
+    await this.Wait(1f);
+    await SayLines(
+      "THERE'S NOTHING OFF TO THE SIDES",
+      "STOP MESSING AROUND WITH IT!"
     );
     while (!gunReady) {
       await this.NextFrame();
@@ -1380,7 +1383,8 @@ public class Root2D : CanvasLayer {
               break;
             }
           case (int)KeyList.Up: {
-
+              if (GDUtil.GameSave.PreviousInputs == null) GDUtil.GameSave.PreviousInputs = new List<string>();
+              if (GDUtil.GameSave.PreviousInputs.Count() < 1) break;
               // start the count if not started yet
               if (historyIndex == null) {
                 historyIndex = 0;
@@ -1396,6 +1400,8 @@ public class Root2D : CanvasLayer {
               break;
             }
           case (int)KeyList.Down: {
+              if (GDUtil.GameSave.PreviousInputs == null) GDUtil.GameSave.PreviousInputs = new List<string>();
+              if (GDUtil.GameSave.PreviousInputs.Count() < 1) break;
               // start the count if not started yet
               if (historyIndex == null) {
                 historyIndex = 0;
@@ -1408,10 +1414,6 @@ public class Root2D : CanvasLayer {
 
               teInput.Select(int.MaxValue, userInputMarkerLength, int.MaxValue, int.MaxValue);
               teInput.InsertTextAtCursor(line);
-              break;
-            }
-          case (int)KeyList.F1: {
-              ScreenShake(0.2f, 1, 2, 0.002f);
               break;
             }
         }
@@ -1599,9 +1601,9 @@ public class Root2D : CanvasLayer {
   public async Task<string> Prompt(ResponseType type, string prompt = null, string[] acceptedAnswers = null, string[] unacceptedAnswers = null, string[] fail = null) {
 
     string pre = "";
-    if (Player != null) pre += $"Health: {Player.Health} Mana: {Player.Mana}";
-    if (Enemy != null) pre += " vs \n" + $"{Enemy.Name}: Health: {Enemy.Health} Mana: {Enemy.Mana}";
-    await Say($"Health: {Player.Health} Mana: {Player.Mana}{(Enemy != null ? " vs " + Enemy.Name : "")}");
+    if (Player != null) pre += $"{Player.Name}: Health: {Player.Health} Mana: {Player.Mana}";
+    if (Enemy != null) pre += "\n vs \n" + $"{Enemy.Name}: Health: {Enemy.Health} Mana: {Enemy.Mana}";
+    if (pre != "") await Say(pre);
     if (prompt != null) await Say(prompt);
 
     string result = null;
@@ -1614,6 +1616,7 @@ public class Root2D : CanvasLayer {
         if (fuckeryDetected) goto Fucked;
       }
       result = lastInput;
+      if (GDUtil.GameSave.PreviousInputs == null) GDUtil.GameSave.PreviousInputs = new List<string>();
       GDUtil.GameSave.PreviousInputs.Insert(0, result);
       if (GDUtil.GameSave.PreviousInputs.Count() > historyLength) {
         GDUtil.GameSave.PreviousInputs.RemoveRange(historyLength, GDUtil.GameSave.PreviousInputs.Count() - historyLength);
