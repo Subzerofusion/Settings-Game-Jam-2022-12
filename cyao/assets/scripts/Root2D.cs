@@ -10,13 +10,17 @@ public class Root2D : CanvasLayer {
   // Declare member variables here. Examples:
   // private int a = 2;
   // private string b = "text";
+  [Export]
+  public NodePath _crSpoilerPath;
+  public ColorRect crSpoiler;
 
   [Export]
-  public float lod;
+  public NodePath _btnWinPath;
+  public Button btnWin;
 
   [Export]
-  public NodePath _n2dBlurPath;
-  public CanvasItem n2dBlur;
+  public NodePath _crBlurPath;
+  public ColorRect crBlur;
 
   [Export]
   public NodePath _vpVictoryPath;
@@ -92,9 +96,9 @@ public class Root2D : CanvasLayer {
   static string[] GERMAN = new string[] { "nein", "danke", "ja", "bitte" };
   static string[] GERMANR = new string[] { "I don't speak German...", "Uh... Guten Tag?", "Spreken zie English?" };
   static string[] JAPANESE = new string[] { "hai", "iie", "daijoubu", "kawaii", "yamette" };
-  static string[] JAPANESER = new string[] { "日本語を分からんよ", "This isn't a visual novel dude...", "Weeb...", "Kimoi..." };
+  static string[] JAPANESER = new string[] { "nihongowarakanyo", "This isn't a visual novel dude...", "Weeb...", "Kimoi..." };
   static string[] RUSSIAN = new string[] { "priviet", "blyatt", "blinn", "niet", "da", "cyka" };
-  static string[] RUSSIANR = new string[] { "Я не знаю как говорить по Русски", "blinn", "niet", "da" };
+  static string[] RUSSIANR = new string[] { "ya nie znayu kak govolit po ruskii", "blinn", "niet", "da" };
 
   class Command {
     public string Help { get; set; }
@@ -370,7 +374,11 @@ public class Root2D : CanvasLayer {
   public Killable Player { get; set; } = null;
 
   private async Task Intro() {
-    if (GDUtil.GameSave.QuitCosDied) {
+    if (GDUtil.GameSave.WonGame) {
+      await SayLines(
+        "Yeah... what do you want...", ""
+      );
+    } else if (GDUtil.GameSave.QuitCosDied) {
       GDUtil.GameSave.QuitCosDied = false;
       await this.Wait(2f);
       Task srf = SkyrimFade(3);
@@ -690,6 +698,7 @@ public class Root2D : CanvasLayer {
 
       OS.WindowResizable = true;
 
+
       do {
         line = await Prompt(ResponseType.Str);
         string[] split = line.Split(" ");
@@ -835,6 +844,8 @@ public class Root2D : CanvasLayer {
     );
     GDUtil.GameSave.FinishedCombatTutorial = true;
     GDUtil.Save();
+
+  Fucked:;
   }
 
   static List<Killable> ENEMYBASES = new List<Killable>{
@@ -1192,20 +1203,57 @@ public class Root2D : CanvasLayer {
       GDUtil.SavePlayer(Player);
       GDUtil.Save();
       Enemy = null;
+    Fucked:;
     }
   }
 
 
-  private async Task DetectFuckery() {
+  bool fuckeryDetected = false;
 
+  bool fucking = false;
+  private async Task FuckeryDetected() {
+    fuckeryDetected = false;
+    if (fucking) return;
+    fucking = true;
+    await SayLines(
+      "HEY HEY HEY!! FUCK OFF",
+      "STOP TOUCHING THAT WINDOW",
+      "THERES NOTHING OUT THERE",
+      "",
+      "OI",
+      "NONONOONOO"
+    );
+    while (!gunReady) {
+      await this.NextFrame();
+    }
+    await SayLines(
+      "DON'T TOUCH THAT!",
+      "THAT'S REALLY DANGEROUS",
+      "YOU COULD HURT SOMEONE",
+      ""
+    );
+    while (true) {
+      await this.Wait(10000f);
+    }
   }
+
+  public async Task DetectFuckery() {
+    while (!fuckeryDetected) {
+      fuckeryDetected = OS.WindowSize.x > 650 || OS.WindowSize.y > 490;
+      await this.NextFrame();
+    }
+    return;
+  }
+
   // Called when the node enters the scene tree for the first time.
   public override async void _Ready() {
     GDUtil.Load();
     OS.WindowResizable = false;
     OS.WindowSize = new Vector2(640, 480);
 
-    // n2dBlur = GetNode<Node2D>(_n2dBlurPath);
+    crSpoiler = GetNode<ColorRect>(_crSpoilerPath);
+    btnWin = GetNode<Button>(_btnWinPath);
+    crBlur = GetNode<ColorRect>(_crBlurPath);
     vpVictory = GetNode<VideoPlayer>(_vpVictoryPath);
     teInput = GetNode<TextEdit>(_teInputPath);
     crSkyrim = GetNode<ColorRect>(_crSkyrimPath);
@@ -1215,18 +1263,20 @@ public class Root2D : CanvasLayer {
     asPickup = GetNode<AudioStreamPlayer2D>(_asPickupPath);
 
     userInputMarkerLength = userInputMarker.Length;
-
+    crSpoiler.Hide();
     textSpeed = _textSpeedNormal;
+    DetectFuckery();
+
     await Intro();
     await PlayerName();
     await CombatTutorial();
     await MurderLoop();
+    await FuckeryDetected();
   }
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
   public override void _Process(float delta) {
-    // n2dBlur = GetNode<CanvasItem>(_n2dBlurPath);
-    // (n2dBlur.Material as ShaderMaterial).SetShaderParam("lod", lod);
+
   }
 
   int[] cursorPos = { 0, 0 };
@@ -1245,7 +1295,9 @@ public class Root2D : CanvasLayer {
   int? historyIndex = null;
 
   bool gunReady = false;
-  public override void _Input(InputEvent inputEvent) {
+
+  bool shot = false;
+  public override async void _Input(InputEvent inputEvent) {
     base._Input(inputEvent);
 
     if (inputEvent is InputEventMouseButton eventButton) {
@@ -1260,11 +1312,13 @@ public class Root2D : CanvasLayer {
               break;
             }
           case (int)ButtonList.Left: {
+              if (shot) break;
               if (gunReady) {
                 gunReady = false;
                 asShoot.Play();
                 asGun.Animation = "shoot";
                 asGun.Play();
+                vpVictory.Show();
                 vpVictory.Play();
                 for (int i = 0; i < 8; i++) {
                   Node2D instance = (Node2D)bulletHole.Instance();
@@ -1274,6 +1328,12 @@ public class Root2D : CanvasLayer {
                   instance.Position = position;
                   AddChild(instance);
                 }
+                shot = true;
+                await SayLines(
+                  "Aww... Fuck...",
+                  "I can't believe you've done this..."
+                );
+                Gaussian(1, 3);
               }
               break;
             }
@@ -1358,6 +1418,11 @@ public class Root2D : CanvasLayer {
     }
   }
 
+  public void OnVictoryFinished() {
+    vpVictory.Hide();
+    btnWin.Show();
+  }
+
   public void OnTEInputFocusExited() {
   }
 
@@ -1384,6 +1449,23 @@ public class Root2D : CanvasLayer {
     // text = teInput.Text;
     // Print(teInput.Text);
 
+  }
+
+  public async Task Gaussian(float duration, float blur) {
+    await this.Wait(1f);
+    float startTime = Time.GetTicksMsec() / 1000f;
+    float elapsed = Time.GetTicksMsec() / 1000f - startTime;
+    while (elapsed < duration) {
+      (crBlur.Material as ShaderMaterial).SetShaderParam("lod", blur * elapsed / duration);
+      await this.NextFrame();
+      elapsed = Time.GetTicksMsec() / 1000f - startTime;
+    }
+  }
+
+  public async void OnWinButtonDown() {
+    GDUtil.GameSave.WonGame = true;
+    GDUtil.Save();
+    await CrushAndClose();
   }
 
   public void OnGunClicked() {
@@ -1442,13 +1524,13 @@ public class Root2D : CanvasLayer {
       if (!completelySkipPrintTime) await this.Wait(textSpeed * 2);
     }
 
+  Fucked:
     preventFocus = false;
     teInput.GrabFocus();
   }
 
   public async Task Say(string text, bool manageFocus = true) {
     teInput.CursorToEnd();
-
     if (manageFocus) {
       preventFocus = true;
       teInput.ReleaseFocus();
@@ -1456,13 +1538,19 @@ public class Root2D : CanvasLayer {
     for (int i = 0; i < text.Length; i++) {
       teInput.CursorToEnd();
       teInput.InsertTextAtCursor(text[i].ToString());
+      if (fuckeryDetected) goto Fucked;
       if (!completelySkipPrintTime && !oneLineAtATime) await this.Wait((float)random.NextDouble() * textSpeed);
     }
     teInput.InsertTextAtCursor("\n");
+
     if (manageFocus) {
       preventFocus = false;
       teInput.GrabFocus();
     }
+
+    return;
+  Fucked:
+    await FuckeryDetected();
   }
 
   private string GetRandom(List<string> selection) {
@@ -1479,7 +1567,7 @@ public class Root2D : CanvasLayer {
     float elapsed = Time.GetTicksMsec() / 1000f - startTime;
 
     Vector2 winPos = OS.WindowPosition;
-    Vector2 winSize = OS.WindowSize;
+    Vector2 winSize = new Vector2(640, 480);
     teInput.SetRotation(teInput.GetRotation() + (float)(random.NextDouble() - 0.5f) * 2 * howWonk);
 
     while (elapsed < duration) {
@@ -1519,6 +1607,7 @@ public class Root2D : CanvasLayer {
 
       while (lastInput == null) {
         await this.NextFrame();
+        if (fuckeryDetected) goto Fucked;
       }
       result = lastInput;
       GDUtil.GameSave.PreviousInputs.Insert(0, result);
@@ -1581,5 +1670,9 @@ public class Root2D : CanvasLayer {
       }
     } while (result == null);
     return result;
+
+  Fucked:
+    await FuckeryDetected();
+    return "";
   }
 }

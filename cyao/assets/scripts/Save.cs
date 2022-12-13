@@ -24,6 +24,8 @@ public class GameSave {
 
   public bool QuitCosDied = false;
 
+  public bool WonGame = false;
+
   public bool FinishedCombatTutorial = false;
 
   public List<string> PreviousInputs = new List<string>();
