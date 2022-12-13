@@ -12,6 +12,17 @@ public class Root2D : CanvasLayer {
   // private string b = "text";
 
   [Export]
+  public float lod;
+
+  [Export]
+  public NodePath _n2dBlurPath;
+  public CanvasItem n2dBlur;
+
+  [Export]
+  public NodePath _vpVictoryPath;
+  public VideoPlayer vpVictory;
+
+  [Export]
   public NodePath _teInputPath;
   public TextEdit teInput;
 
@@ -20,6 +31,21 @@ public class Root2D : CanvasLayer {
   public NodePath _crSkyrimPath;
   public ColorRect crSkyrim;
 
+  [Export]
+  public NodePath _tbGunPath;
+  public TextureButton tbGun;
+
+  [Export]
+  public NodePath _asGunPath;
+  public AnimatedSprite asGun;
+
+  [Export]
+  public NodePath _asShootPath;
+  public AudioStreamPlayer2D asShoot;
+
+  [Export]
+  public NodePath _asPickupPath;
+  public AudioStreamPlayer2D asPickup;
 
   private string userInputMarker = ">>> ";
   private int userInputMarkerLength;
@@ -33,6 +59,8 @@ public class Root2D : CanvasLayer {
   public bool completelySkipPrintTime = false;
   private Random random = new Random();
 
+  [Export]
+  public PackedScene bulletHole;
 
   private bool preventFocus = false;
 
@@ -1167,14 +1195,25 @@ public class Root2D : CanvasLayer {
     }
   }
 
+
+  private async Task DetectFuckery() {
+
+  }
   // Called when the node enters the scene tree for the first time.
   public override async void _Ready() {
     GDUtil.Load();
     OS.WindowResizable = false;
     OS.WindowSize = new Vector2(640, 480);
 
+    // n2dBlur = GetNode<Node2D>(_n2dBlurPath);
+    vpVictory = GetNode<VideoPlayer>(_vpVictoryPath);
     teInput = GetNode<TextEdit>(_teInputPath);
     crSkyrim = GetNode<ColorRect>(_crSkyrimPath);
+    tbGun = GetNode<TextureButton>(_tbGunPath);
+    asGun = GetNode<AnimatedSprite>(_asGunPath);
+    asShoot = GetNode<AudioStreamPlayer2D>(_asShootPath);
+    asPickup = GetNode<AudioStreamPlayer2D>(_asPickupPath);
+
     userInputMarkerLength = userInputMarker.Length;
 
     textSpeed = _textSpeedNormal;
@@ -1186,6 +1225,8 @@ public class Root2D : CanvasLayer {
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
   public override void _Process(float delta) {
+    // n2dBlur = GetNode<CanvasItem>(_n2dBlurPath);
+    // (n2dBlur.Material as ShaderMaterial).SetShaderParam("lod", lod);
   }
 
   int[] cursorPos = { 0, 0 };
@@ -1202,6 +1243,8 @@ public class Root2D : CanvasLayer {
   int currentTextSpeed = 0;
 
   int? historyIndex = null;
+
+  bool gunReady = false;
   public override void _Input(InputEvent inputEvent) {
     base._Input(inputEvent);
 
@@ -1214,6 +1257,24 @@ public class Root2D : CanvasLayer {
             }
           case (int)ButtonList.WheelDown: {
               teInput.ScrollVertical += 1;
+              break;
+            }
+          case (int)ButtonList.Left: {
+              if (gunReady) {
+                gunReady = false;
+                asShoot.Play();
+                asGun.Animation = "shoot";
+                asGun.Play();
+                vpVictory.Play();
+                for (int i = 0; i < 8; i++) {
+                  Node2D instance = (Node2D)bulletHole.Instance();
+                  Vector2 position = GetViewport().GetMousePosition();
+                  position.x += new Random().Next(-80, 80);
+                  position.y += new Random().Next(-80, 80);
+                  instance.Position = position;
+                  AddChild(instance);
+                }
+              }
               break;
             }
         }
@@ -1293,11 +1354,6 @@ public class Root2D : CanvasLayer {
               break;
             }
         }
-
-        if (eventKey.Scancode == (int)KeyList.Backspace) {
-
-
-        }
       }
     }
   }
@@ -1328,6 +1384,18 @@ public class Root2D : CanvasLayer {
     // text = teInput.Text;
     // Print(teInput.Text);
 
+  }
+
+  public void OnGunClicked() {
+    tbGun.Hide();
+    asPickup.Play();
+    asGun.Show();
+    gunReady = true;
+  }
+
+  public void OnGunFinished() {
+    asGun.Animation = "idle";
+    gunReady = true;
   }
 
   public async Task SayPlayerStats() {
