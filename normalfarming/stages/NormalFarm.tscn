@@ -15,36 +15,54 @@ input_ray_pickable = false
 [node name="rock" parent="." index="2" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.4806, 0.352225, -16.5412 )
 
-[node name="Player" parent="." index="3" instance=ExtResource( 2 )]
+[node name="rock13" parent="." index="3" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0157, 0.352225, -16.1704 )
+
+[node name="rock14" parent="." index="4" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.70765, 0.352225, -17.0892 )
+
+[node name="rock9" parent="." index="5" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.27541, 0.995203, -16.4239 )
+
+[node name="rock10" parent="." index="6" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10.1244, 0.995203, -16.7251 )
+
+[node name="rock11" parent="." index="7" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.57185, 1.65653, -16.7895 )
+
+[node name="rock12" parent="." index="8" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.92055, 1.05882, -16.043 )
+
+[node name="Player" parent="." index="9" instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12.8487 )
 
-[node name="rock2" parent="." index="4" instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.814079, 0.237836, -13.9394 )
+[node name="rock2" parent="." index="10" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.814079, 0.514876, -18.8134 )
 
-[node name="rock3" parent="." index="5" instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.86442, 0.237836, -12.7774 )
+[node name="rock3" parent="." index="11" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.42886, 0.623485, -15.2013 )
 
-[node name="rock4" parent="." index="6" instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5796, 0.237837, -24.0966 )
+[node name="rock4" parent="." index="12" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5796, 0.583675, -24.0966 )
 
-[node name="rock5" parent="." index="7" instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -12.0419, 0.237837, -3.96144 )
+[node name="rock5" parent="." index="13" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -12.0419, 0.523771, -3.96144 )
 
-[node name="rock7" parent="." index="8" instance=ExtResource( 3 )]
+[node name="rock7" parent="." index="14" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16.0046, 0.237837, -9.5671 )
 
-[node name="rock8" parent="." index="9" instance=ExtResource( 3 )]
+[node name="rock8" parent="." index="15" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5806, 0.237837, -10.9617 )
 
-[node name="rock6" parent="." index="10" instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29111, 0.237837, 0.600401 )
+[node name="rock6" parent="." index="16" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29111, 0.431063, 0.600401 )
 
-[node name="trowel" parent="." index="11" instance=ExtResource( 4 )]
+[node name="trowel" parent="." index="17" instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0578, 0, -6.57185 )
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="12"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="18"]
 environment = ExtResource( 5 )
 
-[node name="DirectionalLight" type="DirectionalLight" parent="." index="13"]
+[node name="DirectionalLight" type="DirectionalLight" parent="." index="19"]
 transform = Transform( 0.992561, 0.0899743, -0.0820197, 0, 0.673684, 0.73902, 0.121748, -0.733522, 0.668672, -0.0209599, 10.5357, 0 )
 shadow_enabled = true
