@@ -1,0 +1,940 @@
+[gd_scene load_steps=80 format=2]
+
+[ext_resource path="res://Themes/ornate-theme.tres" type="Theme" id=1]
+[ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scripts/Main.gd" type="Script" id=3]
+[ext_resource path="res://Sprites/WindCompassNeedle.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/WindCompassBase.png" type="Texture" id=5]
+[ext_resource path="res://Scenes/Map.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Sprites/MapIcons/Icons3.png" type="Texture" id=7]
+[ext_resource path="res://Themes/ornate.png" type="Texture" id=8]
+[ext_resource path="res://Themes/pixelplay.ttf" type="DynamicFontData" id=9]
+[ext_resource path="res://Sounds/GoToMyInstagram.wav" type="AudioStream" id=10]
+[ext_resource path="res://Sounds/LiveFromConeyIsland.wav" type="AudioStream" id=11]
+
+[sub_resource type="DynamicFont" id=57]
+size = 32
+font_data = ExtResource( 9 )
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[sub_resource type="StyleBoxEmpty" id=2]
+
+[sub_resource type="StyleBoxTexture" id=3]
+content_margin_left = 7.0
+content_margin_right = 4.0
+content_margin_top = 7.0
+content_margin_bottom = 7.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 0, 0, 23, 15 )
+margin_left = 9.89544
+margin_right = 9.93499
+margin_top = 7.22895
+margin_bottom = 7.31437
+
+[sub_resource type="StyleBoxTexture" id=4]
+content_margin_left = 7.0
+content_margin_right = 4.0
+content_margin_top = 7.0
+content_margin_bottom = 7.0
+texture = ExtResource( 8 )
+region_rect = Rect2( -23, 15, 13, 8 )
+margin_left = 9.89544
+margin_right = 9.93499
+margin_top = 7.22895
+margin_bottom = 7.31437
+
+[sub_resource type="StyleBoxTexture" id=5]
+content_margin_left = 7.0
+content_margin_right = 4.0
+content_margin_top = 7.0
+content_margin_bottom = 7.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 0, 17, 23, 15 )
+margin_left = 9.89544
+margin_right = 9.93499
+margin_top = 7.22895
+margin_bottom = 7.31437
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 8 )
+region = Rect2( 81, 49, 7, 7 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 8 )
+region = Rect2( 81, 33, 7, 7 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 8 )
+region = Rect2( 89, 33, 7, 7 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 8 )
+region = Rect2( 89, 49, 7, 7 )
+
+[sub_resource type="StyleBoxTexture" id=10]
+content_margin_left = 7.0
+content_margin_right = 7.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 18, 50, 12, 12 )
+margin_left = 5.0
+margin_right = 5.0
+margin_top = 5.0
+margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id=11]
+content_margin_left = 7.0
+content_margin_right = 7.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 34, 66, 12, 12 )
+margin_left = 5.0
+margin_right = 5.0
+margin_top = 5.0
+margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id=12]
+content_margin_left = 4.0
+content_margin_right = 4.0
+content_margin_top = 7.0
+content_margin_bottom = 7.0
+texture = ExtResource( 8 )
+region_rect = Rect2( -23, 15, 13, 8 )
+margin_left = 9.89544
+margin_right = 9.93499
+margin_top = 7.22895
+margin_bottom = 7.31437
+
+[sub_resource type="AtlasTexture" id=13]
+atlas = ExtResource( 8 )
+region = Rect2( 81, 1, 14, 15 )
+
+[sub_resource type="AtlasTexture" id=14]
+atlas = ExtResource( 8 )
+region = Rect2( 81, 17, 14, 15 )
+
+[sub_resource type="AtlasTexture" id=15]
+atlas = ExtResource( 8 )
+region = Rect2( 65, 1, 14, 15 )
+
+[sub_resource type="AtlasTexture" id=16]
+atlas = ExtResource( 8 )
+region = Rect2( 65, 17, 14, 15 )
+
+[sub_resource type="StyleBoxTexture" id=17]
+texture = ExtResource( 8 )
+region_rect = Rect2( 28, 42, 8, 5 )
+margin_left = 3.0
+margin_right = 3.0
+margin_top = 3.0
+margin_bottom = 3.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id=18]
+texture = ExtResource( 8 )
+region_rect = Rect2( 28, 34, 8, 5 )
+margin_left = 4.0
+margin_right = 4.0
+margin_top = 3.0
+margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id=19]
+texture = ExtResource( 8 )
+region_rect = Rect2( 43, 34, 8, 5 )
+margin_left = 4.0
+margin_right = 4.0
+margin_top = 3.0
+margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id=20]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_top = 5.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="StyleBoxFlat" id=21]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_top = 7.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="StyleBoxLine" id=22]
+color = Color( 1, 1, 1, 0.372549 )
+
+[sub_resource type="AtlasTexture" id=23]
+atlas = ExtResource( 8 )
+region = Rect2( 64, 33, 7, 7 )
+
+[sub_resource type="AtlasTexture" id=24]
+atlas = ExtResource( 8 )
+region = Rect2( 64, 49, 7, 7 )
+
+[sub_resource type="AtlasTexture" id=25]
+atlas = ExtResource( 8 )
+region = Rect2( 64, 41, 7, 7 )
+
+[sub_resource type="StyleBoxTexture" id=26]
+texture = ExtResource( 8 )
+region_rect = Rect2( 56, 34, 7, 5 )
+margin_left = 3.0
+margin_right = 1.0
+margin_top = 2.0
+margin_bottom = 2.0
+expand_margin_left = 3.0
+
+[sub_resource type="StyleBoxTexture" id=27]
+texture = ExtResource( 8 )
+region_rect = Rect2( 56, 42, 7, 5 )
+margin_left = 3.0
+margin_right = 1.0
+margin_top = 2.0
+margin_bottom = 2.0
+expand_margin_left = 3.0
+
+[sub_resource type="StyleBoxTexture" id=28]
+texture = ExtResource( 8 )
+region_rect = Rect2( 73, 34, 7, 5 )
+margin_left = 1.0
+margin_right = 3.0
+margin_top = 2.0
+margin_bottom = 2.0
+expand_margin_right = 3.0
+
+[sub_resource type="StyleBoxTexture" id=29]
+content_margin_left = 7.0
+content_margin_right = 7.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 33, 49, 7, 7 )
+margin_left = 3.0
+margin_right = 3.0
+margin_top = 3.0
+margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id=30]
+content_margin_left = 5.0
+content_margin_right = 5.0
+content_margin_top = 2.0
+content_margin_bottom = 0.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 44, 34, 7, 4 )
+margin_left = 5.269
+margin_right = 5.269
+margin_top = 2.69876
+margin_bottom = 2.82727
+
+[sub_resource type="AtlasTexture" id=31]
+atlas = ExtResource( 8 )
+region = Rect2( 58, 16, 5, 8 )
+
+[sub_resource type="StyleBoxTexture" id=32]
+texture = ExtResource( 8 )
+region_rect = Rect2( 27, 1, 26, 30 )
+margin_left = 12.4265
+margin_right = 12.6524
+margin_top = 14.9117
+margin_bottom = 14.4774
+
+[sub_resource type="AtlasTexture" id=33]
+atlas = ExtResource( 8 )
+region = Rect2( 60, 9, 4, 5 )
+
+[sub_resource type="StyleBoxTexture" id=34]
+texture = ExtResource( 8 )
+region_rect = Rect2( 34, 66, 12, 12 )
+margin_left = 5.20671
+margin_right = 5.20671
+margin_top = 5.52227
+margin_bottom = 5.20671
+
+[sub_resource type="StyleBoxFlat" id=35]
+content_margin_top = 10.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0.352941 )
+
+[sub_resource type="StyleBoxTexture" id=36]
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 0, 80, 16, 16 )
+margin_left = 8.0
+margin_right = 8.0
+margin_top = 8.0
+margin_bottom = 8.0
+
+[sub_resource type="StyleBoxLine" id=37]
+color = Color( 1, 1, 1, 0.352941 )
+
+[sub_resource type="StyleBoxTexture" id=38]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 80, 65, 15, 15 )
+margin_left = 7.03435
+margin_right = 7.02759
+margin_top = 7.16963
+margin_bottom = 7.44018
+expand_margin_left = 7.0
+expand_margin_right = 7.0
+expand_margin_top = 3.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id=39]
+texture = ExtResource( 8 )
+region_rect = Rect2( 10, 21, 3, 6 )
+
+[sub_resource type="AtlasTexture" id=40]
+atlas = ExtResource( 8 )
+region = Rect2( 57, 16, 7, 8 )
+
+[sub_resource type="StyleBoxTexture" id=41]
+texture = ExtResource( 8 )
+region_rect = Rect2( 0, 80, 16, 16 )
+margin_left = 7.58222
+margin_right = 7.58222
+margin_top = 7.83924
+margin_bottom = 7.06817
+
+[sub_resource type="StyleBoxTexture" id=42]
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 32, 80, 16, 8 )
+margin_left = 7.96776
+margin_right = 7.96776
+margin_top = 7.45371
+margin_bottom = 0.771073
+
+[sub_resource type="StyleBoxTexture" id=43]
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 48, 80, 16, 8 )
+margin_left = 7.96776
+margin_right = 7.96776
+margin_top = 7.45371
+margin_bottom = 0.771073
+
+[sub_resource type="StyleBoxTexture" id=44]
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource( 8 )
+region_rect = Rect2( 16, 79, 16, 12 )
+margin_left = 7.83924
+margin_right = 7.32519
+margin_top = 8.22478
+margin_bottom = 3.2128
+expand_margin_top = 2.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id=45]
+texture = ExtResource( 8 )
+region_rect = Rect2( 0, 48, 16, 16 )
+margin_left = 7.0
+margin_right = 7.0
+margin_top = 7.0
+margin_bottom = 7.0
+
+[sub_resource type="AtlasTexture" id=61]
+atlas = ExtResource( 8 )
+region = Rect2( 57, 19, 7, 5 )
+
+[sub_resource type="AtlasTexture" id=62]
+atlas = ExtResource( 8 )
+region = Rect2( 59, 8, 5, 7 )
+
+[sub_resource type="AtlasTexture" id=63]
+atlas = ExtResource( 8 )
+region = Rect2( 81, 49, 7, 7 )
+
+[sub_resource type="AtlasTexture" id=64]
+atlas = ExtResource( 8 )
+region = Rect2( 59, 8, 5, 7 )
+
+[sub_resource type="AtlasTexture" id=65]
+atlas = ExtResource( 8 )
+region = Rect2( 89, 49, 7, 7 )
+
+[sub_resource type="AtlasTexture" id=66]
+atlas = ExtResource( 8 )
+region = Rect2( 58, 16, 5, 8 )
+
+[sub_resource type="StyleBoxTexture" id=58]
+texture = ExtResource( 8 )
+region_rect = Rect2( 0, 80, 16, 16 )
+margin_left = 7.54698
+margin_right = 7.54698
+margin_top = 7.68937
+margin_bottom = 7.83177
+
+[sub_resource type="StyleBoxEmpty" id=59]
+
+[sub_resource type="StyleBoxTexture" id=60]
+texture = ExtResource( 8 )
+region_rect = Rect2( 34, 66, 12, 12 )
+margin_left = 5.54632
+margin_right = 5.68159
+margin_top = 5.68159
+margin_bottom = 5.95214
+
+[sub_resource type="StyleBoxTexture" id=46]
+texture = ExtResource( 8 )
+region_rect = Rect2( 17, 32, 5, 8 )
+margin_left = 3.0
+margin_right = 3.0
+margin_top = 4.0
+margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id=47]
+texture = ExtResource( 8 )
+region_rect = Rect2( 9, 32, 5, 8 )
+margin_left = 3.0
+margin_right = 3.0
+margin_top = 4.0
+margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id=48]
+texture = ExtResource( 8 )
+region_rect = Rect2( 1, 32, 5, 8 )
+margin_left = 3.0
+margin_right = 3.0
+margin_top = 4.0
+margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id=49]
+content_margin_left = 5.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="StyleBoxLine" id=50]
+color = Color( 1, 1, 1, 0.372549 )
+vertical = true
+
+[sub_resource type="AtlasTexture" id=51]
+atlas = ExtResource( 8 )
+region = Rect2( 72, 65, 7, 7 )
+
+[sub_resource type="AtlasTexture" id=52]
+atlas = ExtResource( 8 )
+region = Rect2( 56, 65, 7, 7 )
+
+[sub_resource type="AtlasTexture" id=53]
+atlas = ExtResource( 8 )
+region = Rect2( 64, 65, 7, 7 )
+
+[sub_resource type="StyleBoxTexture" id=54]
+texture = ExtResource( 8 )
+region_rect = Rect2( 73, 73, 5, 7 )
+margin_left = 2.0
+margin_right = 2.0
+margin_top = 1.28512
+margin_bottom = 2.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id=55]
+texture = ExtResource( 8 )
+region_rect = Rect2( 65, 73, 5, 7 )
+margin_left = 2.0
+margin_right = 2.0
+margin_top = 1.0
+margin_bottom = 2.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id=56]
+texture = ExtResource( 8 )
+region_rect = Rect2( 73, 57, 5, 7 )
+margin_left = 2.0
+margin_right = 2.0
+margin_top = 2.0
+expand_margin_top = 3.0
+
+[sub_resource type="DynamicFont" id=67]
+size = 18
+font_data = ExtResource( 9 )
+
+[sub_resource type="Theme" id=68]
+default_font = SubResource( 67 )
+Button/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+Button/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+Button/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
+Button/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+Button/constants/hseparation = 2
+Button/fonts/font = SubResource( 57 )
+Button/styles/disabled = SubResource( 1 )
+Button/styles/focus = SubResource( 2 )
+Button/styles/hover = SubResource( 3 )
+Button/styles/normal = SubResource( 4 )
+Button/styles/pressed = SubResource( 5 )
+CheckBox/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+CheckBox/colors/font_color_disabled = Color( 0.901961, 0.901961, 0.901961, 0.117647 )
+CheckBox/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
+CheckBox/colors/font_color_hover_pressed = Color( 1, 1, 1, 1 )
+CheckBox/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+CheckBox/constants/check_vadjust = 0
+CheckBox/constants/hseparation = 4
+CheckBox/fonts/font = SubResource( 57 )
+CheckBox/icons/checked = SubResource( 6 )
+CheckBox/icons/radio_checked = SubResource( 7 )
+CheckBox/icons/radio_unchecked = SubResource( 8 )
+CheckBox/icons/unchecked = SubResource( 9 )
+CheckBox/styles/disabled = null
+CheckBox/styles/focus = null
+CheckBox/styles/hover = SubResource( 10 )
+CheckBox/styles/hover_pressed = SubResource( 11 )
+CheckBox/styles/normal = SubResource( 12 )
+CheckBox/styles/pressed = SubResource( 11 )
+CheckButton/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+CheckButton/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+CheckButton/colors/font_color_hover = Color( 1, 1, 1, 1 )
+CheckButton/colors/font_color_hover_pressed = Color( 1, 1, 1, 1 )
+CheckButton/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+CheckButton/constants/check_vadjust = 0
+CheckButton/constants/hseparation = 4
+CheckButton/fonts/font = SubResource( 57 )
+CheckButton/icons/off = SubResource( 13 )
+CheckButton/icons/off_disabled = SubResource( 14 )
+CheckButton/icons/on = SubResource( 15 )
+CheckButton/icons/on_disabled = SubResource( 16 )
+CheckButton/styles/disabled = null
+CheckButton/styles/focus = SubResource( 3 )
+CheckButton/styles/hover = SubResource( 4 )
+CheckButton/styles/hover_pressed = SubResource( 4 )
+CheckButton/styles/normal = null
+CheckButton/styles/pressed = SubResource( 4 )
+HScrollBar/icons/decrement = null
+HScrollBar/icons/decrement_highlight = null
+HScrollBar/icons/increment = null
+HScrollBar/icons/increment_highlight = null
+HScrollBar/styles/grabber = SubResource( 17 )
+HScrollBar/styles/grabber_highlight = SubResource( 18 )
+HScrollBar/styles/grabber_pressed = SubResource( 19 )
+HScrollBar/styles/scroll = SubResource( 20 )
+HScrollBar/styles/scroll_focus = SubResource( 21 )
+HSeparator/constants/separation = 4
+HSeparator/styles/separator = SubResource( 22 )
+HSlider/icons/grabber = SubResource( 23 )
+HSlider/icons/grabber_disabled = SubResource( 24 )
+HSlider/icons/grabber_highlight = SubResource( 25 )
+HSlider/icons/tick = null
+HSlider/styles/grabber_area = SubResource( 26 )
+HSlider/styles/grabber_area_highlight = SubResource( 27 )
+HSlider/styles/slider = SubResource( 28 )
+LineEdit/colors/clear_button_color = Color( 0.88, 0.88, 0.88, 1 )
+LineEdit/colors/clear_button_color_pressed = Color( 1, 1, 1, 1 )
+LineEdit/colors/cursor_color = Color( 0.941176, 0.941176, 0.941176, 0.368627 )
+LineEdit/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+LineEdit/colors/font_color_selected = Color( 0, 0, 0, 1 )
+LineEdit/colors/font_color_uneditable = Color( 0.88, 0.88, 0.88, 0.5 )
+LineEdit/colors/selection_color = Color( 0.862745, 0.862745, 0.862745, 1 )
+LineEdit/constants/minimum_spaces = 12
+LineEdit/fonts/font = SubResource( 57 )
+LineEdit/icons/clear = null
+LineEdit/styles/focus = SubResource( 11 )
+LineEdit/styles/normal = SubResource( 29 )
+LineEdit/styles/read_only = SubResource( 30 )
+OptionButton/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+OptionButton/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+OptionButton/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
+OptionButton/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+OptionButton/constants/arrow_margin = 2
+OptionButton/constants/hseparation = 2
+OptionButton/fonts/font = SubResource( 57 )
+OptionButton/icons/arrow = SubResource( 31 )
+OptionButton/styles/disabled = null
+OptionButton/styles/focus = null
+OptionButton/styles/hover = null
+OptionButton/styles/normal = null
+OptionButton/styles/pressed = null
+Panel/styles/panel = SubResource( 32 )
+PopupMenu/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+PopupMenu/colors/font_color_accel = Color( 0.7, 0.7, 0.7, 0.8 )
+PopupMenu/colors/font_color_disabled = Color( 0.4, 0.4, 0.4, 0.8 )
+PopupMenu/colors/font_color_hover = Color( 0.88, 0.88, 0.88, 1 )
+PopupMenu/constants/hseparation = 4
+PopupMenu/constants/vseparation = 4
+PopupMenu/fonts/font = SubResource( 57 )
+PopupMenu/icons/checked = SubResource( 6 )
+PopupMenu/icons/radio_checked = SubResource( 7 )
+PopupMenu/icons/radio_unchecked = SubResource( 8 )
+PopupMenu/icons/submenu = SubResource( 33 )
+PopupMenu/icons/unchecked = SubResource( 9 )
+PopupMenu/styles/hover = SubResource( 34 )
+PopupMenu/styles/labeled_separator_left = SubResource( 35 )
+PopupMenu/styles/labeled_separator_right = SubResource( 35 )
+PopupMenu/styles/panel = SubResource( 36 )
+PopupMenu/styles/panel_disabled = null
+PopupMenu/styles/separator = SubResource( 37 )
+ProgressBar/colors/font_color = Color( 0.94, 0.94, 0.94, 1 )
+ProgressBar/colors/font_color_shadow = Color( 0, 0, 0, 1 )
+ProgressBar/fonts/font = SubResource( 57 )
+ProgressBar/styles/bg = SubResource( 38 )
+ProgressBar/styles/fg = SubResource( 39 )
+ScrollContainer/styles/bg = null
+SpinBox/icons/updown = SubResource( 40 )
+TabContainer/colors/font_color_bg = Color( 0.69, 0.69, 0.69, 1 )
+TabContainer/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+TabContainer/colors/font_color_fg = Color( 0.94, 0.94, 0.94, 1 )
+TabContainer/constants/hseparation = 4
+TabContainer/constants/label_valign_bg = 2
+TabContainer/constants/label_valign_fg = 0
+TabContainer/constants/side_margin = 8
+TabContainer/constants/top_margin = 24
+TabContainer/fonts/font = SubResource( 57 )
+TabContainer/icons/decrement = null
+TabContainer/icons/decrement_highlight = null
+TabContainer/icons/increment = null
+TabContainer/icons/increment_highlight = null
+TabContainer/icons/menu = null
+TabContainer/icons/menu_highlight = null
+TabContainer/styles/panel = SubResource( 41 )
+TabContainer/styles/tab_bg = SubResource( 42 )
+TabContainer/styles/tab_disabled = SubResource( 43 )
+TabContainer/styles/tab_fg = SubResource( 44 )
+TextEdit/colors/background_color = Color( 0, 0, 0, 0 )
+TextEdit/colors/bookmark_color = Color( 0.08, 0.49, 0.98, 1 )
+TextEdit/colors/brace_mismatch_color = Color( 1, 0.2, 0.2, 1 )
+TextEdit/colors/breakpoint_color = Color( 0.8, 0.8, 0.4, 0.2 )
+TextEdit/colors/caret_background_color = Color( 0, 0, 0, 1 )
+TextEdit/colors/caret_color = Color( 0.88, 0.88, 0.88, 1 )
+TextEdit/colors/code_folding_color = Color( 0.8, 0.8, 0.8, 0.8 )
+TextEdit/colors/completion_background_color = Color( 0.17, 0.16, 0.2, 1 )
+TextEdit/colors/completion_existing_color = Color( 0.87, 0.87, 0.87, 0.13 )
+TextEdit/colors/completion_font_color = Color( 0.67, 0.67, 0.67, 1 )
+TextEdit/colors/completion_scroll_color = Color( 1, 1, 1, 1 )
+TextEdit/colors/completion_selected_color = Color( 0.26, 0.26, 0.27, 1 )
+TextEdit/colors/current_line_color = Color( 0.25, 0.25, 0.26, 0.8 )
+TextEdit/colors/executing_line_color = Color( 0.2, 0.8, 0.2, 0.4 )
+TextEdit/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+TextEdit/colors/font_color_readonly = Color( 0.88, 0.88, 0.88, 0.5 )
+TextEdit/colors/font_color_selected = Color( 0, 0, 0, 1 )
+TextEdit/colors/function_color = Color( 0.4, 0.64, 0.81, 1 )
+TextEdit/colors/line_number_color = Color( 0.67, 0.67, 0.67, 0.4 )
+TextEdit/colors/mark_color = Color( 1, 0.4, 0.4, 0.4 )
+TextEdit/colors/member_variable_color = Color( 0.9, 0.31, 0.35, 1 )
+TextEdit/colors/number_color = Color( 0.92, 0.58, 0.2, 1 )
+TextEdit/colors/safe_line_number_color = Color( 0.67, 0.78, 0.67, 0.6 )
+TextEdit/colors/selection_color = Color( 0.490196, 0.490196, 0.490196, 1 )
+TextEdit/colors/symbol_color = Color( 0.94, 0.94, 0.94, 1 )
+TextEdit/colors/word_highlighted_color = Color( 0.8, 0.9, 0.9, 0.15 )
+TextEdit/constants/completion_lines = 7
+TextEdit/constants/completion_max_width = 50
+TextEdit/constants/completion_scroll_width = 3
+TextEdit/constants/line_spacing = 4
+TextEdit/fonts/font = SubResource( 57 )
+TextEdit/icons/fold = null
+TextEdit/icons/folded = null
+TextEdit/icons/space = null
+TextEdit/icons/tab = null
+TextEdit/styles/completion = null
+TextEdit/styles/focus = null
+TextEdit/styles/normal = SubResource( 45 )
+TextEdit/styles/read_only = null
+Tree/colors/custom_button_font_highlight = Color( 0.94, 0.94, 0.94, 1 )
+Tree/colors/drop_position_color = Color( 1, 0.3, 0.2, 1 )
+Tree/colors/font_color = Color( 0.69, 0.69, 0.69, 1 )
+Tree/colors/font_color_selected = Color( 1, 1, 1, 1 )
+Tree/colors/guide_color = Color( 0, 0, 0, 0.1 )
+Tree/colors/relationship_line_color = Color( 0.27, 0.27, 0.27, 1 )
+Tree/colors/title_button_color = Color( 0.88, 0.88, 0.88, 1 )
+Tree/constants/button_margin = 4
+Tree/constants/draw_guides = 1
+Tree/constants/draw_relationship_lines = 0
+Tree/constants/hseparation = 4
+Tree/constants/item_margin = 12
+Tree/constants/scroll_border = 4
+Tree/constants/scroll_speed = 12
+Tree/constants/vseparation = 4
+Tree/fonts/font = SubResource( 57 )
+Tree/fonts/title_button_font = SubResource( 57 )
+Tree/icons/arrow = SubResource( 61 )
+Tree/icons/arrow_collapsed = SubResource( 62 )
+Tree/icons/checked = SubResource( 63 )
+Tree/icons/select_arrow = SubResource( 64 )
+Tree/icons/unchecked = SubResource( 65 )
+Tree/icons/updown = SubResource( 66 )
+Tree/styles/bg = SubResource( 58 )
+Tree/styles/bg_focus = SubResource( 59 )
+Tree/styles/button_pressed = null
+Tree/styles/cursor = null
+Tree/styles/cursor_unfocused = null
+Tree/styles/custom_button = null
+Tree/styles/custom_button_hover = null
+Tree/styles/custom_button_pressed = null
+Tree/styles/selected = SubResource( 60 )
+Tree/styles/selected_focus = SubResource( 60 )
+Tree/styles/title_button_hover = null
+Tree/styles/title_button_normal = null
+Tree/styles/title_button_pressed = null
+VScrollBar/icons/decrement = null
+VScrollBar/icons/decrement_highlight = null
+VScrollBar/icons/increment = null
+VScrollBar/icons/increment_highlight = null
+VScrollBar/styles/grabber = SubResource( 46 )
+VScrollBar/styles/grabber_highlight = SubResource( 47 )
+VScrollBar/styles/grabber_pressed = SubResource( 48 )
+VScrollBar/styles/scroll = SubResource( 49 )
+VScrollBar/styles/scroll_focus = null
+VSeparator/constants/separation = 4
+VSeparator/styles/separator = SubResource( 50 )
+VSlider/icons/grabber = SubResource( 51 )
+VSlider/icons/grabber_disabled = SubResource( 52 )
+VSlider/icons/grabber_highlight = SubResource( 53 )
+VSlider/icons/tick = null
+VSlider/styles/grabber_area = SubResource( 54 )
+VSlider/styles/grabber_area_highlight = SubResource( 55 )
+VSlider/styles/slider = SubResource( 56 )
+
+[node name="Main" type="Control"]
+pause_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 2.0
+margin_bottom = 2.0
+theme = ExtResource( 1 )
+script = ExtResource( 3 )
+
+[node name="Map" parent="." instance=ExtResource( 6 )]
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+pause_mode = 1
+z_index = 3
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="UILayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+
+[node name="WindCompass" type="Sprite" parent="UILayer/UI"]
+position = Vector2( 1806, 949 )
+texture = ExtResource( 5 )
+
+[node name="Needle" type="Sprite" parent="UILayer/UI/WindCompass"]
+texture = ExtResource( 4 )
+
+[node name="SpeedLabel" type="Label" parent="UILayer/UI"]
+margin_left = 1621.0
+margin_top = 12.0
+margin_right = 1899.0
+margin_bottom = 55.0
+text = "Current Speed: "
+
+[node name="ConeyIsland" type="Label" parent="UILayer/UI"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -56.0
+margin_top = -38.0
+margin_right = 106.0
+margin_bottom = 4.0
+rect_pivot_offset = Vector2( 81, 21 )
+theme = SubResource( 68 )
+text = "CONEY ISLAND"
+align = 1
+valign = 1
+
+[node name="Sprite" type="Sprite" parent="UILayer/UI/ConeyIsland"]
+position = Vector2( 80, 38 )
+scale = Vector2( 0.5, 0.5 )
+z_index = 1
+z_as_relative = false
+texture = ExtResource( 7 )
+
+[node name="MaxHP" type="ColorRect" parent="UILayer/UI"]
+margin_left = 16.0
+margin_top = 841.0
+margin_right = 70.0
+margin_bottom = 1045.0
+
+[node name="HP" type="ColorRect" parent="UILayer/UI/MaxHP"]
+margin_left = 52.0
+margin_top = 202.0
+margin_right = 102.0
+margin_bottom = 402.0
+rect_rotation = -180.0
+color = Color( 0.219608, 0.752941, 0, 1 )
+
+[node name="Label" type="Label" parent="UILayer/UI/MaxHP"]
+margin_left = 1.0
+margin_top = -37.0
+margin_right = 55.0
+margin_bottom = 5.0
+text = "HP"
+align = 1
+valign = 1
+
+[node name="StatsLabel" type="Label" parent="UILayer/UI"]
+margin_left = 78.0
+margin_top = 934.0
+margin_right = 228.0
+margin_bottom = 1066.0
+text = "BaseSpeed:
+SailSpeed:
+Regen:"
+
+[node name="NotificationLabel" type="Label" parent="UILayer/UI"]
+visible = false
+margin_left = 16.0
+margin_top = 15.0
+margin_right = 395.0
+margin_bottom = 108.0
+text = "The Wind God is pleased,
+he grants you some"
+
+[node name="Timer" type="Timer" parent="UILayer/UI/NotificationLabel"]
+wait_time = 3.0
+
+[node name="Menu" type="Control" parent="UILayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -479.5
+margin_top = -270.5
+margin_right = 479.5
+margin_bottom = 270.5
+theme = ExtResource( 1 )
+
+[node name="Pause" type="ColorRect" parent="UILayer/Menu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -377.5
+margin_top = -171.0
+margin_right = 377.5
+margin_bottom = 171.0
+theme = ExtResource( 1 )
+color = Color( 0.0823529, 0.0941176, 0.231373, 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Panel" type="Panel" parent="UILayer/Menu/Pause"]
+margin_left = 3.0
+margin_top = 4.0
+margin_right = 753.0
+margin_bottom = 337.0
+
+[node name="Label" type="Label" parent="UILayer/Menu/Pause"]
+margin_left = 23.0
+margin_top = 15.0
+margin_right = 388.0
+margin_bottom = 331.0
+text = "Controls:
+
+A/D - Change wind direction
+Tab - Check Map
+E - Wifes Update
+1/2/3 - Zoom Level"
+autowrap = true
+
+[node name="Continue" type="Button" parent="UILayer/Menu/Pause/Label"]
+margin_left = 467.0
+margin_top = 243.5
+margin_right = 717.0
+margin_bottom = 313.5
+rect_pivot_offset = Vector2( 147, 44 )
+text = "Continue"
+
+[node name="Quit" type="Button" parent="UILayer/Menu/Pause/Label"]
+margin_left = 467.0
+margin_top = 173.5
+margin_right = 717.0
+margin_bottom = 243.5
+rect_pivot_offset = Vector2( 147, 44 )
+text = "Quit"
+
+[node name="Kills" type="Label" parent="UILayer/Menu/Pause"]
+visible = false
+margin_left = 380.0
+margin_top = 12.5
+margin_right = 737.0
+margin_bottom = 139.5
+text = "Ships sunk: 5/10
+"
+align = 2
+
+[node name="Hint" type="Label" parent="UILayer/Menu/Pause"]
+visible = false
+margin_left = 544.5
+margin_top = 178.0
+margin_right = 909.5
+margin_bottom = 494.0
+rect_scale = Vector2( 0.5, 0.5 )
+text = "press Alt+F4 to quit :)"
+autowrap = true
+
+[node name="Notification" type="ColorRect" parent="UILayer/Menu"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -242.5
+margin_top = -146.0
+margin_right = 242.5
+margin_bottom = 146.0
+theme = ExtResource( 1 )
+color = Color( 0.0823529, 0.0941176, 0.231373, 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Panel" type="Panel" parent="UILayer/Menu/Notification"]
+margin_left = 3.0
+margin_top = 4.0
+margin_right = 480.0
+margin_bottom = 288.0
+
+[node name="Label" type="Label" parent="UILayer/Menu/Notification"]
+margin_left = 23.0
+margin_top = 15.0
+margin_right = 470.0
+margin_bottom = 218.0
+text = "You rescued your seventh female wife from the wreckage! Bring her home to Coney Island so you can introduce her to the rest of your wives"
+align = 1
+autowrap = true
+
+[node name="Continue" type="Button" parent="UILayer/Menu/Notification"]
+margin_left = 123.0
+margin_top = 212.0
+margin_right = 373.0
+margin_bottom = 282.0
+rect_pivot_offset = Vector2( 147, 44 )
+text = "Continue"
+
+[node name="EnemySpawnTimer" type="Timer" parent="."]
+wait_time = 1.2
+autostart = true
+
+[node name="MapCamera" type="Camera2D" parent="."]
+zoom = Vector2( 20, 20 )
+
+[node name="Delay" type="Timer" parent="."]
+wait_time = 3.0
+
+[node name="Sounds" type="Node" parent="."]
+
+[node name="GoToMyInstagram" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 10 )
+
+[node name="Live" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 11 )
+volume_db = -10.0
+
+[connection signal="pressed" from="UILayer/Menu/Pause/Label/Continue" to="." method="_on_Continue_pressed"]
+[connection signal="pressed" from="UILayer/Menu/Pause/Label/Quit" to="." method="_on_Quit_pressed"]
+[connection signal="pressed" from="UILayer/Menu/Notification/Continue" to="." method="_on_Continue_pressed"]
+[connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_EnemySpawnTimer_timeout"]
+
+[editable path="Player"]

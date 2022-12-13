@@ -1,0 +1,97 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://Sprites/ShipDirectionArrow.png" type="Texture" id=1]
+[ext_resource path="res://Sounds/SevenFemaleWives.wav" type="AudioStream" id=2]
+[ext_resource path="res://Sprites/MapIcons/Icons2.png" type="Texture" id=3]
+[ext_resource path="res://Sounds/BingBong2.wav" type="AudioStream" id=4]
+[ext_resource path="res://Sounds/FuckYaLife.wav" type="AudioStream" id=5]
+[ext_resource path="res://Sounds/BingBong1.wav" type="AudioStream" id=6]
+[ext_resource path="res://Sprites/Enemy/Boss/Boss1.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/Enemy/Boss/BossCannon1.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/Enemy/Boss/BossSail1.png" type="Texture" id=9]
+[ext_resource path="res://Scripts/Boss.gd" type="Script" id=10]
+[ext_resource path="res://Sounds/SteveJobs.wav" type="AudioStream" id=11]
+
+[node name="Boss" type="Node2D"]
+pause_mode = 1
+script = ExtResource( 10 )
+
+[node name="Ship" type="KinematicBody2D" parent="."]
+scale = Vector2( 2, 2 )
+
+[node name="Hull" type="Sprite" parent="Ship"]
+texture = ExtResource( 7 )
+offset = Vector2( 25, 0 )
+
+[node name="Collision" type="CollisionPolygon2D" parent="Ship"]
+visible = false
+position = Vector2( 1, 1 )
+rotation = 1.5708
+polygon = PoolVector2Array( 22, -7.00008, 30.9999, -20.0001, 35.9999, -29.0001, 37.9998, -48.0001, 31.9998, -63.0001, 23.9997, -70.0001, -1.0003, -83, -30.0002, -65.9999, -41.0002, -43.9999, -36.0001, -22.9999, -24, -8.99991, -24, 8.6844e-05, -24, 9.00009, -32.9999, 26.0001, -27.9999, 36.0001, 20.0001, 36.9999, 31.0001, 31.9999, 23, 8.99992 )
+
+[node name="Area2D" type="Area2D" parent="Ship"]
+
+[node name="Collision" type="CollisionPolygon2D" parent="Ship/Area2D"]
+visible = false
+position = Vector2( 1, 1 )
+rotation = 1.5708
+polygon = PoolVector2Array( 22, -7.00008, 30.9999, -20.0001, 35.9999, -29.0001, 37.9998, -48.0001, 31.9998, -63.0001, 23.9997, -70.0001, -1.0003, -83, -30.0002, -65.9999, -41.0002, -43.9999, -36.0001, -22.9999, -24, -8.99991, -24, 8.6844e-05, -24, 9.00009, -32.9999, 26.0001, -27.9999, 36.0001, 20.0001, 36.9999, 31.0001, 31.9999, 23, 8.99992 )
+
+[node name="MapIcon" type="Sprite" parent="Ship"]
+visible = false
+scale = Vector2( 8, 8 )
+z_index = 1
+texture = ExtResource( 3 )
+
+[node name="Sail" type="Sprite" parent="."]
+scale = Vector2( 2, 2 )
+z_index = 1
+texture = ExtResource( 9 )
+offset = Vector2( 25, 0 )
+
+[node name="Cannon" type="Sprite" parent="."]
+position = Vector2( 115, 0 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 8 )
+offset = Vector2( 22, 0 )
+
+[node name="DirectionArrow" type="Sprite" parent="."]
+visible = false
+scale = Vector2( 5, 5 )
+texture = ExtResource( 1 )
+offset = Vector2( 25, 0 )
+
+[node name="DespawnTimer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+
+[node name="ShootTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="Sounds" type="Node" parent="."]
+
+[node name="BingBong1" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 6 )
+volume_db = -15.0
+pitch_scale = 0.8
+
+[node name="BingBong2" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 4 )
+volume_db = -10.0
+pitch_scale = 0.8
+
+[node name="FuckYaLife" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 5 )
+volume_db = -10.0
+pitch_scale = 0.8
+
+[node name="SevenFemaleWives" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 2 )
+volume_db = -10.0
+
+[node name="SteveJobs" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 11 )
+volume_db = -15.0
+
+[connection signal="area_entered" from="Ship/Area2D" to="." method="_on_Area2D_area_entered"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_ShootTimer_timeout"]
