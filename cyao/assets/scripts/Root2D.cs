@@ -316,7 +316,8 @@ public class Root2D : CanvasLayer {
       string[] split = line.Split(" ");
       if(split.Count() != 2) {
         await root.SayLines(
-          "\"analyse\" only has 1 argument!",
+          "\"analyse\" only only take the following as parameters!",
+          "\"damage\" | \"health\" | \"resistance\" | \"mana\" | \"items\"",
           "use \"help\" for more info.",
           ""
         );
@@ -1106,7 +1107,7 @@ public class Root2D : CanvasLayer {
     GDUtil.SavePlayer(Player);
     GDUtil.Save();
 
-    Player.OnDmgEvent += () => { ScreenShake(0.25f, 16, 8, 0.01f); };
+    Player.OnDmgEvent += () => { ScreenShake(0.25f, 16, 4, 0.002f); };
 
     while (true) {
       Enemy = GenerateEnemy();
@@ -1239,7 +1240,7 @@ public class Root2D : CanvasLayer {
 
   public async Task DetectFuckery() {
     while (!fuckeryDetected) {
-      fuckeryDetected = OS.WindowSize.x > 650 || OS.WindowSize.y > 490;
+      fuckeryDetected = OS.WindowSize.x > 680 || OS.WindowSize.y > 520;
       await this.NextFrame();
     }
     return;
@@ -1410,7 +1411,7 @@ public class Root2D : CanvasLayer {
               break;
             }
           case (int)KeyList.F1: {
-              ScreenShake(0.2f, 4, 2, 0.01f);
+              ScreenShake(0.2f, 1, 2, 0.002f);
               break;
             }
         }
@@ -1597,7 +1598,10 @@ public class Root2D : CanvasLayer {
   int historyLength = 200;
   public async Task<string> Prompt(ResponseType type, string prompt = null, string[] acceptedAnswers = null, string[] unacceptedAnswers = null, string[] fail = null) {
 
-    if (Player != null) await Say($"Health: {Player.Health} Mana: {Player.Mana}{(Enemy != null ? " vs " + Enemy.Name : "")}");
+    string pre = "";
+    if (Player != null) pre += $"Health: {Player.Health} Mana: {Player.Mana}";
+    if (Enemy != null) pre += " vs \n" + $"{Enemy.Name}: Health: {Enemy.Health} Mana: {Enemy.Mana}";
+    await Say($"Health: {Player.Health} Mana: {Player.Mana}{(Enemy != null ? " vs " + Enemy.Name : "")}");
     if (prompt != null) await Say(prompt);
 
     string result = null;

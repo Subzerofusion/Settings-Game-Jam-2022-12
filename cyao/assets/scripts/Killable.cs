@@ -38,6 +38,7 @@ public class KAction {
     List<string> executionLog = new List<string>();
     if (Cost > user.Mana) executionLog.Add($"{user.Name} doesn't have enough mana");
     executionLog.Add(UsePrint.Replace("{{user}}", user.Name).Replace("{{name}}", Name).Replace("{{target.Name}}", target.Name == user.Name ? "themselves" : target.Name));
+    executionLog.Add($"Description: {Description}");
     user.Mana -= Cost;
     int dmg = (int)(Damage * target.Resistance);
     target.StdDmg(Damage);
