@@ -1,0 +1,8 @@
+[gd_resource type="SpatialMaterial" format=2]
+
+[resource]
+flags_transparent = true
+albedo_color = Color( 0.639216, 0.619608, 0.619608, 0.227451 )
+rim_enabled = true
+rim = 1.0
+rim_tint = 0.5

@@ -1,0 +1,25 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=2]
+
+[ext_resource path="res://assets/shaders/new_shader.tres" type="Shader" id=1]
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = ExtResource( 1 )
+
+[sub_resource type="Shader" id=2]
+code = "shader_type spatial;
+render_mode unshaded;
+
+uniform vec4 outline_color: hint_color;
+uniform float outline_strength = 1.0;
+
+void fragment() {
+    ALBEDO = outline_color.rgb;
+    ALPHA = dot(NORMAL, vec3(0,0,1)) * outline_strength;
+}"
+
+[resource]
+render_priority = -1
+next_pass = SubResource( 3 )
+shader = SubResource( 2 )
+shader_param/outline_color = Color( 0.27451, 0.631373, 0.101961, 1 )
+shader_param/outline_strength = 2.0

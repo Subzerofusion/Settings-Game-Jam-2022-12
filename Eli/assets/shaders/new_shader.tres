@@ -1,0 +1,21 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "shader_type spatial;
+render_mode unshaded;
+
+uniform vec4 outline_color: hint_color;
+uniform float outline_strength = 1.0;
+uniform float size = 1.0;
+void fragment() {
+    ALBEDO = outline_color.rgb;
+    ALPHA = dot(NORMAL, vec3(0,0,1)) * outline_strength;
+	
+}
+void vertex() {
+	VERTEX=VERTEX+NORMAL*size;
+}
+float edge1 = 1 - _OutlineWidth;
+float edge2 = edge1 + _OutlineSoftness;
+float fresnel = pow(1.0 - saturate(dot(normalWS, viewWS)), _OutlinePower);
+return lerp(1, smoothstep(edge1, edge2, fresnel), step(0, edge1)) * _OutlineColor;"
