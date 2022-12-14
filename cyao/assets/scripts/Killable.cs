@@ -103,7 +103,7 @@ public class KAction {
       Description = "Strikes for more damage per use",
       Damage = 5, Cost = 0,
       Effect = (root2d, action, user, target) => {
-        action.Damage *= action.Damage;
+        action.Damage *= 5;
         return new string[]{"Exponential strike just got more powerful"};
       }},
     new KAction(){ Id = "atk_focus", Name = "Focused Blast",

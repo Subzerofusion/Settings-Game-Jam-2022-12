@@ -90,7 +90,7 @@ public class Root2D : CanvasLayer {
   }
 
   static string[] POSITIVE = new string[] { "ok", "okay", "yes", "y", "yea", "yeap", "yeet", "yeah", "affirmative", "amen", "fine", "good", "true", "all right", "aye", "beyond a doubt", "by all means", "certainly", "definitely", "even so", "exactly", "gladly", "good enough", "granted", "indubitably", "just so", "most assuredly", "naturally", "of course", "positively", "precisely", "sure thing", "surely", "undoubtedly", "unquestionably", "very well", "willingly", "without fail", "yep" };
-  static string[] NEGATIVE = new string[] { "no", "nah", "nope", "decline", "negative", "negatory", "absolutely not", "nein", "veto", "niet" };
+  static string[] NEGATIVE = new string[] { "n", "no", "nah", "nope", "decline", "negative", "negatory", "absolutely not", "nein", "veto", "niet" };
   static string[] POSNEGR = new string[] { "C'mon dude... It's just a yes or no question", "Why you gotta make things so complicated?", "Pls... It's not hard..." };
 
   static string[] GERMAN = new string[] { "nein", "danke", "ja", "bitte" };
@@ -541,7 +541,7 @@ public class Root2D : CanvasLayer {
 
   Killable defaultPlayer = new Killable() {
     Name = GDUtil.GameSave.Name,
-    Health = 20000000,
+    Health = 5000,
     Mana = 2000,
     Resistance = 0.9f,
     AttackIds = new List<string>() { "atk_fire_ball", "atk_lightning" },

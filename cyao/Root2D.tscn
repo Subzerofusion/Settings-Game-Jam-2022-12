@@ -102,7 +102,7 @@ _btnWinPath = NodePath("CanvasLayer/Button")
 _crBlurPath = NodePath("CanvasLayer/ColorRect")
 _vpVictoryPath = NodePath("CanvasLayer/VideoPlayer")
 _teInputPath = NodePath("TEInput")
-_crSkyrimPath = NodePath("CanvasLayer/ColorRect")
+_crSkyrimPath = NodePath("CRSkyrim")
 _tbGunPath = NodePath("TextureButton")
 _asGunPath = NodePath("ASGun")
 _asShootPath = NodePath("AudioShoot")
@@ -145,6 +145,12 @@ stream = ExtResource( 20 )
 
 [node name="AudioPickup" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 6 )
+
+[node name="CRSkyrim" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color( 0, 0, 0, 1 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
