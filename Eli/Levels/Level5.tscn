@@ -21,7 +21,7 @@ transform = Transform( 35.243, 0, 0, 0, 0.657, 0, 0, 0, 23.695, 0, 0, 45.3232 )
 script = ExtResource( 5 )
 maxPlanets = 4
 targetPoints = 4
-nextLevelPath = "res://Levels/Level2.tsc"
+nextLevelPath = "res://Levels/Level2.tscn"
 
 [node name="Camera" type="Camera" parent="ControlManager"]
 transform = Transform( 1, 0, 0, 0, 0.53858, 0.842575, 0, -0.842575, 0.53858, -1.48845, 66.2672, 108.616 )

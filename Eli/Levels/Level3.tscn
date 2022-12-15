@@ -20,7 +20,7 @@ transform = Transform( 35.243, 0, 0, 0, 0.657, 0, 0, 0, 23.695, 0, 0, 45.3232 )
 
 [node name="ControlManager" type="Node" parent="."]
 script = ExtResource( 3 )
-nextLevelPath = "res://Levels/Level4.tsc"
+nextLevelPath = "res://Levels/Level4.tscn"
 
 [node name="Camera" type="Camera" parent="ControlManager"]
 transform = Transform( 1, 0, 0, 0, 0.53858, 0.842575, 0, -0.842575, 0.53858, -1.48845, 66.2672, 108.616 )
@@ -99,7 +99,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 60.5109, -1.52588e-05, 64.2533
 mass = 5000.0
 linear_velocity = Vector3( 100, 0, 0 )
 angular_velocity = Vector3( 100, 0, 0 )
-startingVelocity = Vector3( -15, 0, 0 )
+startingVelocity = Vector3( -10, 0, 0 )
 
 [node name="Target" parent="." instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.41583, 0.107529, 55.8012 )
