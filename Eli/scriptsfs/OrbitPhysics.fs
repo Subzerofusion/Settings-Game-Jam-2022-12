@@ -65,7 +65,7 @@ let accumulateSteps entites dtMs steps=
     GD.Print $"calculating physics for {steps} steps"
     states[0]<-entites
     for i=1 to steps-1 do 
-        states[i]<-stepTime dtMs states[i-1]
+        states[i]<-stepTime dtMs (states.[i-1])
     states
 
     

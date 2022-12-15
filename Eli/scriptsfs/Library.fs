@@ -145,7 +145,7 @@ and OrbitMaster()=
         startingEntites.Add(nodeId,orbitalNodeToOrbitalData node )
         resetTimeSteps<-true
         newOrbitalBody.Trigger(node)
-        GD.Print(sprintf "starting entity= %A" startingEntites[nodeId])
+        GD.Print(sprintf "starting entity= %A" (startingEntites.[nodeId]))
         ()
 
     member this.DeleteOrbitalBody(node:OrbitalBodyNode)=
